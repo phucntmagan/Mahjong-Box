@@ -63,7 +63,7 @@ figure img { width: 100%; max-width: 100%; display: block; }
 <h1>Phương án nắp gỗ đặc — khung gỗ đỏ ôm tấm Nu</h1>
 <div class="meta">
 <b>Thay cho:</b> nắp bọc da / nắp lõi ổn định phủ veneer · <b>Đơn vị:</b> mm<br>
-<b>Vật liệu:</b> khung gõ đỏ đặc (<i>Afzelia xylocarpa</i>) + tấm Nu gõ đỏ thả trong rãnh<br>
+<b>Vật liệu:</b> khung <b>cocobolo</b> (đồng màu thân) + tấm Nu gõ đỏ (<i>Afzelia xylocarpa</i>) thả trong rãnh<br>
 <b>Công cụ:</b> tools/lid_solid_calc.py · tools/draw_lid.py — chạy lại được
 </div></div>
 
@@ -106,7 +106,7 @@ trị số cho phép ổn định</b>. Cạnh bản lề bắt buộc phải là
 <figure><img src="../figs/fig6-khung-tam-tha.svg"></figure>
 <table>
 <tr><th style="width:36%">Chi tiết</th><th style="width:28%">Kích thước</th><th>Ghi chú</th></tr>
-<tr><td>Đố dọc cạnh mộng</td><td>34 × 350 × 18</td><td>gõ đỏ đặc, thớ dọc 350; mang mặt mộng và lỗ Ø6,2</td></tr>
+<tr><td>Đố dọc cạnh mộng</td><td>34 × 350 × 18</td><td>cocobolo đặc, thớ dọc 350; mang mặt mộng và lỗ Ø6,2</td></tr>
 <tr><td>Đố dọc cạnh khe giữa</td><td>34 × 350 × 12</td><td>mang rãnh âm 4 × 21,7 cho sống khóa</td></tr>
 <tr><td>Đố ngang trước/sau</td><td>30 × 108,7</td><td>vát theo khung</td></tr>
 <tr><td>Lòng khung</td><td>108,7 × 290</td><td></td></tr>
@@ -138,14 +138,27 @@ sinh ra, không phải phay.</div>
 
 <h2>4. Khối lượng và tải</h2>
 <table>
-<tr><th style="width:52%">Cấu tạo</th><th class="n">Gỗ</th><th class="n">+ Quân</th><th class="n">TỔNG</th></tr>
-<tr><td>Thân + khay cocobolo | nắp gõ đỏ đặc</td><td class="n">4,94</td><td class="n">2,43</td><td class="n bad">7,37 kg</td></tr>
-<tr><td>Thân cocobolo, khay lõi ổn định | nắp gõ đỏ đặc</td><td class="n">4,17</td><td class="n">2,43</td><td class="n">6,60 kg</td></tr>
-<tr><td>Thân + khay cocobolo | nắp lõi ổn định + veneer Nu</td><td class="n">4,49</td><td class="n">2,43</td><td class="n">6,92 kg</td></tr>
+<tr><th style="width:52%">Cấu tạo khay</th><th class="n">Gỗ</th><th class="n">+ Quân</th><th class="n">TỔNG</th></tr>
+<tr><td>Khay cocobolo</td><td class="n">5,49</td><td class="n">2,43</td><td class="n bad">7,92 kg</td></tr>
+<tr><td>Khay lõi ổn định</td><td class="n">4,72</td><td class="n">2,43</td><td class="n">7,15 kg</td></tr>
 </table>
-<div class="fix"><b>Tải thiết kế 217 N</b> so với 215 N của bước trước — chênh 1 %.
-<b>Toàn bộ tính toán quai, sống khóa và chốt xoay ở tài liệu trước vẫn đủ, không phải tính lại.</b>
-Nắp gỗ đặc chỉ nặng thêm khoảng 0,3–0,5 kg so với nắp lõi ổn định.</div>
+<div class="fix"><b>Tải thiết kế 233 N</b> so với 215 N của bước trước — tăng 8 %. Kiểm lại toàn bộ:
+hệ số an toàn thấp nhất tụt từ 10× xuống <b>9×</b>, võng sống từ 0,85 lên 0,92 mm (giới hạn 1,14).
+<b>Kích thước sống khóa, chốt xoay và quai giữ nguyên — không phải sửa.</b></div>
+
+<h2>4b. Mộng khung bằng cocobolo — rủi ro lớn nhất của phương án này</h2>
+<p>Khung nắp là kết cấu <b>4 mộng mỗi cánh, 8 mộng cả bộ</b>, vừa giữ tấm Nu vừa mang mặt mộng bản lề.
+Mà cocobolo là một trong những loại <b>khó dán nhất</b>: chất chiết xuất (quinone) thổi lên bề mặt
+vừa gia công trong vòng vài phút và chặn kết dính.</p>
+<table>
+<tr><th style="width:20%">Hạng mục</th><th>Yêu cầu bắt buộc</th></tr>
+<tr><td>Keo</td><td><b>EPOXY</b>, không dùng PVA. PVA trên cocobolo là kiểu hỏng đã biết.</td></tr>
+<tr><td>Lau dầu</td><td>Acetone, lau <b>ngay trước khi ép</b> — trong vòng 15 phút kể từ khi phay xong má mộng. Lau xong không chạm tay vào mặt dán.</td></tr>
+<tr><td>Chốt khóa</td><td>Chốt gỗ Ø5 <b>xuyên mộng</b>, khoan lệch 0,8 mm (draw-bore). Mục đích <b>không phải chịu tải</b> — mỗi mộng chỉ chịu ~20 N — mà để khung không bung nếu đường keo hỏng sau vài mùa.</td></tr>
+<tr><td>Kiểm tra</td><td>Ép thử 1 mộng mẫu, để 7 ngày rồi phá huỷ. <b>Đường phá phải đi qua thớ gỗ</b>, không được đi dọc đường keo.</td></tr>
+</table>
+<div class="warn">Nếu xưởng không chạy được quy trình này, phương án lùi là <b>chuyển khung nắp sang
+gõ đỏ</b> (dễ dán hơn nhiều) và chấp nhận lệch màu ở mép nắp.</div>
 
 <h2>5. Tấm Nu — yêu cầu mua và xử lý</h2>
 <p>Cần <b>2 tấm đã lạng 121 × 302 × 12</b> (để bào xuống 10), lạng liên tiếp để book-match hai
@@ -162,7 +175,7 @@ cánh. Khối Nu thô tối thiểu ~<b>161 × 342 × 40</b>.</p>
 <h2>6. Những gì không đổi</h2>
 <ul>
 <li>Sống khóa 44 × 20, chốt xoay Ø16, quai — kích thước và kiểm bền giữ nguyên</li>
-<li>Sống bắt cứng vào <b>đố dọc cạnh khe giữa</b> (gỗ đặc) — không bao giờ bắt vào tấm Nu thả</li>
+<li>Sống bắt cứng vào <b>đố dọc cạnh khe giữa</b> (cocobolo đặc) — không bao giờ bắt vào tấm Nu thả</li>
 <li>Vát nắp 18 → 12 giữ nguyên (khung vát, tấm Nu dày đều 10)</li>
 <li>Hốc bán nguyệt R8,5 cho chốt: khoét vào đố gỗ đặc — khoét được</li>
 <li>Phủ bì 354 × 362 × 83</li>
@@ -176,6 +189,14 @@ Phần này viết theo trí nhớ.<br><br>
 <b>Bắt buộc xác minh với Cơ quan quản lý CITES Việt Nam và Chi cục Kiểm lâm trước khi mua.</b>
 Cộng với cocobolo (<i>Dalbergia</i>, Phụ lục II) — hộp này nay có <b>hai loài</b> cần kiểm tra
 giấy tờ, không phải một.</div>
+<p>Khung nắp bằng cocobolo còn đẩy lượng gỗ <i>Dalbergia</i> mỗi hộp lên cao, và điều đó quyết định
+số hộp gửi được mỗi lô hàng:</p>
+<table>
+<tr><th style="width:34%">Cấu tạo khay</th><th class="n">Dalbergia / hộp</th><th class="n">3 hộp</th><th class="n">Tối đa mỗi lô</th></tr>
+<tr><td>Khay cocobolo</td><td class="n">4,84 kg</td><td class="n bad">14,51</td><td class="n bad">2 hộp</td></tr>
+<tr><td>Khay lõi ổn định</td><td class="n">3,21 kg</td><td class="n ok">9,62</td><td class="n ok">3 hộp</td></tr>
+</table>
+<p style="font-size:8.4pt;color:#55524b">Theo ngưỡng miễn trừ 10 kg của annotation #15 — phải xác minh lại bản hiện hành.</p>
 
 <h2>8. Tóm tắt thay đổi so với bản trước</h2>
 <table>
@@ -186,6 +207,7 @@ giấy tờ, không phải một.</div>
 <tr><td class="c">4</td><td>Thêm nguyên công ổn định hoá tấm Nu</td><td>chống nứt, chống hút hoàn thiện không đều</td></tr>
 <tr><td class="c">5</td><td>BOM thêm: 2 tấm Nu, epoxy trám, grain filler</td><td></td></tr>
 <tr><td class="c">6</td><td>Hồ sơ CITES: thêm <i>Afzelia</i></td><td>trước chỉ có <i>Dalbergia</i></td></tr>
+<tr><td class="c">7</td><td>Khung nắp <b>cocobolo</b> (không phải gõ đỏ)</td><td>đồng màu thân như ảnh mẫu; kéo theo quy trình dán epoxy + chốt draw-bore</td></tr>
 </table>
 
 <div class="foot">Mọi phép tính sinh và kiểm tra bằng <code>tools/lid_solid_calc.py</code>;

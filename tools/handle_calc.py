@@ -3,65 +3,39 @@
 Tinh toan thiet ke quai xach cho hop Mahjong 152 quan.
 Chay: python3 tools/handle_calc.py
 """
-import math
+import math, os, sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import box_spec as B
 
 def hr(t): print("\n"+"="*76+"\n"+t+"\n"+"="*76)
 
 # --------------------------------------------------------------- 1. KHOI LUONG
 hr("1. KHOI LUONG - con so quyet dinh toan bo thiet ke quai")
+print("  Cau hinh da chot: than + khay + khung nap + song khoa = COCOBOLO,")
+print("  tam nap = NU GO DO tha trong ranh. Xem tools/box_spec.py.\n")
+print(f"  {'chi tiet':18s}{'cm3':>9s}{'kg':>8s}   vat lieu")
+mat={'tam Nu':'Nu go do'}
+for k,v in B.V.items():
+    r = B.RHO[mat.get(k,'cocobolo')]
+    print(f"  {k:18s}{v/1000:9.0f}{v/1e6*r:8.2f}   {mat.get(k,'cocobolo')}")
+print(f"\n  {'Cau tao khay':16s}{'go kg':>8s}{'+quan':>8s}{'TONG kg':>9s}{'Dalbergia/hop':>15s}")
+for khay in ('cocobolo','loi on dinh'):
+    go,t,tot = B.mass(khay)
+    print(f"  {khay:16s}{go:8.2f}{t:8.2f}{tot:9.2f}{B.dalbergia_kg(khay):15.2f}")
+M_HIGH = B.mass('cocobolo')[2]
+M_LOW  = B.mass('loi on dinh')[2]
+print(f"\n  => DAI KHOI LUONG THIET KE: {M_LOW:.2f} - {M_HIGH:.2f} kg")
 
-# the tich go (mm3), hinh hoc Rev C: 354 x 350 x 67, vach 10, day 8, vach ngan 6
-V = {}
-V['day']        = 354*350*8
-V['vach truoc/sau'] = 2*(354*10*44)           # cao trung binh 44 tren day
-V['vach trai/phai'] = 2*(330*10*39)
-V['vach ngan']  = 2*(330*6*44)
-V['canh nap']   = 2*(176.7*350*13 - 100*330*6)  # nem 18->8, tru long lom lot da
-V['khay quan']  = 4*(325*124*19 - 315*114*15)
-V['khay phu kien'] = 325*68*38 - (28*152*24.5 + 58*75*18.5 + 58*78*18.5)
-Vtot = sum(V.values())
-print(f"  {'chi tiet':22s}{'cm3':>10s}")
-for k,v in V.items(): print(f"  {k:22s}{v/1000:10.0f}")
-print(f"  {'TONG GO':22s}{Vtot/1000:10.0f} cm3")
-
-RHO = {'cocobolo':1.10, 'go trac':1.05, 'loi on dinh + veneer':0.58, 'oc cho/walnut':0.65}
-M_TILE = 16.0   # g/quan, quan premium ure/melamine ~1,5 g/cm3
-m_tiles = 152*M_TILE/1000
-print(f"\n  152 quan x {M_TILE:.0f} g = {m_tiles:.2f} kg   (+ 4 xuc xac ~8 g)")
-
-print(f"\n  {'Cau tao':34s}{'go kg':>9s}{'+quan':>9s}{'TONG kg':>10s}")
-SC = [
- ("Toan bo cocobolo dac", {'all':'cocobolo'}),
- ("Than+khay cocobolo, nap loi on dinh", {'canh nap':'loi on dinh + veneer','all':'cocobolo'}),
- ("Than cocobolo, nap+khay loi on dinh", {'canh nap':'loi on dinh + veneer',
-                                          'khay quan':'loi on dinh + veneer',
-                                          'khay phu kien':'loi on dinh + veneer','all':'cocobolo'}),
-]
-res={}
-for name,mix in SC:
-    m=0
-    for k,v in V.items():
-        rho = RHO[mix.get(k, mix['all'])]
-        m += v/1000*rho/1000
-    res[name]=m
-    print(f"  {name:34s}{m:9.2f}{m_tiles:9.2f}{m+m_tiles:10.2f}")
-
-M_LOW  = min(res.values())+m_tiles
-M_HIGH = max(res.values())+m_tiles
-print(f"\n  => DAI KHOI LUONG THIET KE: {M_LOW:.1f} - {M_HIGH:.1f} kg")
-
-# --------------------------------------------------------------- 2. TAI THIET KE
 hr("2. TAI TRONG THIET KE")
 g=9.81
 P_static = M_HIGH*g
 for k,lbl in [(1,"tinh (dung yen)"),(2,"dong (di bo, lac tay)"),(3,"thiet ke - he so 3"),
               (4,"kiem chung roi/giat manh")]:
     print(f"  he so {k}  {lbl:26s} {M_HIGH*k:6.1f} kg = {P_static*k:7.0f} N")
-P_DES = P_static*3
+P_DES = B.design_load('cocobolo')
 print(f"\n  => TAI THIET KE P = {P_DES:.0f} N  (chia deu 2 diem neo: {P_DES/2:.0f} N/diem)")
 print(f"  => Yeu cau kiem chung: treo {M_HIGH*4:.0f} kg trong 60 s + 5.000 chu ky nhac")
 
-# --------------------------------------------------------------- 3. ECGONOMI
 hr("3. EC-GO-NO-MI TAY NAM  (tai >4,5 kg => quy dinh khac han tui nhe)")
 E = [("Chieu dai nam tay thong (clear)", "110 - 130 mm", "ban tay nam 95-100 mm + du 15"),
      ("Tiet dien nam",                   "30 x 18 mm oval", "tai nang can BE MAT RONG, khong tron nho"),
@@ -170,13 +144,26 @@ print(f"  e) O xuc xac phai co NAP TRUOT - khi xach xuc xac se roi khoi o")
 
 # --------------------------------------------------------------- 10. KET LUAN
 hr("10. KET LUAN VE KHOI LUONG")
-print(f"  {M_HIGH:.1f} kg mot tay la NANG. Moc so sanh:")
+print(f"  {M_HIGH:.2f} kg mot tay la NANG. Moc so sanh:")
 for m,lbl in [(5.0,"gioi han hanh ly xach tay thoai mai"),
               (7.0,"cap laptop day - xach duoc 2-3 phut"),
               (10.0,"nguong khuyen cao xach mot tay lien tuc")]:
     print(f"    {m:4.1f} kg  {lbl}")
-print(f"\n  Giam can bang VAT LIEU, khong phai bang thiet ke quai:")
-for name,m in res.items():
-    print(f"    {m+m_tiles:5.2f} kg  {name}")
-print(f"  => Chenh {M_HIGH-M_LOW:.1f} kg giua cau tao dac va cau tao loi on dinh.")
-print(f"     Loi on dinh dang nao cung BAT BUOC cho canh nap (xem review Rev B, muc 5).")
+print(f"\n  Chot khung nap bang cocobolo (dong mau than) day khoi luong len {M_HIGH:.2f} kg.")
+print(f"  Don bay duy nhat con lai la KHAY:")
+for khay in ('cocobolo','loi on dinh'):
+    print(f"    khay {khay:12s} -> {B.mass(khay)[2]:.2f} kg")
+print(f"  => Chenh {M_HIGH-M_LOW:.2f} kg. Khong con don bay nao khac ma khong doi vat lieu vo.")
+print(f"\n  O {M_HIGH:.1f} kg, phuong an C (hoc am hai tay) dang gia can nhac lai:")
+print(f"  {M_HIGH/2:.2f} kg moi tay thay vi {M_HIGH:.2f} kg mot tay.")
+
+hr("11. NGUONG MIEN TRU CITES - so hop moi lo hang")
+print("  Annotation #15 (theo tri nho, PHAI xac minh): thanh pham <= 10 kg go loai")
+print("  liet ke moi lo hang thi duoc mien tru.\n")
+print(f"  {'Cau tao khay':16s}{'Dalbergia/hop':>15s}{'2 hop':>9s}{'3 hop':>9s}{'so hop toi da':>15s}")
+for khay in ('cocobolo','loi on dinh'):
+    d = B.dalbergia_kg(khay)
+    print(f"  {khay:16s}{d:15.2f}{2*d:9.2f}{3*d:9.2f}{int(10//d):15d}")
+print("\n  => Khung nap cocobolo day Dalbergia/hop len cao. Neu khay cung cocobolo thi")
+print("     mot lo hang chi duoc 2 hop. Khay loi on dinh thi duoc 3.")
+print("     Day la ly do THUONG MAI de chon khay loi on dinh, ngoai ly do khoi luong.")

@@ -31,7 +31,7 @@ Nu thớ xoắn loạn, hay có lõi vỏ và lỗ rỗng → có thể tách, v
 
 | Chi tiết | Kích thước | Ghi chú |
 |---|---|---|
-| Đố dọc cạnh mộng | 34 × 350 × 18 | gõ đỏ đặc, thớ dọc 350; mang mặt mộng và lỗ Ø6,2 |
+| Đố dọc cạnh mộng | 34 × 350 × 18 | cocobolo đặc, thớ dọc 350; mang mặt mộng và lỗ Ø6,2 |
 | Đố dọc cạnh khe giữa | 34 × 350 × 12 | mang rãnh âm 4 × 21,7 cho sống khóa |
 | Đố ngang trước/sau | 30 × 108,7 | |
 | Lòng khung | 108,7 × 290 | |
@@ -54,33 +54,32 @@ Giải luôn: §3.1 review Rev B (cánh nắp cần lòng lõm) và vấn đề 
 
 ## Khối lượng
 
-| Cấu tạo | Gỗ | + Quân | TỔNG |
+| Cấu tạo khay | Gỗ | + Quân | TỔNG |
 |---|---:|---:|---:|
-| Thân + khay cocobolo \| nắp gõ đỏ đặc | 4,94 | 2,43 | **7,37 kg** |
-| Thân cocobolo, khay lõi ổn định \| nắp gõ đỏ đặc | 4,17 | 2,43 | **6,60 kg** |
-| Thân + khay cocobolo \| nắp lõi ổn định + veneer Nu | 4,49 | 2,43 | 6,92 kg |
+| Khay cocobolo | 5,49 | 2,43 | **7,92 kg** |
+| Khay lõi ổn định | 4,72 | 2,43 | **7,15 kg** |
 
-Tải thiết kế **217 N** so với 215 N bước trước. **Toàn bộ tính toán quai, sống khóa, chốt xoay
-vẫn đủ — không phải tính lại.**
+Tải thiết kế **233 N** so với 215 N bước trước (+8 %). Hệ số an toàn thấp nhất tụt từ 10× xuống
+**9×**, võng sống từ 0,85 lên 0,92 mm (giới hạn 1,14). **Kích thước sống khóa, chốt xoay và quai
+giữ nguyên — không phải sửa.**
 
-## Khung nắp làm bằng gỗ gì?
+## Mộng khung bằng cocobolo — rủi ro lớn nhất
 
-Trong ảnh mẫu, **viền khung nắp và thân hộp là cùng một loại gỗ sẫm màu**. Nếu thân là cocobolo
-mà khung nắp là gõ đỏ thì hai màu khác nhau, thấy rõ ngay ở mép nắp.
+**Đã chốt: khung nắp và thân đều là cocobolo**, chỉ tấm nắp là Nu gõ đỏ — đồng màu như ảnh mẫu.
 
-| Khung nắp | ρ | Khung (kg) | Thân+khay cocobolo | Khay lõi ổn định |
-|---|---:|---:|---:|---:|
-| gõ đỏ | 0,82 | 0,75 | 7,37 kg | 6,60 kg |
-| cocobolo | 1,10 | 1,00 | **7,62 kg** | **6,85 kg** |
+Khung nắp là kết cấu **4 mộng mỗi cánh, 8 mộng cả bộ**, vừa giữ tấm Nu vừa mang mặt mộng bản lề.
+Mà cocobolo là một trong những loại **khó dán nhất**: chất chiết xuất (quinone) thổi lên bề mặt
+vừa gia công trong vòng vài phút và chặn kết dính.
 
-Đổi khung sang cocobolo cho đồng màu thân: **+0,25 kg**, tải thiết kế 217 → 224 N — vẫn nằm
-trong tính toán quai.
+| Hạng mục | Yêu cầu bắt buộc |
+|---|---|
+| Keo | **EPOXY**, không dùng PVA. PVA trên cocobolo là kiểu hỏng đã biết. |
+| Lau dầu | Acetone, lau **ngay trước khi ép** — trong vòng 15 phút kể từ khi phay xong má mộng |
+| Chốt khóa | Chốt gỗ Ø5 **xuyên mộng**, khoan lệch 0,8 mm (draw-bore). Không phải để chịu tải — mỗi mộng chỉ chịu ~20 N — mà để khung không bung nếu đường keo hỏng sau vài mùa |
+| Kiểm tra | Ép thử 1 mộng mẫu, để 7 ngày rồi phá huỷ. **Đường phá phải đi qua thớ gỗ**, không được đi dọc đường keo |
 
-Đánh đổi kỹ thuật: cocobolo nhiều dầu, **mọi mộng–mộng của khung phải lau acetone ngay trước khi
-ép**, nếu không khung sẽ bong mộng sau vài mùa. Gõ đỏ dễ dán hơn nhiều — đó là lý do kỹ thuật
-để giữ khung bằng gõ đỏ.
-
-Đường trung dung: **khung cocobolo đồng màu thân, tấm Nu gõ đỏ làm điểm nhấn** — đúng như ảnh.
+Nếu xưởng không chạy được quy trình này: chuyển khung sang gõ đỏ (dễ dán hơn nhiều) và chấp nhận
+lệch màu ở mép nắp.
 
 ## Tấm Nu — mua và xử lý
 
@@ -98,7 +97,7 @@ Khối Nu thô tối thiểu ~161 × 342 × 40.
 ## Không đổi
 
 Sống khóa 44 × 20, chốt xoay Ø16, quai — giữ nguyên. Sống bắt vào **đố dọc cạnh khe giữa**
-(gỗ đặc), không bao giờ vào tấm Nu thả. Vát nắp 18 → 12. Phủ bì 354 × 362 × 83.
+(cocobolo đặc), không bao giờ vào tấm Nu thả. Vát nắp 18 → 12. Phủ bì 354 × 362 × 83.
 
 ## Pháp lý
 
@@ -108,6 +107,13 @@ khác nhau và có thể đã thay đổi — phần này viết theo trí nhớ
 quản lý CITES Việt Nam và Chi cục Kiểm lâm trước khi mua.
 
 Cộng với cocobolo (*Dalbergia*, Phụ lục II) — hộp này nay có **hai loài** cần giấy tờ.
+
+Khung nắp cocobolo còn quyết định số hộp gửi được mỗi lô hàng:
+
+| Cấu tạo khay | Dalbergia / hộp | 3 hộp | Tối đa mỗi lô |
+|---|---:|---:|---:|
+| Khay cocobolo | 4,84 kg | 14,51 | **2 hộp** |
+| Khay lõi ổn định | 3,21 kg | 9,62 | **3 hộp** |
 
 ## Thay đổi so với bản trước
 
@@ -119,3 +125,4 @@ Cộng với cocobolo (*Dalbergia*, Phụ lục II) — hộp này nay có **hai
 | 4 | Thêm nguyên công ổn định hoá tấm Nu | chống nứt, chống hút hoàn thiện không đều |
 | 5 | BOM thêm: 2 tấm Nu, epoxy trám, grain filler | |
 | 6 | Hồ sơ CITES: thêm *Afzelia* | trước chỉ có *Dalbergia* |
+| 7 | Khung nắp **cocobolo**, không phải gõ đỏ | đồng màu thân như ảnh mẫu; kéo theo quy trình epoxy + draw-bore |

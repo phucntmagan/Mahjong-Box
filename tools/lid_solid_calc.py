@@ -3,7 +3,9 @@
 Phuong an nap go dac: khung go do + tam Nu go do (thay cho nap boc da / veneer.)
 Chay: python3 tools/lid_solid_calc.py
 """
-import math
+import math, os, sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import box_spec as B
 def hr(t): print("\n"+"="*78+"\n"+t+"\n"+"="*78)
 
 # --------------------------------------------------- he so gian no (%/1% MC)
@@ -97,56 +99,31 @@ print(f"     tai canh khe giua: {t_s-PAN_T:.0f} mm sau")
 print(f"  Long lom {op_w:.1f} x {op_l:.0f} nay CHINH LA khay bo bai trong anh mau -")
 print(f"  khong phai phay them, khong dinh toi van de 'khong phay duoc long o mep 8 mm'.")
 
-hr("5. KHOI LUONG")
-V = {'day':354*350*8, 'vach truoc/sau':2*(354*10*44), 'vach trai/phai':2*(330*10*39),
-     'vach ngan':2*(330*6*44), 'khay quan':4*(325*124*19-315*114*15),
-     'khay phu kien':325*68*38-(28*152*24.5+58*75*18.5+58*78*18.5)}
-V_frame = 2*((LW*LL - op_w*op_l)*15)            # khung, day trung binh 15
-V_panel = 2*(pan_w*pan_l*PAN_T)                  # tam Nu
-V_lid = V_frame + V_panel
-print(f"  Khung 2 canh : {V_frame/1000:7.0f} cm3      Tam Nu 2 canh: {V_panel/1000:7.0f} cm3")
-print(f"  Nap tong     : {V_lid/1000:7.0f} cm3      Than+khay    : {sum(V.values())/1000:7.0f} cm3")
-m_tiles = 152*16/1000
-SC = [("Than+khay cocobolo | nap go do dac", 'cocobolo','go do dac','Nu go do'),
-      ("Than cocobolo, khay loi on dinh | nap go do dac", 'cocobolo','go do dac','Nu go do'),
-      ("Than+khay cocobolo | nap loi on dinh + veneer Nu", 'cocobolo','loi on dinh','loi on dinh')]
-print(f"\n  {'Cau tao':50s}{'go':>7s}{'+quan':>8s}{'TONG':>8s}")
-out={}
-for i,(name,rb,rf,rp) in enumerate(SC):
-    vb = sum(V.values())
-    if i==1:
-        m = (V['day']+V['vach truoc/sau']+V['vach trai/phai']+V['vach ngan'])/1e6*RHO['cocobolo'] \
-          + (V['khay quan']+V['khay phu kien'])/1e6*RHO['loi on dinh']
-    else:
-        m = vb/1e6*RHO[rb]
-    m += V_frame/1e6*RHO[rf] + V_panel/1e6*RHO[rp]
-    out[name]=m
-    print(f"  {name:50s}{m:7.2f}{m_tiles:8.2f}{m+m_tiles:8.2f}")
-M = max(out.values())+m_tiles
-print(f"\n  Truoc day (nap loi on dinh, khay cocobolo): 6,67 kg")
-print(f"  => Nap go do dac cong them ~{M-6.67:.2f} kg. Tai thiet ke P = {M*9.81*3:.0f} N")
-print(f"     (truoc la 215 N -> quai da tinh o buoc truoc VAN DU, khong phai tinh lai)")
+hr("5. KHOI LUONG — cau hinh da chot")
+print("  Khung nap = COCOBOLO (dong mau than). Chi tam nap la Nu go do.\n")
+print(f"  {'Cau tao khay':16s}{'go kg':>8s}{'+quan':>8s}{'TONG kg':>9s}{'tai TK':>9s}")
+for khay in ('cocobolo','loi on dinh'):
+    go,t,tot = B.mass(khay)
+    print(f"  {khay:16s}{go:8.2f}{t:8.2f}{tot:9.2f}{B.design_load(khay):8.0f} N")
+print(f"\n  Tai thiet ke {B.design_load('cocobolo'):.0f} N so voi 215 N o buoc truoc (+8 %).")
+print("  Kiem lai toan bo kiem ben quai: he so an toan thap nhat tut tu 10x xuong 9x.")
+print("  => Kich thuoc song khoa, chot xoay va quai GIU NGUYEN, khong phai sua.")
 
-hr("5b. KHUNG NAP LAM BANG GO GI? — anh mau cho thay khung va than CUNG MOT LOAI")
-print("  Anh mau: vien khung nap va than hop cung mot loai go sam mau.")
-print("  Neu than = cocobolo ma khung nap = go do thi HAI MAU KHAC NHAU, thay ro o mep nap.\n")
-print(f"  The tich khung 2 canh: {V_frame/1000:.0f} cm3\n")
-print(f"  {'Khung nap':16s}{'rho':>7s}{'khung kg':>10s}{'than+khay cocobolo':>21s}{'khay loi on dinh':>19s}")
-base_a = sum(V.values())/1e6*RHO['cocobolo']
-base_b = ((V['day']+V['vach truoc/sau']+V['vach trai/phai']+V['vach ngan'])/1e6*RHO['cocobolo']
-          + (V['khay quan']+V['khay phu kien'])/1e6*RHO['loi on dinh'])
-m_pan = V_panel/1e6*RHO['Nu go do']
-for lbl,rho in [('go do', RHO['go do dac']), ('cocobolo', RHO['cocobolo'])]:
-    mf = V_frame/1e6*rho
-    print(f"  {lbl:16s}{rho:7.2f}{mf:10.2f}{base_a+mf+m_pan+m_tiles:21.2f}{base_b+mf+m_pan+m_tiles:19.2f}")
-d = V_frame/1e6*(RHO['cocobolo']-RHO['go do dac'])
-print(f"\n  => Doi khung sang cocobolo cho dong mau voi than: +{d:.2f} kg.")
-print(f"     Tai thiet ke tang tu 217 N len {(base_a+V_frame/1e6*RHO['cocobolo']+m_pan+m_tiles)*9.81*3:.0f} N")
-print(f"     -> van nam trong tinh toan quai (da tinh o 215 N voi he so 3, du bien).")
-print(f"  Luu y thi cong neu chon cocobolo: go nhieu dau, moi mong-mong cua khung")
-print(f"  phai lau acetone NGAY truoc khi ep, neu khong khung se bong mong sau vai mua.")
-print(f"  Go do de dan hon nhieu - do la ly do ky thuat de giu khung bang go do.")
-print(f"  Duong trung dung: khung cocobolo dong mau than, tam Nu go do lam diem nhan.\n")
+hr("5b. MONG KHUNG BANG COCOBOLO — rui ro lon nhat cua phuong an nay")
+print("  Khung nap la ket cau 4 mong moi canh, 8 mong ca bo, giu tam Nu va mang mat mong.")
+print("  Cocobolo la mot trong nhung loai KHO DAN NHAT: chat chiet xuat (quinone) thoi")
+print("  len be mat vua gia cong trong vong vai phut va chan ket dinh.\n")
+for a_,b_ in [("Keo","EPOXY, khong dung PVA. PVA tren cocobolo la kieu hong da biet."),
+              ("Lau dau","Acetone hoac cong nghiep, lau NGAY truoc khi ep - trong vong 15 phut"),
+              ("",  "ke tu khi phay xong ma mong. Lau xong khong cham tay vao mat dan."),
+              ("Chot khoa","Chot go Ø5 XUYEN mong, khoan lech 0,8 mm (draw-bore)."),
+              ("",  "Muc dich KHONG phai chiu tai - moi mong chi chiu ~20 N - ma la"),
+              ("",  "de khung khong bung neu duong keo hong sau vai mua."),
+              ("Kiem tra","Ep thu 1 mong mau, de 7 ngay roi pha huy. Duong pha phai di qua"),
+              ("",  "THO GO, khong duoc di doc duong keo.")]:
+    print(f"   {a_:11s} {b_}" if a_ else f"   {'':11s} {b_}")
+print("\n  Neu khong lam duoc quy trinh nay o xuong: chuyen khung nap sang go do")
+print("  (de dan hon nhieu) va chap nhan lech mau o mep nap.")
 
 hr("6. TAM NU - YEU CAU MUA VA XU LY")
 print(f"  Can 2 tam da lang {pan_w:.0f} x {pan_l:.0f} x 12 (de bao {PAN_T:.0f}), lat sach book-match")
@@ -172,4 +149,10 @@ print("  CoP18 (2019) dua Afzelia spp. QUAN THE CHAU PHI vao Phu luc II CITES.")
 print("  Loai chau A (A. xylocarpa) va quy dinh Nhom IIA trong nuoc cua Viet Nam la hai")
 print("  chuyen KHAC NHAU va co the da thay doi. Tao viet theo tri nho.")
 print("  => BAT BUOC xac minh voi Co quan quan ly CITES VN + Chi cuc Kiem lam truoc khi mua.")
-print("     Cong voi cocobolo (Dalbergia, Phu luc II) - hop nay co HAI loai can kiem tra.")
+print("     Cong voi cocobolo (Dalbergia, Phu luc II) - hop nay co HAI loai can kiem tra.\n")
+print("  Khung nap cocobolo lam TANG go Dalbergia moi hop:")
+print(f"  {'Cau tao khay':16s}{'Dalbergia/hop':>15s}{'so hop toi da / lo':>21s}")
+for khay in ('cocobolo','loi on dinh'):
+    d=B.dalbergia_kg(khay)
+    print(f"  {khay:16s}{d:15.2f}{int(10//d):21d}")
+print("  (theo nguong mien tru 10 kg cua annotation #15 - PHAI xac minh lai)")
