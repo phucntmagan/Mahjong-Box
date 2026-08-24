@@ -63,6 +63,25 @@ Giải luôn: §3.1 review Rev B (cánh nắp cần lòng lõm) và vấn đề 
 Tải thiết kế **217 N** so với 215 N bước trước. **Toàn bộ tính toán quai, sống khóa, chốt xoay
 vẫn đủ — không phải tính lại.**
 
+## Khung nắp làm bằng gỗ gì?
+
+Trong ảnh mẫu, **viền khung nắp và thân hộp là cùng một loại gỗ sẫm màu**. Nếu thân là cocobolo
+mà khung nắp là gõ đỏ thì hai màu khác nhau, thấy rõ ngay ở mép nắp.
+
+| Khung nắp | ρ | Khung (kg) | Thân+khay cocobolo | Khay lõi ổn định |
+|---|---:|---:|---:|---:|
+| gõ đỏ | 0,82 | 0,75 | 7,37 kg | 6,60 kg |
+| cocobolo | 1,10 | 1,00 | **7,62 kg** | **6,85 kg** |
+
+Đổi khung sang cocobolo cho đồng màu thân: **+0,25 kg**, tải thiết kế 217 → 224 N — vẫn nằm
+trong tính toán quai.
+
+Đánh đổi kỹ thuật: cocobolo nhiều dầu, **mọi mộng–mộng của khung phải lau acetone ngay trước khi
+ép**, nếu không khung sẽ bong mộng sau vài mùa. Gõ đỏ dễ dán hơn nhiều — đó là lý do kỹ thuật
+để giữ khung bằng gõ đỏ.
+
+Đường trung dung: **khung cocobolo đồng màu thân, tấm Nu gõ đỏ làm điểm nhấn** — đúng như ảnh.
+
 ## Tấm Nu — mua và xử lý
 
 Cần 2 tấm đã lạng **121 × 302 × 12** (bào xuống 10), lạng liên tiếp để book-match.

@@ -127,6 +127,27 @@ print(f"\n  Truoc day (nap loi on dinh, khay cocobolo): 6,67 kg")
 print(f"  => Nap go do dac cong them ~{M-6.67:.2f} kg. Tai thiet ke P = {M*9.81*3:.0f} N")
 print(f"     (truoc la 215 N -> quai da tinh o buoc truoc VAN DU, khong phai tinh lai)")
 
+hr("5b. KHUNG NAP LAM BANG GO GI? — anh mau cho thay khung va than CUNG MOT LOAI")
+print("  Anh mau: vien khung nap va than hop cung mot loai go sam mau.")
+print("  Neu than = cocobolo ma khung nap = go do thi HAI MAU KHAC NHAU, thay ro o mep nap.\n")
+print(f"  The tich khung 2 canh: {V_frame/1000:.0f} cm3\n")
+print(f"  {'Khung nap':16s}{'rho':>7s}{'khung kg':>10s}{'than+khay cocobolo':>21s}{'khay loi on dinh':>19s}")
+base_a = sum(V.values())/1e6*RHO['cocobolo']
+base_b = ((V['day']+V['vach truoc/sau']+V['vach trai/phai']+V['vach ngan'])/1e6*RHO['cocobolo']
+          + (V['khay quan']+V['khay phu kien'])/1e6*RHO['loi on dinh'])
+m_pan = V_panel/1e6*RHO['Nu go do']
+for lbl,rho in [('go do', RHO['go do dac']), ('cocobolo', RHO['cocobolo'])]:
+    mf = V_frame/1e6*rho
+    print(f"  {lbl:16s}{rho:7.2f}{mf:10.2f}{base_a+mf+m_pan+m_tiles:21.2f}{base_b+mf+m_pan+m_tiles:19.2f}")
+d = V_frame/1e6*(RHO['cocobolo']-RHO['go do dac'])
+print(f"\n  => Doi khung sang cocobolo cho dong mau voi than: +{d:.2f} kg.")
+print(f"     Tai thiet ke tang tu 217 N len {(base_a+V_frame/1e6*RHO['cocobolo']+m_pan+m_tiles)*9.81*3:.0f} N")
+print(f"     -> van nam trong tinh toan quai (da tinh o 215 N voi he so 3, du bien).")
+print(f"  Luu y thi cong neu chon cocobolo: go nhieu dau, moi mong-mong cua khung")
+print(f"  phai lau acetone NGAY truoc khi ep, neu khong khung se bong mong sau vai mua.")
+print(f"  Go do de dan hon nhieu - do la ly do ky thuat de giu khung bang go do.")
+print(f"  Duong trung dung: khung cocobolo dong mau than, tam Nu go do lam diem nhan.\n")
+
 hr("6. TAM NU - YEU CAU MUA VA XU LY")
 print(f"  Can 2 tam da lang {pan_w:.0f} x {pan_l:.0f} x 12 (de bao {PAN_T:.0f}), lat sach book-match")
 print(f"  => khoi Nu tho toi thieu ~{pan_w+40:.0f} x {pan_l+40:.0f} x 40 de xe duoc 2 lat lien tiep")
