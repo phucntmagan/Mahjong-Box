@@ -17,6 +17,9 @@ nắp hai cánh vát với mộng gỗ và chốt xoay giấu kín.
 | `figs/*.svg` · `figs/*.png` | Hình vẽ thiết kế quai |
 | `tools/handle_calc.py` | Tính khối lượng, tải, kiểm bền quai |
 | `tools/draw_handle.py` · `tools/render_figs.sh` | Sinh và render hình vẽ |
+| `docs/NAP-GO-DAC.md` | Phương án nắp gỗ đặc (khung gỗ đỏ + tấm Nu thả) |
+| `build/Nap-go-dac-Mahjong.pdf` | Bản PDF phương án nắp gỗ đặc |
+| `tools/lid_solid_calc.py` · `tools/draw_lid.py` | Tính và vẽ phương án nắp gỗ đặc |
 
 ## Kết quả
 
@@ -37,7 +40,9 @@ Cộng 2 chi tiết công năng bị bỏ sót so với ảnh mẫu và 1 rủi 
 ```
 python3 tools/check_dimensions.py     # chuỗi kích thước hộp
 python3 tools/handle_calc.py          # khối lượng, tải, kiểm bền quai
+python3 tools/lid_solid_calc.py       # nắp gỗ đặc: giãn nở, kẹt mộng, khối lượng
 python3 tools/draw_handle.py          # sinh figs/*.svg
+python3 tools/draw_lid.py             # sinh figs/fig6, fig7
 ./tools/render_figs.sh                # SVG -> PNG
 ```
 
