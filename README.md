@@ -21,6 +21,10 @@ nắp hai cánh vát với mộng gỗ và chốt xoay giấu kín.
 | `build/Nap-go-dac-Mahjong.pdf` | Bản PDF phương án nắp gỗ đặc |
 | `tools/lid_solid_calc.py` · `tools/draw_lid.py` | Tính và vẽ phương án nắp gỗ đặc |
 | `tools/box_spec.py` | **Đặc tả vật liệu và hình học đã chốt** — nguồn sự thật cho khối lượng và tải |
+| `docs/DONG-HOC-BAN-LE.md` | Động học bản lề — giải điểm treo §2.5 |
+| `build/Dong-hoc-ban-le-Mahjong.pdf` | Bản PDF động học bản lề |
+| `tools/hinge_kinematics.py` · `tools/draw_hinge.py` | Suy trục xoay, quét va chạm, vẽ hình |
+| `tools/drawlib.py` | Helper vẽ SVG dùng chung |
 
 ## Kết quả
 
@@ -42,6 +46,7 @@ Cộng 2 chi tiết công năng bị bỏ sót so với ảnh mẫu và 1 rủi 
 python3 tools/check_dimensions.py     # chuỗi kích thước hộp
 python3 tools/handle_calc.py          # khối lượng, tải, kiểm bền quai
 python3 tools/box_spec.py             # đặc tả đã chốt: khối lượng, tải, Dalbergia/hộp
+python3 tools/hinge_kinematics.py     # trục xoay, quét va chạm, mặt chặn, chuỗi X
 python3 tools/lid_solid_calc.py       # nắp gỗ đặc: giãn nở, kẹt mộng, khối lượng
 python3 tools/draw_handle.py          # sinh figs/*.svg
 python3 tools/draw_lid.py             # sinh figs/fig6, fig7

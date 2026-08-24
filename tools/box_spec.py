@@ -24,6 +24,15 @@ K = {'doc tho': 0.0001, 'cocobolo ngang tho': 0.0016,
 
 M_TILE_G, N_TILES = 16.0, 152
 
+# ---------------------------------------------------------------- CHO QUYET DINH
+# tools/hinge_kinematics.py chung minh vach BAN LE phai day 18 (khong phai 10) de
+# chua duoc ong go ban kinh 9 quanh lo chot Ø6,2. Day KHONG phai tuy chon.
+# Chuoi X buoc phai doi; ba phuong an: 370 (khuyen nghi) / 366 / 362.
+# Cac tri so duoi day VAN o be rong 354 cho toi khi chot. Neu chon 370:
+#   +265 cm3 go -> +0,29 kg -> 8,22 kg -> tai thiet ke 242 N
+BOX_W_HIEN_TAI  = 354.0
+BOX_W_DE_XUAT   = 370.0     # chua chot
+
 # ------------------------------------------------------------------ hinh hoc
 LW, LL = 176.7, 350.0                    # canh nap
 ST_H, ST_S, RAIL = 34.0, 34.0, 30.0      # do doc canh mong / canh khe giua / do ngang
