@@ -15,19 +15,19 @@ giữa, đè lên cả hai cánh, mang quai da ở giữa, giữ xuống hai tr�
 
 ## Khối lượng — con số quyết định
 
-Cấu hình chốt: thân, khay, khung nắp, sống khóa = **cocobolo**; tấm nắp = **Nu gõ đỏ**;
+Cấu hình chốt: thân, khay, khung nắp, sống khóa = **cocobolo** (ρ 1,00); tấm nắp = **Nu gõ đỏ**;
 quai = **da bò**. Nguồn sự thật: `tools/box_spec.py`.
 
 | Cấu tạo khay | Gỗ | + Quân | TỔNG |
 |---|---:|---:|---:|
-| Khay cocobolo | 5,49 | 2,43 | **7,92 kg** |
-| Khay lõi ổn định | 4,72 | 2,43 | **7,15 kg** |
+| Khay cocobolo | 5,05 | 2,43 | **7,48 kg** |
+| Khay lõi ổn định | 4,43 | 2,43 | **6,86 kg** |
 
-7,9 kg một tay là nặng — hơn chiếc cặp laptop đầy. **Đòn bẩy duy nhất còn lại là khay**
-(chênh 0,77 kg); không còn đòn bẩy nào khác mà không đổi vật liệu vỏ.
+7,5 kg một tay là nặng — hơn chiếc cặp laptop đầy. **Đòn bẩy duy nhất còn lại là khay**
+(chênh 0,62 kg); 2,43 kg quân cờ là cố định.
 
-Tải thiết kế: **P = 233 N** (7,92 kg × hệ số động 3), 117 N mỗi điểm neo.
-Kiểm chứng: treo **32 kg / 60 s** + **5.000 chu kỳ** nhấc–đặt.
+Tải thiết kế: **P = 220 N** (7,48 kg × hệ số động 3), 110 N mỗi điểm neo.
+Kiểm chứng: treo **30 kg / 60 s** + **5.000 chu kỳ** nhấc–đặt.
 
 ## Vì sao quai phải nằm giữa nóc
 
@@ -55,22 +55,22 @@ Mặt trên chỉ có bốn chỗ neo được:
 | Chi tiết chuyển động | 2 | 4 | 0 |
 | Kim loại | không | không | không |
 | Da | có | không | không |
-| Tay xách | một tay · 7,92 kg | một tay · 7,92 kg | hai tay · 3,96 kg/tay |
+| Tay xách | một tay · 7,48 kg | một tay · 7,48 kg | hai tay · 3,74 kg/tay |
 | Rủi ro chế tạo | trung bình | cao | thấp |
 
 **Khuyến nghị A.** Chọn B nếu khách đòi không dùng da (giá: +16 mm chiều cao, thêm 2 khớp mòn).
-Ở 7,9 kg, **C không còn là phương án dự phòng mà là lựa chọn nghiêm túc**: 3,96 kg mỗi tay.
+Ở 7,5 kg, **C không còn là phương án dự phòng mà là lựa chọn nghiêm túc**: 3,74 kg mỗi tay.
 
 ## Kiểm bền phương án A
 
 | Bộ phận | Tính | Cho phép | Hệ số |
 |---|---|---:|---:|
-| Sống — uốn tại hốc quai | 11,8 MPa | 110 (MOR) | 9× |
-| Sống — võng giữa nhịp | 0,92 mm | 1,14 (L/300) | đạt |
-| Chốt — cắt qua lưỡi | 0,91 MPa | ~14 | 15× |
-| Chốt — ép mặt gỗ | 0,73 MPa | ~10 | 14× |
-| Da — kéo | 0,97 MPa | ~20 | 21× |
-| Đường chỉ khóa, 8 mũi | 233 N | 720 N | 3,1× |
+| Sống — uốn tại hốc quai | 11,2 MPa | 110 (MOR) | 10× |
+| Sống — võng giữa nhịp | 0,87 mm | 1,14 (L/300) | đạt |
+| Chốt — cắt qua lưỡi | 0,86 MPa | ~14 | 16× |
+| Chốt — ép mặt gỗ | 0,69 MPa | ~10 | 14× |
+| Da — kéo | 0,92 MPa | ~20 | 22× |
+| Đường chỉ khóa, 8 mũi | 220 N | 720 N | 3,3× |
 
 Hai cảnh báo không nằm trong bảng:
 
@@ -97,15 +97,15 @@ Khung nắp cocobolo đẩy lượng gỗ *Dalbergia* mỗi hộp lên cao:
 
 | Cấu tạo khay | Dalbergia / hộp | 3 hộp | Tối đa mỗi lô |
 |---|---:|---:|---:|
-| Khay cocobolo | 4,84 kg | 14,51 | **2 hộp** |
-| Khay lõi ổn định | 3,21 kg | 9,62 | **3 hộp** |
+| Khay cocobolo | 4,40 kg | 13,19 | **2 hộp** |
+| Khay lõi ổn định | 2,92 kg | 8,75 | **3 hộp** |
 
 Theo ngưỡng miễn trừ 10 kg của annotation #15 — phải xác minh bản hiện hành.
 Đây là **lý do thương mại** để chọn khay lõi ổn định, độc lập với lý do khối lượng.
 
 ## Cần chốt trước khi vẽ chi tiết
 
-1. Khay cocobolo (7,92 kg) hay lõi ổn định (7,15 kg)? → quyết định A/B hay C, và số hộp mỗi lô CITES
+1. Khay cocobolo (7,48 kg) hay lõi ổn định (6,86 kg)? → quyết định A/B hay C, và số hộp mỗi lô CITES
 2. Có dùng da không? → A hay B
 3. Chấp nhận phủ bì 83 mm và hai trụ nhô 6 mm? → nếu không thì chỉ còn C
 4. **Động học bản lề (review Rev B §2.5) đã chốt chưa?**

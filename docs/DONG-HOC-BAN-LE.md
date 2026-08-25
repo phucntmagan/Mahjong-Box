@@ -73,26 +73,26 @@ thành mỗi bên — không dùng được.
 
 **370 × 350** gần vuông, tỷ lệ đẹp hơn 354 × 350. Cánh nắp 184,2 mỗi bên, sống khóa X 163…207.
 
-## Ngưỡng CITES tụt xuống 1 hộp mỗi lô
+## Ngưỡng CITES — biên chỉ còn 7 %
 
-Ở bề rộng 370 với khay cocobolo, lượng *Dalbergia* mỗi hộp lên **5,13 kg** — hai hộp là 10,26 kg,
-vượt ngưỡng miễn trừ 10 kg. Ở 354 vẫn còn 2 hộp.
+Ở bề rộng 370 với khay cocobolo, lượng *Dalbergia* mỗi hộp là **4,66 kg** (ρ 1,00) — hai hộp
+9,32 kg, **vẫn lọt ngưỡng miễn trừ 10 kg**. Nhưng biên chỉ còn 7 %: lô gỗ về nặng hơn dự kiến là
+tụt xuống 1 hộp/lô. Khay lõi ổn định (3,18 kg/hộp) cho 3 hộp và bỏ hẳn rủi ro này.
 
-Muốn giữ 2 hộp ở bề rộng 370: chuyển khay sang lõi ổn định (3,50 kg/hộp) hoặc dùng cocobolo nhẹ hơn.
-
-## Khối lượng — lần thứ ba đi lên
+## Khối lượng
 
 | Mốc | Khối lượng | Tải TK |
 |---|---:|---:|
 | Bản đầu (ước, thiếu sống khóa) | 7,30 kg | 215 N |
 | Chốt khung cocobolo + tính cả sống khóa | 7,92 kg | 233 N |
-| Vách bản lề 18, hộp 370 | **8,22 kg** | 242 N |
+| Chốt ρ cocobolo = 1,00 | 7,48 kg | 220 N |
+| Vách bản lề 18, hộp 370 | **7,75 kg** | 228 N |
 
-Kiểm lại ở 242 N: sống uốn 12,3 MPa (hệ số 9×), võng 0,96 mm < 1,14, chốt xoay 0,95 MPa,
-chỉ khâu hệ số 3,0×. **Vẫn đạt hết — không phải sửa kích thước nào.**
+Kiểm lại ở 228 N: sống uốn 11,5 MPa (hệ số 10×), võng 0,90 mm < 1,14, chốt xoay 0,89 MPa,
+chỉ khâu hệ số 3,2×. **Đạt hết — không phải sửa kích thước nào.**
 
-Nhưng đây là lần thứ ba khối lượng đi lên. Ở 8,2 kg, xách một tay làm được 1–2 phút chứ không hơn.
-Hai đòn bẩy duy nhất còn lại: khay lõi ổn định (−0,77 kg) và phương án C (hốc âm hai tay).
+Chốt ρ = 1,00 kéo lại gần nửa cân. Nhưng 2,43 kg quân cờ là cố định nên vẫn còn 7,75 kg.
+Hai đòn bẩy còn lại: khay lõi ổn định (−0,62 kg) và phương án C (hốc âm hai tay).
 
 ## Chốt trị số cho HD-01
 

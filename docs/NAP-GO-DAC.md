@@ -56,12 +56,11 @@ Giải luôn: §3.1 review Rev B (cánh nắp cần lòng lõm) và vấn đề 
 
 | Cấu tạo khay | Gỗ | + Quân | TỔNG |
 |---|---:|---:|---:|
-| Khay cocobolo | 5,49 | 2,43 | **7,92 kg** |
-| Khay lõi ổn định | 4,72 | 2,43 | **7,15 kg** |
+| Khay cocobolo | 5,05 | 2,43 | **7,48 kg** |
+| Khay lõi ổn định | 4,43 | 2,43 | **6,86 kg** |
 
-Tải thiết kế **233 N** so với 215 N bước trước (+8 %). Hệ số an toàn thấp nhất tụt từ 10× xuống
-**9×**, võng sống từ 0,85 lên 0,92 mm (giới hạn 1,14). **Kích thước sống khóa, chốt xoay và quai
-giữ nguyên — không phải sửa.**
+Tải thiết kế **220 N** (ρ cocobolo chốt 1,00). Hệ số an toàn thấp nhất **10×**, võng sống 0,87 mm
+trên giới hạn 1,14. **Kích thước sống khóa, chốt xoay và quai giữ nguyên — không phải sửa.**
 
 ## Mộng khung bằng cocobolo — rủi ro lớn nhất
 
@@ -112,8 +111,8 @@ Khung nắp cocobolo còn quyết định số hộp gửi được mỗi lô h�
 
 | Cấu tạo khay | Dalbergia / hộp | 3 hộp | Tối đa mỗi lô |
 |---|---:|---:|---:|
-| Khay cocobolo | 4,84 kg | 14,51 | **2 hộp** |
-| Khay lõi ổn định | 3,21 kg | 9,62 | **3 hộp** |
+| Khay cocobolo | 4,40 kg | 13,19 | **2 hộp** |
+| Khay lõi ổn định | 2,92 kg | 8,75 | **3 hộp** |
 
 ## Thay đổi so với bản trước
 

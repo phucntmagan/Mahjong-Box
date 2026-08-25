@@ -64,7 +64,7 @@ figure img { width: 100%; max-width: 100%; display: block; }
 <div class="meta">
 <b>Nghiên cứu thiết kế</b> · quai xách kiểu vali, gỗ và da, không kim loại · <b>Đơn vị:</b> mm<br>
 <b>Cơ sở:</b> hình học Rev C (354 × 350 × 67) · vật liệu chốt tại <code>tools/box_spec.py</code><br>
-<b>Vật liệu:</b> thân, khay, khung nắp, sống khóa = cocobolo · tấm nắp = Nu gõ đỏ · quai = da bò<br>
+<b>Vật liệu:</b> thân, khay, khung nắp, sống khóa = cocobolo (ρ 1,00) · tấm nắp = Nu gõ đỏ · quai = da bò<br>
 <b>Công cụ:</b> tools/handle_calc.py · tools/draw_handle.py — chạy lại được
 </div></div>
 
@@ -82,20 +82,20 @@ vấn đề §3.2 còn treo trong review Rev B. <b>Một chi tiết, ba việc.<
 cộng 152 quân ở 16 g/quân:</p>
 <table>
 <tr><th style="width:46%">Cấu tạo khay</th><th class="n">Gỗ (kg)</th><th class="n">+ Quân (kg)</th><th class="n">TỔNG (kg)</th></tr>
-<tr><td>Khay cocobolo</td><td class="n">5,49</td><td class="n">2,43</td><td class="n bad">7,92</td></tr>
-<tr><td>Khay lõi ổn định</td><td class="n">4,72</td><td class="n">2,43</td><td class="n">7,15</td></tr>
+<tr><td>Khay cocobolo</td><td class="n">5,05</td><td class="n">2,43</td><td class="n bad">7,48</td></tr>
+<tr><td>Khay lõi ổn định</td><td class="n">4,43</td><td class="n">2,43</td><td class="n">6,86</td></tr>
 </table>
-<div class="warn"><b>7,9 kg một tay là nặng.</b> Mốc so sánh: 5 kg là giới hạn hành lý xách tay
+<div class="warn"><b>7,5 kg một tay là nặng.</b> Mốc so sánh: 5 kg là giới hạn hành lý xách tay
 thoải mái; 7 kg là chiếc cặp laptop đầy — xách được 2–3 phút rồi phải đổi tay; 10 kg là ngưỡng
 khuyến cáo cho xách một tay liên tục.<br><br>
-Cấu hình đã chốt (thân, khay, khung nắp, sống khóa đều cocobolo) đẩy khối lượng lên 7,9 kg.
-<b>Đòn bẩy duy nhất còn lại là khay:</b> chuyển khay sang lõi ổn định được 7,15 kg — chênh 0,77 kg.
-Không còn đòn bẩy nào khác mà không đổi vật liệu vỏ. Ở mức này, <b>phương án C (hốc âm hai tay)
-đáng cân nhắc lại</b>: 3,96 kg mỗi tay thay vì 7,92 kg một tay.</div>
+Cấu hình đã chốt (thân, khay, khung nắp, sống khóa đều cocobolo, ρ 1,00) cho 7,48 kg.
+<b>Đòn bẩy duy nhất còn lại là khay:</b> chuyển khay sang lõi ổn định được 6,86 kg — chênh 0,62 kg.
+Không còn đòn bẩy nào khác mà không đổi vật liệu vỏ — 2,43 kg quân cờ là cố định.
+Ở mức này, <b>phương án C (hốc âm hai tay)</b> vẫn đáng cân nhắc: 3,74 kg mỗi tay.</div>
 
-<div class="num"><b>Tải thiết kế.</b> Lấy trường hợp nặng nhất 7,92 kg, hệ số động 3 (đi bộ, lắc tay,
-đặt xuống mạnh) → <b>P = 233 N</b>, chia đều hai điểm neo là <b>117 N mỗi điểm</b>.
-Yêu cầu kiểm chứng: treo <b>32 kg trong 60 giây</b> không biến dạng dư, và <b>5.000 chu kỳ</b>
+<div class="num"><b>Tải thiết kế.</b> Lấy trường hợp nặng nhất 7,48 kg, hệ số động 3 (đi bộ, lắc tay,
+đặt xuống mạnh) → <b>P = 220 N</b>, chia đều hai điểm neo là <b>110 N mỗi điểm</b>.
+Yêu cầu kiểm chứng: treo <b>30 kg trong 60 giây</b> không biến dạng dư, và <b>5.000 chu kỳ</b>
 nhấc–đặt không rơ.</div>
 
 <h2>2. Quai chỉ có một chỗ đặt đúng</h2>
@@ -152,12 +152,12 @@ cánh trái là sống đi theo.</p>
 <h3>Kiểm bền</h3>
 <table>
 <tr><th style="width:30%">Bộ phận</th><th style="width:30%">Ứng suất tính</th><th class="n" style="width:20%">Cho phép</th><th class="n" style="width:20%">Hệ số</th></tr>
-<tr><td>Sống — uốn tại hốc quai</td><td>11,8 MPa</td><td class="n">110 (MOR)</td><td class="n ok">9×</td></tr>
-<tr><td>Sống — võng giữa nhịp</td><td>0,92 mm</td><td class="n">1,14 (L/300)</td><td class="n ok">đạt</td></tr>
-<tr><td>Chốt — cắt qua lưỡi</td><td>0,91 MPa</td><td class="n">~14</td><td class="n ok">15×</td></tr>
-<tr><td>Chốt — ép mặt gỗ</td><td>0,73 MPa</td><td class="n">~10</td><td class="n ok">14×</td></tr>
-<tr><td>Da — kéo</td><td>0,97 MPa</td><td class="n">~20</td><td class="n ok">21×</td></tr>
-<tr><td>Đường chỉ khóa — 8 mũi</td><td>233 N</td><td class="n">720 N</td><td class="n ok">3,1×</td></tr>
+<tr><td>Sống — uốn tại hốc quai</td><td>11,2 MPa</td><td class="n">110 (MOR)</td><td class="n ok">10×</td></tr>
+<tr><td>Sống — võng giữa nhịp</td><td>0,87 mm</td><td class="n">1,14 (L/300)</td><td class="n ok">đạt</td></tr>
+<tr><td>Chốt — cắt qua lưỡi</td><td>0,86 MPa</td><td class="n">~14</td><td class="n ok">16×</td></tr>
+<tr><td>Chốt — ép mặt gỗ</td><td>0,69 MPa</td><td class="n">~10</td><td class="n ok">14×</td></tr>
+<tr><td>Da — kéo</td><td>0,92 MPa</td><td class="n">~20</td><td class="n ok">22×</td></tr>
+<tr><td>Đường chỉ khóa — 8 mũi</td><td>220 N</td><td class="n">720 N</td><td class="n ok">3,3×</td></tr>
 </table>
 <div class="warn"><b>Gỗ thừa sức chịu tải tức thời. Điểm yếu thật là MÒN.</b> Sau 5.000 chu kỳ
 nhấc–đặt, lỗ chốt gỗ sẽ ô-van hóa và chốt bắt đầu rơ. Bắt buộc: <b>lót ổ chốt bằng gỗ cực cứng</b>
@@ -187,7 +187,7 @@ Zero cơ cấu, zero chi tiết mòn, zero rủi ro, không đổi phủ bì.</p
 hộp luôn được bê ngang nên không cần khóa nắp cho việc di chuyển. Vẫn phải giải bài toán khóa
 nắp riêng.</p>
 <p>Với cấu hình đã chốt (7,9 kg) thì đây không còn là phương án dự phòng nữa mà là lựa chọn
-nghiêm túc: 3,96 kg mỗi tay là thoải mái, còn 7,92 kg một tay thì không.</p>
+nghiêm túc: 3,74 kg mỗi tay là thoải mái, còn 7,48 kg một tay thì không.</p>
 </div>
 
 <h2>6. So sánh</h2>
@@ -199,7 +199,7 @@ nghiêm túc: 3,96 kg mỗi tay là thoải mái, còn 7,92 kg một tay thì kh
 <tr><td>Chi tiết chuyển động</td><td>2 chốt xoay</td><td>2 chốt + 2 khớp bail</td><td class="ok">0</td></tr>
 <tr><td>Kim loại</td><td class="ok">Không</td><td class="ok">Không</td><td class="ok">Không</td></tr>
 <tr><td>Da</td><td>Có</td><td class="ok">Không</td><td class="ok">Không</td></tr>
-<tr><td>Tay xách</td><td>Một tay · 7,92 kg</td><td>Một tay · 7,92 kg</td><td class="ok">Hai tay · 3,96 kg/tay</td></tr>
+<tr><td>Tay xách</td><td>Một tay · 7,48 kg</td><td>Một tay · 7,48 kg</td><td class="ok">Hai tay · 3,74 kg/tay</td></tr>
 <tr><td>Rủi ro chế tạo</td><td>Trung bình</td><td>Cao</td><td class="ok">Thấp</td></tr>
 </table>
 
@@ -220,8 +220,8 @@ nghiêm túc: 3,96 kg mỗi tay là thoải mái, còn 7,92 kg một tay thì kh
 10 kg của annotation #15 vẫn đúng như tôi nhớ (<b>phải xác minh</b>), số hộp tối đa mỗi lô hàng là:</p>
 <table>
 <tr><th style="width:34%">Cấu tạo khay</th><th class="n">Dalbergia / hộp</th><th class="n">2 hộp</th><th class="n">3 hộp</th><th class="n">Tối đa / lô</th></tr>
-<tr><td>Khay cocobolo</td><td class="n">4,84 kg</td><td class="n">9,67</td><td class="n bad">14,51</td><td class="n bad">2 hộp</td></tr>
-<tr><td>Khay lõi ổn định</td><td class="n">3,21 kg</td><td class="n">6,42</td><td class="n ok">9,62</td><td class="n ok">3 hộp</td></tr>
+<tr><td>Khay cocobolo</td><td class="n">4,40 kg</td><td class="n">8,79</td><td class="n bad">13,19</td><td class="n bad">2 hộp</td></tr>
+<tr><td>Khay lõi ổn định</td><td class="n">2,92 kg</td><td class="n">5,83</td><td class="n ok">8,75</td><td class="n ok">3 hộp</td></tr>
 </table>
 <div class="warn">Đây là <b>lý do thương mại</b> để chọn khay lõi ổn định, độc lập với lý do khối lượng:
 nó quyết định gửi được 2 hay 3 hộp mỗi lô hàng.</div>
@@ -229,7 +229,7 @@ nó quyết định gửi được 2 hay 3 hộp mỗi lô hàng.</div>
 <h2>8. Việc cần chốt trước khi vẽ chi tiết</h2>
 <table>
 <tr><th class="c" style="width:6%">#</th><th style="width:48%">Quyết định</th><th>Ảnh hưởng</th></tr>
-<tr><td class="c">1</td><td>Khay cocobolo (7,92 kg) hay lõi ổn định (7,15 kg)?</td><td>Quyết định luôn A/B hay C — và số hộp mỗi lô hàng CITES</td></tr>
+<tr><td class="c">1</td><td>Khay cocobolo (7,48 kg) hay lõi ổn định (6,86 kg)?</td><td>Quyết định luôn A/B hay C — và số hộp mỗi lô hàng CITES</td></tr>
 <tr><td class="c">2</td><td>Có dùng da không?</td><td>A hay B; chênh 16 mm chiều cao</td></tr>
 <tr><td class="c">3</td><td>Chấp nhận phủ bì 83 mm và hai trụ nhô 6 mm?</td><td>Nếu không thì chỉ còn C</td></tr>
 <tr><td class="c">4</td><td>Động học bản lề (review Rev B §2.5) đã chốt chưa?</td><td>Vị trí trục xoay đổi thì biên dạng đầu cánh đổi theo — sống khóa bám vào đó</td></tr>

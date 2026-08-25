@@ -12,8 +12,11 @@ CHOT (24-08-2026):
 import math
 
 # ------------------------------------------------------------------ vat lieu
+# Tri so cocobolo cong bo thuong 1,05-1,10 (go chim trong nuoc). Chot 1,00 theo
+# lo hang thuc te. Do nhay: sai 10 % ty trong -> tai thiet ke doi 6 %, he so an
+# toan thap nhat 10x -> 9x. Bien du rong, khong can thiet ke theo dau nang.
 RHO = {                       # g/cm3
-    'cocobolo'     : 1.10,
+    'cocobolo'     : 1.00,   # CHOT 24-08-2026 theo lo go thuc te
     'Nu go do'     : 0.90,
     'go do dac'    : 0.82,
     'loi on dinh'  : 0.58,
