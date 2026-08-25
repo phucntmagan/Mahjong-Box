@@ -73,6 +73,13 @@ thành mỗi bên — không dùng được.
 
 **370 × 350** gần vuông, tỷ lệ đẹp hơn 354 × 350. Cánh nắp 184,2 mỗi bên, sống khóa X 163…207.
 
+## Ngưỡng CITES tụt xuống 1 hộp mỗi lô
+
+Ở bề rộng 370 với khay cocobolo, lượng *Dalbergia* mỗi hộp lên **5,13 kg** — hai hộp là 10,26 kg,
+vượt ngưỡng miễn trừ 10 kg. Ở 354 vẫn còn 2 hộp.
+
+Muốn giữ 2 hộp ở bề rộng 370: chuyển khay sang lõi ổn định (3,50 kg/hộp) hoặc dùng cocobolo nhẹ hơn.
+
 ## Khối lượng — lần thứ ba đi lên
 
 | Mốc | Khối lượng | Tải TK |

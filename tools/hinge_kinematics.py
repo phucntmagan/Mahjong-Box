@@ -147,7 +147,11 @@ dV = ((NEWW-354)*350*8                      # day rong them
 dm = dV/1e6*B.RHO['cocobolo']
 print(f"            the tich go +{dV/1000:.0f} cm3 -> +{dm:.2f} kg -> tong "
       f"{B.mass('cocobolo')[2]+dm:.2f} kg, tai TK {(B.mass('cocobolo')[2]+dm)*9.81*3:.0f} N")
-print(f"            Dalbergia/hop {B.dalbergia_kg('cocobolo')+dm:.2f} kg -> van 2 hop/lo")
+dal = B.dalbergia_kg('cocobolo')+dm
+print(f"            Dalbergia/hop {dal:.2f} kg -> {int(10//dal)} hop/lo hang "
+      f"(nguong mien tru 10 kg)")
+if int(10//dal) < 2:
+    print(f"            CANH BAO: tut xuong 1 hop/lo. O be rong 354 con duoc 2 hop.")
 
 hr("7. CHOT LAI CAC TRI SO CHO HD-01")
 for a,b in [("Truc xoay", f"X = {PX:.0f} tu mat ngoai vach, Z = {PZ:.0f} tu mat ban"),
