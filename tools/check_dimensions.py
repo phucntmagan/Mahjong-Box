@@ -3,6 +3,10 @@
 Kiem tra doc lap toan bo chuoi kich thuoc cua ban ve
 "Ban ve san xuat hop Mahjong 152 quan - Rev B" (BURLORA).
 
+Script nay kiem BAN VE DA NHAN, nen cac tri so Rev B duoi day CO CHU DINH go
+cung — chung la doi tuong duoc kiem, khong phai dac ta. Dac ta hien hanh nam
+o tools/box_spec.py; muc 9 o cuoi doi chieu Rev B voi dac ta do.
+
 Chay:  python3 tools/check_dimensions.py
 Khong phu thuoc thu vien ngoai.
 
@@ -10,7 +14,10 @@ Quy uoc: don vi mm. Z=0 la mat ban. Truc X chay theo canh 354,
 X=0 tai canh co mong trai, X=177 tai khe rap giua nap.
 """
 
-import math
+import math, os, sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import box_spec as BS
+S = BS.derive()
 
 IN = 25.4
 
@@ -195,7 +202,7 @@ note(False, "14-24 mm rong khong duoc giao nhiem vu, khong co khoa nap, khong co
             "chi tiet ep khay -> khay va quan se xoc khi van chuyen.")
 
 print()
-print("  --- Phuong an ha chieu cao (Rev C de xuat) ---")
+print("  --- Phuong an ha chieu cao (de xuat luc review; da duoc thay bang dac ta o muc 9) ---")
 CLR = 1.0
 rimC = tray_top + CLR
 bodyC_hinge = rimC - foot
@@ -241,6 +248,40 @@ check("Joker 4/lop x 2 lop", 4 * 2, 8)
 check("TONG", 4 * 3 * 12 + 4 * 2, 152)
 print(f"  + 4 quan du phong o hoc phu (de xuat) -> {152+4} quan")
 
+
+print()
+print("=" * 78)
+print("9. DOI CHIEU Rev B  <->  DAC TA DA CHOT (tools/box_spec.py)")
+print("=" * 78)
+print(f"  {'hang muc':24s}{'Rev B':>22s}{'da chot':>26s}   nguyen nhan doi")
+CMP = [
+  ("Chuoi X (be rong)", "10+126+6+70+6+126+10",
+   f"{S['WALL_HINGE']:.0f}+{S['BAY']:.0f}+{S['DIV']:.0f}+{S['AC_BAY']:.0f}+"
+   f"{S['DIV']:.0f}+{S['BAY']:.0f}+{S['WALL_HINGE']:.0f}",
+   "vach ban le phai chua ong go R9"),
+  ("Phu bi X", "354", f"{S['W']:.0f}", ""),
+  ("Phu bi Y", "350", f"{S['Y_OA']:.0f}", "hoc am hai tay noi ra 12 moi ben"),
+  ("Phu bi Z", "80", f"{S['Z_OA']:.0f}", "ha chieu cao + bo song khoa + day 6"),
+  ("Day hop", "8", f"{BS.BOT:.0f}", "giam can; kiem uon he so 864x"),
+  ("Day nap tai mong", "18", f"{BS.T_HINGE:.0f}", ""),
+  ("Day nap tai khe giua", "8", f"{BS.T_SEAM:.0f}", "de phay duoc, bo canh dao 8 mm"),
+  ("Goc vat mat duoi nap", "3,24 do", f"{S['ANG']:.3f} do",
+   "Rev B tinh tren 176,7; dung ra tinh tren doan vat that"),
+  ("Khe rap giua", "0,6", f"{BS.SEAM}", "gian no khung go dac o dMC 5 %"),
+  ("Canh nap", "176,7 tam lien", f"{S['LW']:.2f} khung + tam tha",
+   "Nu dac ket ban le o dMC 4,1 %"),
+  ("Chot ban le", "1 x O6 x 322", "2 x O6 x 160", "khong khoan duoc 322 mm"),
+  ("Lo chot", "O6,35", f"O{BS.D_PIN:.2f}", "khe 0,35-0,40 qua long, canh se ro"),
+  ("Ranh Joker", "150", f"{BS.AC_JOKER[1]:.0f}", "lo quan +0,5 thi khe am"),
+  ("Khay phu kien AC-01", "325 x 68 x 38",
+   f"{S['AC_L']:.0f} x {S['AC_W_OUT']:.0f} x {BS.AC_H:.0f}", ""),
+]
+for a, x, y, why in CMP:
+    print(f"  {a:24s}{x:>22s}{y:>26s}   {why}")
+print()
+print(f"  Khoi luong: {BS.mass_of(S,'cocobolo')[2]:.2f} kg (khay cocobolo) / "
+      f"{BS.mass_of(S,'loi on dinh')[2]:.2f} kg (khay loi on dinh)")
+print(f"  Rev B khong tinh khoi luong o bat ky sheet nao.")
 
 print()
 print("=" * 78)

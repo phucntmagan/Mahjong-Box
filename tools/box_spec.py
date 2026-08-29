@@ -7,11 +7,15 @@ duoc viet lai mot con so hinh hoc.
 CHOT:
   Than, khay, khung nap, song khoa, chot xoay : COCOBOLO (Dalbergia retusa)
   Tam nap                                      : NU GO DO (Afzelia xylocarpa, burl)
-  Quai (chi phuong an A)                       : DA BO BRIDLE
   Nap = khung go dac om tam Nu THA trong ranh (khong phai tam lien)
-  Be rong: chuoi X = 370  (CHOT 29-08-2026, xem tools/width_options.py)
+  Be rong  : chuoi X = 370          (CHOT 29-08-2026, tools/width_options.py)
+  Xach     : PHUONG AN C, hoc am hai tay  (CHOT 29-08-2026, tools/handle_option_c.py)
+             -> phu bi Y = 374, khong con song khoa, khong con quai da
+  Day hop  : 8 -> 6                 (CHOT 29-08-2026, giam can)
+  Tam Nu   : 10 -> 8                (CHOT 29-08-2026, giam can VA de lay du lip
+             cho ranh om tam o do doc canh khe giua - xem selfcheck)
 
-Hai phuong an xach, chua chot:
+Hai phuong an xach:
   A  song khoa cocobolo 44 x 20 doc khe rap giua + quai da, 2 chot xoay 1/4 vong
      -> xach MOT tay, giai luon khoa nap va do mep tu do cua nap
   C  hai hoc am long ban tay phay vao vach truoc/sau, khong co co cau nao
@@ -57,7 +61,7 @@ WALL_FB    = 10.0        # vach truoc/sau
 INNER_Y    = 330.0       # long hop theo Y
 
 # --- phuong an xach
-HANDLE     = 'A'         # 'A' song khoa + quai da  |  'C' hoc am hai tay
+HANDLE     = 'C'         # CHOT: 'C' hoc am hai tay ('A' song khoa + quai da)
 POST_W     =  44.0       # (A) be rong tru quai, bang be rong song khoa
 POST_OUT   =   6.0       # (A) tru nho ra ngoai
 POST_IN    =   4.0       # (A) tru an vao trong
@@ -67,7 +71,8 @@ RIB_W      =  16.0       # (C) song noi giua tren AC-01 do mep tu do cua nap
 
 # --- Z (chieu cao), Z=0 la mat ban
 FOOT   =  2.0            # chan dem
-BOT    =  8.0            # day hop
+BOT    =  6.0            # day hop (8 -> 6)
+BOT_TON=  4.0            # mong day chay vao ranh trong vach
 TRAY_H = 19.0            # chieu cao mot khay quan
 N_STACK = 2              # so khay chong trong mot khoang
 CLR_Z  =  1.0            # khe tren dinh khay
@@ -79,8 +84,12 @@ SPINE_T, SPINE_INSET = 20.0, 4.0   # (A) song khoa day 20, am 4 vao nap
 SEAM    = 1.5            # khe rap giua (0,6 -> 1,5 vi gian no khung go dac)
 STILE   = 34.0           # be rong do doc (ca hai canh)
 RAIL    = 30.0           # be rong do ngang
-GRV, TON, GRV_W = 9.0, 6.0, 6.0    # ranh sau 9 / mong tam dai 6 / ranh rong 6
-PAN_T   = 10.0           # day tam Nu
+PAN_T   =  8.0           # day tam Nu (10 -> 8)
+GRV     =  9.0           # ranh om tam: sau 9
+TON     =  6.0           # canh tam an vao ranh 6 -> tam THA 3 mm moi phia
+GRV_W   = PAN_T          # ranh rong dung bang day tam: tam KHONG bi phay bac.
+                         # Nu tho xoan loan, mot bac 1,5 mm tren canh tam la cho nut.
+S_TOP   =  3.0           # lip khung phia TREN ranh - do la be mat nhin thay
 LID_L   = 350.0          # chieu dai canh nap (theo Y, khong ke tru/hoc am)
 
 # --- ban le
@@ -101,6 +110,7 @@ AC_WALL = 5.0
 AC_JOKER = (28.0, 152.0, 24.5)    # ranh Joker (rong, dai, sau)
 AC_AUX_L, AC_AUX_D = 80.0, 18.5   # hoc 4 quan du phong (dai, sau)
 AC_DICE_D = 18.5                  # o xuc xac (sau); chieu dai = phan con lai
+AC_CLR   =  2.5                   # khe moi dau khay trong khoang (bang khay quan)
 
 # ============================================================== SUY RA
 # Toan bo hinh hoc suy ra tu chuoi X va phuong an xach. Tach thanh ham de so
@@ -123,7 +133,8 @@ def derive(wall_hinge=WALL_HINGE, bay=BAY, div=DIV, ac_bay=AC_BAY, handle=HANDLE
     GRIP_OUT = grip_out
     NHO_RA  = max(post_out, grip_out)
     Y_OA    = Y_BODY + 2*NHO_RA                          # phu bi Y
-    AC_Y    = INNER_Y - 2*post_in                        # dai khay phu kien AC-01
+    AC_Y    = INNER_Y - 2*post_in                        # LONG khoang phu kien theo Y
+    AC_L    = AC_Y - 2*AC_CLR                            # DAI khay AC-01 (khe moi dau)
 
     Z_FLOOR    = FOOT + BOT                              # san trong
     Z_TRAY_TOP = Z_FLOOR + N_STACK*TRAY_H
@@ -154,6 +165,10 @@ def derive(wall_hinge=WALL_HINGE, bay=BAY, div=DIV, ac_bay=AC_BAY, handle=HANDLE
         """Tich phan day nap tu x=a den x=b (a,b >= 18)."""
         return T_HINGE*(b-a) - SLOPE*((b-2*R_KN)**2 - (a-2*R_KN)**2)/2
 
+    # --- lip cua ranh om tam Nu: khung vat nen cho mong nhat la mep trong
+    #     cua do doc canh khe giua (x = LW - STILE)
+    LIP_BOT = t_lid(LW - STILE) - S_TOP - PAN_T
+
     # --- hoc am (phuong an C): dat day hoc ngang san trong, dinh cach vanh mot dai go
     GRIP_X0   = X_SEAM - GRIP_W/2
     GRIP_X1   = X_SEAM + GRIP_W/2
@@ -166,7 +181,7 @@ def derive(wall_hinge=WALL_HINGE, bay=BAY, div=DIV, ac_bay=AC_BAY, handle=HANDLE
     # --- khay phu kien: chuoi dai khep ve AC_Y
     AC_W_OUT  = ac_bay - 2.0                             # khe 1,0 moi ben
     AC_W_IN   = AC_W_OUT - 2*AC_WALL
-    AC_DICE_L = AC_Y - 4*AC_WALL - AC_JOKER[1] - AC_AUX_L
+    AC_DICE_L = AC_L - 4*AC_WALL - AC_JOKER[1] - AC_AUX_L
 
     # ---------------------------------------------------- the tich (mm3)
     v = {}
@@ -178,7 +193,7 @@ def derive(wall_hinge=WALL_HINGE, bay=BAY, div=DIV, ac_bay=AC_BAY, handle=HANDLE
     v['vach ngan']      = 2*(INNER_Y*div*(z_rim_at(x_div) - Z_FLOOR))
     v['khay quan']      = 4*(TRAY[0]*TRAY[1]*TRAY[2]
                              - TRAY_IN[0]*TRAY_IN[1]*TRAY_IN[2])
-    v['khay phu kien']  = (AC_Y*AC_W_OUT*AC_H
+    v['khay phu kien']  = (AC_L*AC_W_OUT*AC_H
                            - AC_JOKER[0]*AC_JOKER[1]*AC_JOKER[2]
                            - AC_W_IN*AC_DICE_L*AC_DICE_D
                            - AC_W_IN*AC_AUX_L*AC_AUX_D)
@@ -205,7 +220,7 @@ def derive(wall_hinge=WALL_HINGE, bay=BAY, div=DIV, ac_bay=AC_BAY, handle=HANDLE
         # go them cua go noi tru di the tich hoc khoet vao
         v['go hoc am']  = 2*(GRIP_W*grip_out*(z_rim_at(X_SEAM) - FOOT)
                              - GRIP_W*GRIP_H*GRIP_D)
-        v['song noi AC-01'] = RIB_W*AC_Y*(Z_SEAM - (Z_FLOOR + AC_H))
+        v['song noi AC-01'] = RIB_W*AC_L*(Z_SEAM - (Z_FLOOR + AC_H))
         V_THAN = ['day','vach truoc/sau','go hoc am','vach trai/phai',
                   'mat mong than','vach ngan']
         V_NAP  = ['khung nap','mat mong nap']
@@ -261,6 +276,13 @@ def selfcheck(d=None):
     if d['AC_DICE_L'] < 2*TILE_MAX[0]:             e.append("o xuc xac ngan hon 2 hang o 18x18")
     if SPINE_W/2 + d['X_SEAM'] > d['W']:           e.append("song khoa vuot ra ngoai hop")
     if R_KN > d['WALL_HINGE']/2:                   e.append("ong go khong nam trong vach ban le")
+    # ranh om tam nam o mep trong do doc; cho mong nhat la mep trong do doc
+    # canh khe giua, vi nap vat mong dan ve phia do.
+    lip = d['LIP_BOT']
+    if lip < 2.0:
+        e.append(f"lip duoi ranh om tam chi con {lip:.2f} mm - tang PAN_T se lam no am")
+    if S_TOP < 2.5:                                e.append("lip tren ranh om tam mong hon 2,5")
+    if (WALL_FB - BOT_TON)/2 < 2.5:                e.append("ranh om day lam vach truoc/sau qua mong")
     if d['HANDLE'] == 'C':
         if d['LEDGE'] < 8.0:                       e.append("dai go tren hoc am mong hon 8 mm")
         if d['SKIRT'] < 4.0:                       e.append("dai go duoi hoc am mong hon 4 mm")
@@ -285,7 +307,7 @@ if __name__ == '__main__':
               f"Z{d['Z_LID']:.0f} ; noi {d['Z_PROUD']:.0f} -> Z{d['Z_OA']:.0f}")
         print(f"  Canh nap: {d['LW']:.2f} x {LID_L:.0f}, vat {T_HINGE:.0f} -> {T_SEAM:.0f}"
               f" tren {d['TAPER']:.2f} = {d['ANG']:.3f} do")
-        print(f"  AC-01   : {d['AC_Y']:.0f} x {d['AC_W_OUT']:.0f} x {AC_H:.0f}, long rong "
+        print(f"  AC-01   : {d['AC_L']:.0f} x {d['AC_W_OUT']:.0f} x {AC_H:.0f} trong khoang {d['AC_Y']:.0f}, long rong "
               f"{d['AC_W_IN']:.0f} ; chuoi dai {AC_WALL:.0f}+{AC_JOKER[1]:.0f}+{AC_WALL:.0f}+"
               f"{d['AC_DICE_L']:.0f}+{AC_WALL:.0f}+{AC_AUX_L:.0f}+{AC_WALL:.0f}")
         print()
