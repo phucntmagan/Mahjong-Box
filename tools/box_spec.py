@@ -260,7 +260,11 @@ def dalbergia_kg(khay='cocobolo'): return dalbergia_of(_SELF, khay)
 DYN = 3.0          # he so dong
 def design_load(khay='cocobolo'): return mass(khay)[2]*9.81*DYN
 
-CITES_LIMIT = 10.0   # kg go loai liet ke moi lo (annotation #15 - PHAI xac minh)
+# Nguong mien tru cua chu giai #15. DA TRA LAI 29-08-2026 - xem tools/cites_check.py.
+# Con so 10 kg dung. Nhung DIEN GIAI nguong nay tinh tren TUNG MON HANG chu khong
+# cong don ca lo, nghia la 'so hop moi lo' co the khong con la rang buoc.
+# Chua xac nhan duoc bang van ban goc (cites.org bi chan o moi truong nay).
+CITES_LIMIT = 10.0   # kg go cua MOT loai duoc chu giai
 
 # ============================================================== TU KIEM
 def selfcheck(d=None):
