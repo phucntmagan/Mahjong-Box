@@ -19,6 +19,10 @@ Khởi đầu là một bản review độc lập cho bản vẽ sản xuất **
 
 PDF tương ứng trong `build/`. Hình trong `figs/`.
 
+**Hình 3D:** `figs/fig12a..e` — tổng thể nắp đóng, nắp mở 180°, lòng hộp, cắt dọc, mặt trước.
+Dựng bằng `tools/render3d.py` (bộ dựng hình riêng, không thư viện ngoài); mọi toạ độ lấy từ
+`box_spec` nên hình đúng từng milimét chứ không phải phác hoạ.
+
 ## Quyết định đã chốt
 
 | | |
@@ -57,6 +61,7 @@ Toàn bộ hình học sinh từ chuỗi kích thước qua `derive()`, và `sel
 ```
 python3 tools/draw_bx01.py     # sinh figs/fig9, fig10
 python3 tools/draw_latch.py    # sinh figs/fig11
+python3 tools/render3d.py      # sinh figs/fig12a..e (hình 3D)
 python3 tools/draw_hinge.py    # sinh figs/fig8
 python3 tools/draw_lid.py      # sinh figs/fig6, fig7
 python3 tools/draw_handle.py   # sinh figs/fig1..fig5
@@ -73,3 +78,6 @@ python3 tools/draw_handle.py   # sinh figs/fig1..fig5
 2. **CITES.** Phần pháp lý đã tra lại nhưng cites.org bị chặn trong môi trường chạy, nên toàn bộ là nguồn thứ
    cấp. Đủ để thiết kế tiếp, không đủ để ký hợp đồng.
 3. **Lô quân cờ.** Phải đo tối thiểu 20 quân thuộc đúng lô mua trước khi chốt lòng khay.
+4. **Va chạm giữa các chi tiết thiết kế rời rạc.** Bản dựng 3D đã bắt được hai vụ mà không script nào
+   phát hiện — nam châm nằm trong khe luồn ngón, và khe luồn ngón cộng hốc âm ăn thủng vách trước.
+   `box_spec.selfcheck()` nay kiểm chéo, nhưng nguyên tắc là: **dựng hình trước khi lập trình CNC.**

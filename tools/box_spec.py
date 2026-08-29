@@ -113,12 +113,18 @@ SPINE_REC = (144.0, 32.0, 10.0)   # hoc chua quai tren song
 #   - khe rap giua con dong/mo 1,09 mm theo mua, nen khoa canh-canh phai co tung
 #     ay re theo X, tu no da cho venh 10,6 mm.
 # Chan Z, tu do theo X: nam cham. Khong co chi tiet nao chuyen dong.
-MAG      = (25.0, 5.0, 4.0)   # nam cham khoi: dai (X) x rong (Y) x day (Z)
-MAG_REC  =  4.2               # sau hoc am nam cham
-MAG_X    = (128.0, 169.0)     # tam nam cham tren canh TRAI; canh phai doi xung
+MAG      = (20.0, 5.0, 5.0)   # nam cham khoi: dai (X) x rong (Y) x day (Z)
+MAG_REC  =  5.2               # sau hoc am nam cham
+# Vi tri X bi ep giua hai chi tiet khac: khe luon ngon nhac khay an het dai vanh
+# than o giua moi khoang, nen nam cham chi con nam duoc trong khoang trong giua
+# hai khe. Xem selfcheck() — day la va cham hinh 3D bat duoc.
+MAG_X    = (130.0, 168.0)     # tam nam cham tren canh TRAI; canh phai doi xung
 MAG_Y    =  5.5               # tam theo Y, tinh tu mat ngoai vach truoc
 MAG_EDGE =  2.0               # go toi thieu con lai quanh hoc nam cham
-MAG_PULL = 32.0               # N moi cap, tiep xuc truc tiep — PHAI DO LAI tren mau that
+# Be DAY nam cham la bien tu do duy nhat: dai bi khe luon ngon ep, rong bi vach
+# 10 mm ep, con day thi nap va vanh than deu con du go. Neu do thuc te thieu luc,
+# tang day (va MAG_REC) chu khong doi gi khac.
+MAG_PULL = 30.0               # N moi cap, tiep xuc truc tiep — PHAI DO LAI tren mau that
 MAG_DERATE = 0.25             # tut luc do lop hoan thien chen giua hai mat
 MAG_GRADE= 'N45, ma Ni'
 RHO_MAG  = 7.5                # g/cm3
@@ -195,8 +201,15 @@ def derive(wall_hinge=WALL_HINGE, bay=BAY, div=DIV, ac_bay=AC_BAY, handle=HANDLE
     A_KN   = math.pi*(R_KN**2 - (D_PIN/2)**2)            # tiet dien ong go tru lo chot
 
     def z_rim_at(x):
-        """Cao do vanh than tai toa do x - vanh doc theo dung goc vat cua nap."""
-        return Z_RIM + (Z_SEAM - Z_RIM)*min(x, W-x)/X_SEAM
+        """Cao do vanh than tai toa do x.
+
+        Vanh phai TRUNG KHIT mat duoi nap, vi nap de len no. Mat duoi nap phang
+        o Z_RIM tren doan ong go (x = 0..2R) roi doc deu ra toi mep khe rap giua.
+        Ban truoc lay min(x, W-x)/X_SEAM, tuc bat dau doc ngay tu x=0 — sai 0,18 mm
+        o giua canh, va lam nap kenh tren vanh.
+        """
+        t = (min(x, W - x) - 2*R_KN) / (LW - 2*R_KN)
+        return Z_RIM + (Z_SEAM - Z_RIM)*min(max(t, 0.0), 1.0)
     def t_lid(x):
         """Day nap tai x tinh tu mat ngoai vach (x=18 la mep trong cua ong go)."""
         return T_HINGE - SLOPE*max(0.0, x - 2*R_KN)
@@ -231,6 +244,11 @@ def derive(wall_hinge=WALL_HINGE, bay=BAY, div=DIV, ac_bay=AC_BAY, handle=HANDLE
     AC_DICE_L = AC_L - 4*AC_WALL - AC_JOKER[1] - AC_AUX_L
 
     # --- hoc nhac khay: khe luon ngon tay va mo moc len
+    # Khe luon ngon CHI o hai khoang khay. Khoang phu kien KHONG co khe: hoc am
+    # hai tay chiem bang X {GRIP_X0}..{GRIP_X1} va an sau 16 tu mat ngoai, con khe
+    # luon ngon an 6 tu mat trong — cong lai vua dung het be day vach 10, tuc thung
+    # vach. AC-01 duoc nhac bang hai hom ngon ranh Joker doi nhau (kep hai dai go).
+    WELL_X = (wall_hinge + bay/2, W - wall_hinge - bay/2)
     LIFT_CHANNEL = WELL_D + AC_CLR + NOTCH_D - WELL_FELT  # be rong khe luon ngon (Y)
     LIFT_LEDGE   = NOTCH_D                                # be sau mo de moc ngon
     Z_LIFT_LEDGE = Z_FLOOR + 2*TRAY_H - NOTCH_H           # cao do mo cua khay TREN
@@ -395,6 +413,18 @@ def selfcheck(d=None):
             e.append(f"nam cham cach mat trong vach {d['MAG_MAR_IN']:.1f} < {MAG_EDGE:.1f} mm")
         if max(MAG_X) + MAG[0]/2 > d['LW'] - MAG_EDGE:
             e.append("nam cham ngoai cung vuot qua khe rap giua")
+        # nam cham va khe luon ngon deu an vao vanh vach truoc/sau -> phai roi nhau
+        for wc in d['WELL_X']:      # khe luon ngon khong duoc cham hoc am hai tay
+            if (wc - WELL_W/2 < d['GRIP_X1'] and wc + WELL_W/2 > d['GRIP_X0']
+                    and WALL_FB - WELL_D - GRIP_D + (GRIP_D + GRIP_BACK - WALL_FB) < 0.5):
+                e.append(f"khe luon ngon X={wc:.0f} cham hoc am hai tay -> thung vach")
+        for xc in MAG_X:
+            for wc in d['WELL_X']:
+                if abs(xc - wc) < (MAG[0] + WELL_W)/2 + MAG_EDGE:
+                    e.append(f"nam cham X={xc:.0f} cham khe luon ngon X={wc:.0f}")
+        for i in range(len(MAG_X)-1):
+            if MAG_X[i+1] - MAG_X[i] < MAG[0] + MAG_EDGE:
+                e.append("hai nam cham tren cung mot canh qua sat nhau")
         if d['t_lid'](max(MAG_X)) - MAG_REC < 6.0:
             e.append("hoc nam cham lam nap mong hon 6 mm o cho mong nhat")
     if WALL_FB - WELL_D < 3.5:  e.append("da ngoai vach truoc/sau tai hoc ngon mong hon 3,5")
