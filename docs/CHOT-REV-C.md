@@ -13,7 +13,8 @@ các tài liệu trước đó sai hoặc đã hết hiệu lực**. Đọc nó 
 | Vát nắp | 18 → 8 | **18 → 12**, góc 2,067° | `hinge_kinematics.py` |
 | Khe ráp giữa | 0,6 | **1,5 ±0,3** | `lid_solid_calc.py` |
 | Trục xoay bản lề | không định nghĩa | **P = (9 , 56)** | `hinge_kinematics.py` |
-| Khối lượng | không tính | **6,26 / 6,87 kg** | `box_spec.py` |
+| Khóa nắp | không có | **8 cặp nam châm nắp↔thân** | `lid_latch.py` |
+| Khối lượng | không tính | **6,25 / 6,86 kg** | `box_spec.py` |
 | Tải thiết kế | — | **184 / 202 N** | `box_spec.py` |
 
 ## 1. Bề rộng: 370
@@ -61,13 +62,12 @@ Bù lại C bỏ được 16 mm chiều cao (không còn sống khóa nổi trê
 | Vật liệu ngoài gỗ | da bò bridle | **không** |
 | Giải khóa nắp | có | **KHÔNG** |
 
-**Hai điều C không giải, phải mở việc riêng:**
+**Hai điều C để lại:**
 
-1. **Khóa nắp.** Cánh nắp chỉ được giữ đóng bằng chính trọng lượng nó đè lên vành. Mô men giữ 0,55 N·m,
-   biến thiên theo cos góc nghiêng, về 0 khi hộp nằm nghiêng 90°. Xách ngang thì không bung — đúng. Nhưng
-   chỉ cần **3 N** đẩy lên ở mép tự do là cánh mở, và đặt hộp nằm nghiêng lên cạnh là cánh trên đổ xuống hết
-   hành trình. Ràng buộc "không kim loại" vẫn còn, và bỏ sống khóa nghĩa là trên nắp không còn chi tiết nào
-   để gắn khóa vào.
+1. **Khóa nắp — ĐÃ GIẢI** (29-08-2026, sau khi bỏ ràng buộc "không kim loại"). 8 cặp nam châm nối nắp
+   với thân. Xem `docs/KHOA-NAP.md`. Điểm cốt lõi: khóa **không được** nối cánh với cánh — hai cánh cùng
+   mở thì hai mép khe nâng bằng nhau và chỉ tách nhau, nên chốt trượt ngang tuột ra sau khi khe đã vênh
+   31 mm; và giãn nở theo mùa 1,09 mm buộc mọi khóa cánh–cánh phải có từng ấy rơ, tự nó đã cho 11 mm vênh.
 2. **Ec-gô-nô-mi trần hốc.** C chia đôi tải nhưng *tăng* áp lực cục bộ: quai da có 3000 mm² bề mặt nắm, hốc
    âm chỉ có 960 mm² đầu ngón. Nếu trần hốc phẳng và mép sắc thì lực dồn hết về mép trước. Bắt buộc: trần hốc
    dốc vào trong ~10°, mép ngoài bo tròn R ≥ 8.
@@ -148,7 +148,7 @@ xác nhận**.
 
 | # | Việc | Trạng thái |
 |---|---|---|
-| 1 | **Khóa nắp không kim loại** | **chưa có lời giải** — việc lớn nhất còn lại |
+| 1 | Khóa nắp | **đã giải** — `docs/KHOA-NAP.md`. Còn lại: đo lực tách trên mẫu thật |
 | 2 | Ec-gô-nô-mi trần hốc âm: dốc 10°, bo R8 | đã ghi đặc tính, chưa vẽ chi tiết |
 | 3 | Sheet nắp và sheet khay theo số mới | chưa vẽ |
 | 4 | Xác minh CITES bằng văn bản gốc | việc của bên mua |

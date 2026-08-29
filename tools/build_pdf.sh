@@ -12,6 +12,9 @@ b() {  # b <md> <ten-file> <tieu de> <meta...>
 b docs/BX-01.md bx01 "BX-01 — Thân hộp" \
   "<b>Bộ hồ sơ:</b> Hộp Mahjong 152 quân, BURLORA · <b>Đơn vị:</b> mm" \
   "<b>Nguồn số:</b> tools/box_spec.py · <b>Hình:</b> tools/draw_bx01.py"
+b docs/KHOA-NAP.md khoa-nap "Khóa nắp — nam châm nối nắp với thân" \
+  "<b>Bộ hồ sơ:</b> Hộp Mahjong 152 quân, BURLORA · <b>Đơn vị:</b> mm" \
+  "<b>Nguồn số:</b> tools/box_spec.py · tools/lid_latch.py · <b>Hình:</b> tools/draw_latch.py"
 b docs/CHOT-REV-C.md chot-rev-c "Chốt Rev C — quyết định và hệ quả" \
   "<b>Bộ hồ sơ:</b> Hộp Mahjong 152 quân, BURLORA · <b>Đơn vị:</b> mm" \
   "<b>Nguồn số:</b> tools/box_spec.py"

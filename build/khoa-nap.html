@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8">
+<title>Khóa nắp — nam châm nối nắp với thân</title>
+<style>
+@page { size: A4; margin: 16mm 15mm 14mm 15mm; }
+* { box-sizing: border-box; }
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body { font-family: "DejaVu Sans", sans-serif; font-size: 9.3pt; line-height: 1.5;
+       color: #1a1a1a; margin: 0; }
+h1 { font-size: 17pt; margin: 0 0 2mm; letter-spacing: -0.2pt; }
+h2 { font-size: 12pt; margin: 7mm 0 2.5mm; padding-bottom: 1.2mm;
+     border-bottom: 1.2pt solid #1a1a1a; break-after: avoid; }
+h3 { font-size: 10pt; margin: 4.5mm 0 1.5mm; break-after: avoid; }
+p { margin: 0 0 2mm; }
+ul, ol { margin: 0 0 2mm; padding-left: 5mm; }
+li { margin-bottom: 0.8mm; }
+table { width: 100%; border-collapse: collapse; margin: 2mm 0 3mm; font-size: 8.4pt;
+        break-inside: avoid; }
+th { background: #ecebe7; text-align: left; font-weight: bold; padding: 1.3mm 1.8mm;
+     border: 0.4pt solid #b8b5ae; }
+td { padding: 1.2mm 1.8mm; border: 0.4pt solid #cfccc5; vertical-align: top; }
+td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; }
+td.c, th.c { text-align: center; }
+tr:nth-child(even) td { background: #f7f6f3; }
+code, pre { font-family: "DejaVu Sans Mono", monospace; }
+pre { background: #f4f3ef; border-left: 2.5pt solid #8a8madd; border-left-color: #8a877e;
+      padding: 2.5mm 3mm; font-size: 8pt; line-height: 1.45; margin: 2mm 0 3mm;
+      white-space: pre; break-inside: avoid; }
+code { font-size: 8.4pt; background: #f0efeb; padding: 0.2mm 0.8mm; border-radius: 1pt; }
+.head { border-bottom: 2.5pt solid #1a1a1a; padding-bottom: 3mm; margin-bottom: 4mm; }
+.head .meta { font-size: 8.2pt; color: #55524b; margin-top: 1.5mm; }
+.head .meta b { color: #1a1a1a; }
+.verdict { background: #f2f0ea; border: 0.8pt solid #b8b5ae; border-left: 3pt solid #1a1a1a;
+           padding: 3mm 3.5mm; margin: 3mm 0 4mm; break-inside: avoid; }
+.verdict .big { font-size: 10.5pt; font-weight: bold; display: block; margin-bottom: 1.5mm; }
+.warn { background: #fdf6e8; border: 0.6pt solid #d9c184; border-left: 3pt solid #c79a1e;
+        padding: 2.5mm 3mm; margin: 2.5mm 0; font-size: 8.6pt; break-inside: avoid; }
+.fix { background: #eef4ee; border-left: 3pt solid #4a7a52; padding: 2.5mm 3mm;
+       margin: 2.5mm 0; font-size: 8.8pt; break-inside: avoid; }
+.fix b:first-child { color: #2f5a36; }
+.ok  { color: #2f7a3c; font-weight: bold; }
+.bad { color: #a8332a; font-weight: bold; }
+.tag { display: inline-block; font-size: 7.4pt; font-weight: bold; padding: 0.4mm 1.6mm;
+       border-radius: 1.5pt; vertical-align: 1pt; margin-right: 1.5mm; letter-spacing: 0.3pt; }
+.t-crit { background: #a8332a; color: #fff; }
+.t-maj  { background: #c07a12; color: #fff; }
+.t-min  { background: #6b6862; color: #fff; }
+figure { margin: 3mm 0 4mm; break-inside: avoid; text-align: center; }
+figcaption { font-size: 7.8pt; color: #55524b; margin-top: 1.5mm; text-align: left; }
+.foot { margin-top: 6mm; padding-top: 2mm; border-top: 0.6pt solid #cfccc5;
+        font-size: 7.6pt; color: #6b6862; }
+.pb { break-before: page; }
+.nb { break-inside: avoid; }
+</style></head><body>
+<div class="head"><h1>Khóa nắp — nam châm nối nắp với thân</h1><div class="meta"><b>Bộ hồ sơ:</b> Hộp Mahjong 152 quân, BURLORA · <b>Đơn vị:</b> mm<br><b>Nguồn số:</b> tools/box_spec.py · tools/lid_latch.py · <b>Hình:</b> tools/draw_latch.py</div></div>
+<div class="warn">Việc lớn nhất còn treo sau khi phương án C bỏ sống khóa. Tính toán: <code>tools/lid_latch.py</code>. Hình: <code>figs/fig11-khoa-nap</code>. Trị số: <code>tools/box_spec.py</code>.</div>
+<h2>Kết luận</h2>
+<p><b>Khóa nắp = 8 cặp nam châm khối 25 × 5 × 4 nối NẮP với THÂN.</b> Không có chi tiết chuyển động, không nhìn thấy, không phải thao tác khi mở. Hệ số an toàn 1,9× so với đặc tính &quot;giữ được hộp lật úp hoàn toàn với hệ số động 3&quot;.</p>
+<p>Phần đáng đọc không phải con số đó mà là <b>vì sao mọi cách khóa hiển nhiên đều sai</b>.</p>
+<h2>1. Khóa phải chặn hướng nào</h2>
+<p>Trục chốt bản lề P = (9 , 56). Mép khe ráp giữa cách trục 175,5 mm. Quay cánh một góc nhỏ θ, mép khe đi <b>gần như thẳng đứng lên</b>: tỉ lệ dọc/ngang 19,5 : 1.</p>
+<p>Điều đó sinh ra hai kiểu mở với hai chuyển động tương đối khác hẳn nhau:</p>
+<table><tr><th class="">Kiểu</th><th class="">Chuyển động tương đối giữa hai mép khe</th><th class="">Phải chặn</th></tr><tr><td class=""><b>(a)</b> Một cánh mở</td><td class="">mép khe cánh đó nâng lên so với cánh kia</td><td class="">phương <b>Z</b></td></tr><tr><td class=""><b>(b)</b> Hai cánh cùng mở</td><td class="">hai mép nâng <b>bằng nhau</b>, chỉ <b>tách nhau</b></td><td class="">phương <b>X</b></td></tr></table>
+<p>Kiểu (b) không hiếm. <b>Lật úp hộp là kiểu (b)</b> — trọng lượng hai cánh kéo chúng mở cùng lúc. Đó là trường hợp thường gặp nhất, và nó vô hiệu hoá mọi thứ chỉ chặn phương Z.</p>
+<p>Hệ quả: <b>một cái chốt trượt ngang xuyên từ cánh này sang cánh kia — thứ ai cũng nghĩ tới đầu tiên — không khóa được</b>, vì kiểu (b) rút nó ra đúng theo trục của nó.</p>
+<table><tr><th class="n">Chốt ăn sâu</th><th class="n">Tuột khi mỗi cánh mở</th><th class="n">Khe đã vênh lên</th></tr><tr><td class="n">5,0</td><td class="n">8,8°</td><td class="n">27 mm</td></tr><tr><td class="n">6,5</td><td class="n">10,1°</td><td class="n">31 mm</td></tr><tr><td class="n">8,0</td><td class="n">11,3°</td><td class="n">34 mm</td></tr><tr><td class="n">12,0</td><td class="n">14,1°</td><td class="n">42 mm</td></tr></table>
+<p>Đặt chốt cao hay thấp cũng không cứu được. Với chốt ăn sâu 6,5, khe vênh <b>26 mm</b> nếu chốt sát mặt trên nắp, <b>31 mm</b> ở giữa bề dày, <b>36 mm</b> nếu sát mặt dưới. Không có cao độ nào cứu được.</p>
+<figure><img src="../figs/fig11-khoa-nap.png" style="width:100%"><figcaption>Vì sao khóa nối cánh với cánh không dùng được, bố trí nam châm, và mặt cắt qua một cặp.</figcaption></figure>
+<h2>2. Độ ẩm giết nốt họ nghiệm đó</h2>
+<p>Mỗi cánh nắp có 68 mm gỗ ngang thớ nằm trong chuỗi bề rộng (hai đố dọc 34 mm; tấm Nu thả nên không đóng góp). Ở ΔMC 5 % mỗi cánh nở 0,54 mm → <b>khe ráp giữa đóng lại 1,09 mm</b>.</p>
+<p>Bất kỳ khóa nào nối hai cánh với nhau đều phải có 1,09 mm rơ theo X để còn lắp được quanh năm. Mà 1,09 mm rơ đó, theo mục 1, cho mỗi cánh mở 3,6° và <b>khe vênh lên 11,1 mm</b> — ngay cả khi chốt còn nguyên trong ổ.</p>
+<p><b>Hai mục đầu cộng lại cho một kết luận cứng:</b></p>
+<ul><li>Khóa phải nối <b>NẮP với THÂN</b>, không phải cánh với cánh.</li><li>Và nó chỉ được chặn <b>phương Z</b>, để tự do theo X. Nếu nó chặn cả X, nó sẽ chống lại 1,09 mm giãn nở theo mùa và tự phá gỗ.</li></ul>
+<p>Đúng một loại chi tiết thoả cả hai: thứ <b>ép xuống</b> mà <b>trượt tự do ngang</b>.</p>
+<h2>3. Cần bao nhiêu lực giữ</h2>
+<p>Trường hợp thiết kế: <b>lật úp hộp hoàn toàn</b>. Trọng lượng cánh nắp và toàn bộ ruột hộp đều đè lên mặt trong của nắp và cố xoay nó ra.</p>
+<table><tr><th class="">Thành phần</th><th class="n">kg</th><th class="n">Tay đòn</th><th class="n">N·mm</th></tr><tr><td class="">Trọng lượng một cánh nắp</td><td class="n">0,60</td><td class="n">92</td><td class="n">547</td></tr><tr><td class="">2 khay quân đầy trong một khoang</td><td class="n">1,59</td><td class="n">72</td><td class="n">1123</td></tr><tr><td class="">Nửa khay phụ kiện + quân Joker</td><td class="n">0,39</td><td class="n">176</td><td class="n">676</td></tr><tr><td class=""><b>Tổng mô men quanh trục chốt</b></td><td class="n"></td><td class="n"></td><td class="n"><b>2345</b></td></tr></table>
+<p>Bốn điểm giữ mỗi cánh, tay đòn 121 và 161 mm ở cả hai đầu hộp, tổng tay đòn 564 mm:</p>
+<ul><li>tĩnh: <b>4,20 N</b> mỗi điểm</li><li>hệ số động 3: <b>12,6 N</b> mỗi điểm</li></ul>
+<p><b>Đặc tính chốt: giữ được hộp lật úp hoàn toàn với hệ số động 3.</b></p>
+<h2>4. Nam châm — phương án chốt</h2>
+<table><tr><td class="">Nam châm</td><td class="">khối <b>25 × 5 × 4</b>, N45, mạ Ni</td></tr><tr><td class="">Số lượng</td><td class="">4 mỗi cánh × 2 cánh = <b>8 cặp</b></td></tr><tr><td class="">Vị trí X</td><td class=""><b>128</b> và <b>169</b> trên cánh trái; đối xứng trên cánh phải</td></tr><tr><td class="">Vị trí Y</td><td class=""><b>5,5</b> — nằm trong dải 10 mm mà nắp và vành thân còn chồng lên nhau</td></tr><tr><td class="">Gỗ còn lại</td><td class="">3,0 mm ra mép nắp, 2,0 mm vào lòng hộp</td></tr><tr><td class="">Hốc âm</td><td class="">25,2 × 5,2 × sâu 4,2; dán epoxy; mặt nam châm <b>thụt 0,1</b> dưới bề mặt</td></tr><tr><td class="">Đối ứng</td><td class="">nam châm thứ hai, <b>không</b> dùng đĩa thép</td></tr><tr><td class="">Dày nắp còn lại</td><td class="">8,4 mm ở chỗ mỏng nhất</td></tr><tr><td class="">Khối lượng thêm</td><td class="">60 g</td></tr></table>
+<p>Vì sao hợp: nam châm hút theo <b>phương Z</b> — đúng hướng mạnh nhất của nó — và <b>hoàn toàn tự do theo X</b>. 1,09 mm giãn nở theo mùa chỉ làm lệch 4 % bề mặt, gần như không đổi lực hút. Đó chính xác là thứ mục 2 đòi hỏi.</p>
+<p>Vì sao không dùng đĩa thép đối ứng: thép sẽ rỉ trong khí hậu ẩm, và cocobolo nhiều dầu làm khó phát hiện vết rỉ sớm.</p>
+<table><tr><th class="">Kiểm</th><th class="n"></th></tr><tr><td class="">Yêu cầu mỗi điểm (hệ số động 3)</td><td class="n">12,6 N</td></tr><tr><td class="">Lực kéo một cặp, tiếp xúc trực tiếp</td><td class="n">32,0 N</td></tr><tr><td class="">Sau khi tụt do lớp hoàn thiện (−25 %)</td><td class="n">24,0 N</td></tr><tr><td class=""><b>Hệ số an toàn</b></td><td class="n"><b>1,9×</b></td></tr><tr><td class="">Tổng lực giữ một cánh</td><td class="n">96 N</td></tr></table>
+<div class="warn"><b>32 N mỗi cặp là trị số catalogue.</b> Lớp hoàn thiện dày 0,1–0,2 mm chen giữa hai mặt làm tụt lực 15–25 %, và trị số công bố của nhà cung cấp thường lạc quan. <b>Đặc tính kiểm (đưa vào QA, không phải vào BOM):</b> mỗi cặp nam châm lắp trên mẫu đã hoàn thiện phải đo được ≥ <b>12,6 N</b>. Chọn nam châm theo kết quả đo, không theo catalogue. Khối 25 × 5 × 4 N45 là điểm xuất phát.</div>
+<p><b>Nam châm không làm được ba việc, phải nói rõ với khách:</b></p>
+<ol><li><b>Không khóa.</b> Ai cũng mở được nắp bằng cách nhấc lên. Đây là nắp hộp, không phải két sắt.</li><li><b>Không chống được cú rơi tự do.</b> Ở 3 g thì đạt; rơi từ 1 m thì không.</li><li>Ghi vào sổ tay: giữ thẻ từ và đồng hồ cơ cách hộp 20 cm. Quân Mahjong không từ tính nên không sao.</li></ol>
+<h2>5. Khóa gài brass — phương án nhìn thấy được</h2>
+<p>Cũng phải nối nắp với thân và chỉ chặn Z, y như nam châm. Hình thức khả thi duy nhất là <b>lưỡi gài lật qua mép nắp</b>: xoay lên đè lên mặt nắp, xoay xuống thì nằm áp vào mặt vách.</p>
+<table><tr><td class="">Vị trí</td><td class="">X = <b>100</b> và <b>270</b>, trên mặt ngoài vách trước</td></tr><tr><td class="">Vì sao không ở giữa</td><td class="">khe ráp giữa X = 185 nằm giữa dải hốc âm 125…245; lưỡi gài khi mở sẽ thõng xuống hốc, vướng tay</td></tr><tr><td class="">Vì sao đủ một cái mỗi cánh</td><td class="">giữ bất kỳ một điểm nào của cánh là cánh đó không xoay được nữa — động học chỉ có một bậc tự do</td></tr><tr><td class="">Đế bắt mã</td><td class="">vành thân tại X = 100 ở Z50,2; đỉnh hốc âm ở Z38 → dải gỗ 12,2 mm để bắt đế</td></tr><tr><td class="">Đế</td><td class="">brass 40 × 12 × 3, hạ bậc 3 mm vào mặt vách</td></tr><tr><td class="">Trục xoay</td><td class="">chốt brass Ø3, trục chạy theo X, ở Z42</td></tr><tr><td class="">Lưỡi gài</td><td class="">brass dày 3, vươn ra 20, đầu lưỡi đè lên mặt nắp 10 mm</td></tr><tr><td class="">Hạ bậc trên nắp</td><td class="">10 (Y) × 34 (X) × sâu 3,2 → lưỡi phẳng với mặt nắp</td></tr><tr><td class="">Giữ vị trí</td><td class="">vòng ép sóng ở trục cho ma sát ~0,3 N·m; lưỡi đứng yên ở cả hai vị trí, không cần lò xo</td></tr></table>
+<p>Kiểm: một khóa mỗi cánh, tay đòn 91 mm. Lực trên lưỡi ở hệ số động 3 là <b>77 N</b> → uốn lưỡi 15 MPa (hệ số 16×), ép mặt gỗ dưới lưỡi 0,23 MPa (hệ số 62×).</p>
+<p>Đổi lại: <b>hai chi tiết chuyển động quay lại vào thiết kế</b> — đúng cái mà phương án C vừa bỏ đi. Và phải thao tác mỗi lần mở hộp.</p>
+<h2>6. So sánh</h2>
+<table><tr><th class=""></th><th class="">Nam châm</th><th class="">Khóa gài brass</th></tr><tr><td class="">Chi tiết chuyển động</td><td class=""><b>0</b></td><td class="">2</td></tr><tr><td class="">Chi tiết mòn</td><td class=""><b>không</b></td><td class="">trục xoay</td></tr><tr><td class="">Phải thao tác khi mở</td><td class=""><b>không</b></td><td class="">có</td></tr><tr><td class="">Nhìn thấy</td><td class="">không</td><td class="">có</td></tr><tr><td class="">Hệ số an toàn khi lật úp</td><td class="">1,9× (lực hút)</td><td class="">16× (bền lưỡi gài)</td></tr><tr><td class="">Khóa chống mở</td><td class="">KHÔNG</td><td class="">KHÔNG — không có chốt</td></tr><tr><td class="">Chống xóc / lạch cạch</td><td class="">có</td><td class="">có, và ép chặt hơn</td></tr><tr><td class="">Chịu được giãn nở theo mùa</td><td class="">có</td><td class="">có</td></tr><tr><td class="">Khối lượng thêm</td><td class="">60 g</td><td class="">~60 g</td></tr><tr><td class="">Rủi ro chế tạo</td><td class="">thấp</td><td class="">trung bình</td></tr></table>
+<p><b>Khuyến nghị: nam châm.</b> Phương án C được chọn vì &quot;không cơ cấu, không chi tiết mòn&quot;. Gắn lại hai cái khóa gài là phá chính lý do đã chọn nó.</p>
+<p>Chọn khóa gài brass <b>nếu khách đòi một khóa nhìn thấy được</b> — đó là quyết định về sản phẩm, không phải về kỹ thuật. Lúc đó làm cả hai: nam châm giữ hàng ngày, khóa gài làm chi tiết trang trí và chốt vận chuyển.</p>
+<h2>7. Kéo theo</h2>
+<ul><li>Khối lượng: <b>6,25 kg</b> (khay lõi ổn định) / <b>6,86 kg</b> (khay cocobolo) — đã tính cả 8 cặp nam châm và trừ 16 hốc âm.</li><li>BOM thêm: 16 nam châm khối 25 × 5 × 4 N45 mạ Ni, epoxy dán.</li><li>QA thêm: đo lực tách mỗi cặp trên mẫu đã hoàn thiện, ngưỡng 12,6 N.</li><li>Sheet BX-01 và sheet nắp phải thêm 16 hốc âm 25,2 × 5,2 × 4,2 với dung sai vị trí ±0,2 — sai lệch vị trí giữa hai nửa của một cặp làm tụt lực hút nhanh hơn khe hở.</li></ul>
+<div class="foot">Sinh tu <code>docs/KHOA-NAP.md</code> bang <code>tools/md2html.py</code>. Moi tri so sinh tu <code>tools/box_spec.py</code>.</div>
+</body></html>

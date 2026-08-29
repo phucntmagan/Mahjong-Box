@@ -77,6 +77,10 @@ for c in wells:                                          # khe luon ngon
         b.append(v.rect(w0, w1, y0, y1, VOID, ACC, 1.2))
     for y0, y1 in [(FB+ACL, FB+ACL+B.NOTCH_D), (YB-FB-ACL-B.NOTCH_D, YB-FB-ACL)]:
         b.append(v.rect(w0, w1, y0, y1, VOID, ACC, 1.2))
+for xc in list(B.MAG_X) + [W-x for x in B.MAG_X]:         # hoc nam cham khoa nap
+    for yc in (B.MAG_Y, YB-B.MAG_Y):
+        b.append(v.rect(xc-B.MAG[0]/2, xc+B.MAG[0]/2, yc-B.MAG[1]/2, yc+B.MAG[1]/2,
+                        '#2f5d9e', '#1a3a66', 1.0))
 for x0 in (0, W-WH):                                     # mat mong
     for a, is_body in kn:
         y0, y1 = kn_y0+a, kn_y0+a+B.KN_LEN
@@ -132,6 +136,9 @@ ITEMS = [
  (9, (WH/2, kn_y0+250), 'L',
   f'Vach ban le {WH:.0f} — bat buoc: chua ong go R{B.R_KN:.0f}, thanh quanh lo '
   f'{B.R_KN-B.D_PIN/2:.1f} mm.'),
+ (10, (B.MAG_X[1], B.MAG_Y), 'B',
+  f'Hoc nam cham khoa nap {B.MAG[0]+0.2:.1f} x {B.MAG[1]+0.2:.1f} x sau {B.MAG_REC:.1f}, '
+  f'8 cai tren than (va 8 doi ung tren nap). Vi tri +/-0,2.'),
 ]
 for n, (fx, fy), side, _ in ITEMS:
     bx, by = {'L': (BL, v.Z(fy)), 'R': (BR, v.Z(fy)),

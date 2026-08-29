@@ -106,6 +106,23 @@ KN_BODY, KN_LID = 4, 3   # 4 mat thuoc THAN, 3 thuoc NAP
 SPINE_W = 44.0
 SPINE_REC = (144.0, 32.0, 10.0)   # hoc chua quai tren song
 
+# --- khoa nap (CHOT 29-08-2026 — xem tools/lid_latch.py)
+# Dong hoc buoc khoa phai noi NAP voi THAN va chi chan phuong Z:
+#   - hai canh cung mo thi chi tach nhau 18*theta trong khi nang 175*theta, nen
+#     moi khoa noi CANH-CANH deu tuot ra sau khi khe da venh hang chuc mm;
+#   - khe rap giua con dong/mo 1,09 mm theo mua, nen khoa canh-canh phai co tung
+#     ay re theo X, tu no da cho venh 10,6 mm.
+# Chan Z, tu do theo X: nam cham. Khong co chi tiet nao chuyen dong.
+MAG      = (25.0, 5.0, 4.0)   # nam cham khoi: dai (X) x rong (Y) x day (Z)
+MAG_REC  =  4.2               # sau hoc am nam cham
+MAG_X    = (128.0, 169.0)     # tam nam cham tren canh TRAI; canh phai doi xung
+MAG_Y    =  5.5               # tam theo Y, tinh tu mat ngoai vach truoc
+MAG_EDGE =  2.0               # go toi thieu con lai quanh hoc nam cham
+MAG_PULL = 32.0               # N moi cap, tiep xuc truc tiep — PHAI DO LAI tren mau that
+MAG_DERATE = 0.25             # tut luc do lop hoan thien chen giua hai mat
+MAG_GRADE= 'N45, ma Ni'
+RHO_MAG  = 7.5                # g/cm3
+
 # --- khay
 TRAY = (325.0, 124.0, TRAY_H)     # khay quan phu bi
 TRAY_IN = (315.0, 114.0, 15.0)    # long khay quan
@@ -191,6 +208,14 @@ def derive(wall_hinge=WALL_HINGE, bay=BAY, div=DIV, ac_bay=AC_BAY, handle=HANDLE
     #     cua do doc canh khe giua (x = LW - STILE)
     LIP_BOT = t_lid(LW - STILE) - S_TOP - PAN_T
 
+    # --- khoa nap bang nam cham: ban kinh tay don tinh tu truc chot ban le
+    PIN_X, PIN_Z = R_KN, Z_RIM + R_KN
+    MAG_R = tuple(x - PIN_X for x in MAG_X)          # tay don moi nam cham
+    MAG_N_LEAF = 2*len(MAG_X)                        # 2 dau hop x so vi tri
+    MAG_SUM_R = 2*sum(MAG_R)                         # tong tay don mot canh
+    MAG_MAR_OUT = MAG_Y - MAG[1]/2                   # go tu mep nap toi hoc
+    MAG_MAR_IN  = WALL_FB - (MAG_Y + MAG[1]/2)       # go tu hoc toi mat trong vach
+
     # --- hoc am (phuong an C): dat day hoc ngang san trong, dinh cach vanh mot dai go
     GRIP_X0   = X_SEAM - GRIP_W/2
     GRIP_X1   = X_SEAM + GRIP_W/2
@@ -256,6 +281,10 @@ def derive(wall_hinge=WALL_HINGE, bay=BAY, div=DIV, ac_bay=AC_BAY, handle=HANDLE
         v['go hoc am']  = 2*(GRIP_W*grip_out*(z_rim_at(X_SEAM) - FOOT)
                              - GRIP_W*GRIP_H*GRIP_D)
         v['nap che o xuc xac'] = (AC_W_IN + 2*COVER_LIP)*(2*DICE_SOCK + 3*DICE_RIB)*COVER_T
+        # hoc am nam cham khoet vao nap va vao vanh than (4 moi canh + 4 doi ung)
+        n_mag = 2*MAG_N_LEAF
+        v['khung nap'] -= n_mag*MAG[0]*MAG[1]*MAG_REC
+        v['vach truoc/sau'] -= n_mag*MAG[0]*MAG[1]*MAG_REC
         V_THAN = ['day','vach truoc/sau','go hoc am','vach trai/phai',
                   'mat mong than','vach ngan']
         V_NAP  = ['khung nap','mat mong nap']
@@ -359,6 +388,15 @@ def selfcheck(d=None):
         e.append(f"lip duoi ranh om tam chi con {lip:.2f} mm - tang PAN_T se lam no am")
     if S_TOP < 2.5:                                e.append("lip tren ranh om tam mong hon 2,5")
     if (WALL_FB - BOT_TON)/2 < 2.5:                e.append("ranh om day lam vach truoc/sau qua mong")
+    if d['HANDLE'] == 'C':
+        if d['MAG_MAR_OUT'] < MAG_EDGE:
+            e.append(f"nam cham cach mep nap {d['MAG_MAR_OUT']:.1f} < {MAG_EDGE:.1f} mm")
+        if d['MAG_MAR_IN'] < MAG_EDGE:
+            e.append(f"nam cham cach mat trong vach {d['MAG_MAR_IN']:.1f} < {MAG_EDGE:.1f} mm")
+        if max(MAG_X) + MAG[0]/2 > d['LW'] - MAG_EDGE:
+            e.append("nam cham ngoai cung vuot qua khe rap giua")
+        if d['t_lid'](max(MAG_X)) - MAG_REC < 6.0:
+            e.append("hoc nam cham lam nap mong hon 6 mm o cho mong nhat")
     if WALL_FB - WELL_D < 3.5:  e.append("da ngoai vach truoc/sau tai hoc ngon mong hon 3,5")
     if NOTCH_D > (TRAY[0]-TRAY_IN[0])/2 + 0.001:
         e.append("khoet mat dau khay sau hon be day vach khay")
