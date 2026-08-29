@@ -44,6 +44,20 @@ K = {'doc tho': 0.0001, 'cocobolo ngang tho': 0.0016,
 
 # tri so co ly cocobolo dung cho kiem ben (MPa)
 MOR, E_W, C_PERP, SHEAR = 110.0, 13000.0, 14.0, 13.0
+# Keo NGANG THO — tri so yeu nhat cua go, chi phoi viec xe doc thanh go quanh lo
+# chot mat mong. Lay ~1/15 MOR, la muc thong dung cho go cung nhiet doi.
+T_PERP = 7.0
+
+# derive_mode(): tra ve dac ta o mot ho nghiem ban le khac ma KHONG doi bien toan
+# cuc — dung de so sanh hai ho trong hinge_kinematics.py muc 2.
+def derive_mode(mode, **kw):
+    global HG_MODE
+    old = HG_MODE
+    try:
+        HG_MODE = mode
+        return derive(**kw)
+    finally:
+        HG_MODE = old
 
 M_TILE_G, N_TILES = 16.0, 152
 TILE_MAX = (25.7, 36.8, 11.4)     # quan lon nhat theo Rev B
@@ -51,7 +65,7 @@ TILE_MAX = (25.7, 36.8, 11.4)     # quan lon nhat theo Rev B
 # ============================================================== CHUOI KICH THUOC
 # --- X (be rong) : vach | khay | ngan | phu kien | ngan | khay | vach
 # Vach ban le 18 la do HOC AM HAI TAY: sau 12 + thanh sau 6. Ban le brass chi an
-# HG_MORT vao vanh nen KHONG doi hoi gi ve be day vach — xem handle_option_c.py.
+# Ban le mong go chiem 2*R_KN theo X, van lot trong 18 — xem handle_option_c.py.
 WALL_HINGE = 18.0        # vach trai/phai — nay chi con vi HOC AM (12+6), khong vi ban le
 BAY        = 126.0       # khoang khay quan
 DIV        =   6.0       # vach ngan
@@ -106,38 +120,33 @@ GRV_W   = PAN_T          # ranh rong dung bang day tam: tam KHONG bi phay bac.
 S_TOP   =  3.0           # lip khung phia TREN ranh - do la be mat nhin thay
 LID_L   = 350.0          # chieu dai canh nap (theo Y, khong ke tru/hoc am)
 
-# ============================================================== BAN LE
-# TRUC XOAY NAM O CANH NGOAI TREN CUA THAN (arris), khong o giua be day nap.
+# ============================================================== BAN LE — MONG GO
+# RANG BUOC DA CHOT TU DAU: ban le lam bang MONG GO, khong dung kim loai.
+# (Kim loai chi duoc chap nhan cho KHOA NAP — xem docs/KHOA-NAP.md.)
 #
-# Ban truoc dat truc o giua be day nap de canh mo nam dung dai cao do cua nap
-# dong. Do la mot lua chon THAM MY tu dat ra, khong phai rang buoc hinh hoc — va
-# chinh no ep phai bo tron dau canh nap ban kinh bang NUA BE DAY NAP — cai ma ban
-# truoc goi la 'ong go'. hinge_kinematics.py muc 1 tinh lai bang quet so.
+# Cai duy nhat con la BIEN la CHO DAT TRUC. hinge_kinematics.py muc 1 chung minh
+# chi co DUNG HAI ho nghiem hinh hoc, khong co ho thu ba:
 #
-# Dat truc o arris (0 , Z_RIM) — GOC CHUNG cua ca hai chi tiet — thi:
-#   - hai goc dau canh nap TRUNG voi truc: ban kinh quet 0, khong quet vao dau.
-#   - => khong can ong go, khong can coi khoet vao vanh, khong can mat mong go.
-#   - chi con phai bo luon R = HG_R hai canh arris de lay cho cho KHOP BRASS —
-#     do la cho cho PHAN CUNG, khong phai cho hinh hoc.
-#   - canh mo nam thap hon vanh dung mot be day nap. Khong ai phien.
-#   - o 180 deg, mat canh mong cua nap ap DUNG vao mat ngoai vach than: CHAN
-#     180 deg tu nhien, tiep xuc ca mat, khong phai phay mat chan trong mong.
-# Ban le thanh mot chi tiet brass nho o dung canh — dung nhu anh mau.
-HG_N    = 3              # so ban le moi canh
-HG_L    = 40.0           # dai mot ban le
-HG_W    = 14.0           # be rong mot canh ban le (mortise theo X)
-HG_T    = 1.8            # day mot canh ban le
-HG_KN   = 4.5            # duong kinh khop (nho ra ngoai HG_KN/2)
-HG_MORT = HG_T/2         # sau mortise moi ben (chia deu than va nap)
-HG_MAT  = 'brass CuZn39Pb3'
-HG_R    = HG_KN/2        # ban kinh khop
-# Truc khop nam DUNG tren arris (0 , Z_RIM). Khop duong kinh HG_KN tam o do se an
-# vao go CA HAI ben, nen phai BO LUON hai canh arris dung ban kinh HG_R:
-#   - canh ngoai TREN cua vach than
-#   - canh ngoai DUOI cua nap
-# Dong lai, hai duong luon do khep thanh mot lo O HG_KN om tron khop: khop chim
-# han trong duong chi goc, chi lo ra mot soi brass manh — dung hinh anh trong anh
-# tham chieu. Gia phai tra: mat chan 180 do ngan bot HG_R (xem STOP_H).
+#   A. Truc nam TRONG vat lieu, tai TAM mat dau canh nap -> (T_LID/2 , Z_RIM+T_LID/2)
+#      Dau canh nap buoc phai bo tron ban kinh R = T_LID/2 (tiep tuyen ca hai mat
+#      nap). Ong go = chinh dau canh nap, KHONG nho ra ngoai phu bi. Nhung R bi
+#      be day nap ep cung, va o 180 do KHONG co mat chan tu nhien.
+#
+#   B. Truc nam TREN MAT PHANG NGOAI cua than (x = 0), tai arris (0 , Z_RIM)
+#      Hai goc dau canh nap trung voi truc -> ban kinh quet 0, khong phai bo tron
+#      gi ca. R cua ong go duoc TU DO chon theo do ben chu khong theo be day nap.
+#      Gia: ong nho ra ngoai dung R moi ben. Duoc: o 180 do mat canh nap ap thang
+#      vao mat ngoai vach -> mat chan tu nhien, va canh mo nam PHANG voi vanh than.
+#
+# Doi HG_MODE thi moi tri so duoi day tu suy lai.
+HG_MODE  = 'B'           # 'A' = truc giua be day nap ; 'B' = truc tren arris
+KN_PIN   =  6.0          # duong kinh chot go (cocobolo thang tho)
+KN_FIT   =  0.20         # khe lo chot: lo O(KN_PIN + KN_FIT)
+KN_WALL  =  3.0          # thanh go quanh lo chot — CHI dung o mode B (mode A: R bi ep)
+N_KN     =  7            # so mat mong; le -> hai dau thuoc THAN
+KN_LEN   = 44.0          # dai mot mat mong
+KN_GAP   =  1.0          # khe doc truc giua hai mat mong (cho go no theo mua)
+KN_PIN_L = 160.0         # dai mot chot; 2 chot moi canh, gap nhau o mat mong giua
 RHO_BRASS = 8.5          # g/cm3
 
 # --- song khoa + quai (phuong an A)
@@ -230,7 +239,35 @@ def derive(wall_hinge=WALL_HINGE, bay=BAY, div=DIV, ac_bay=AC_BAY, handle=HANDLE
     Z_RIM_AVG  = (Z_RIM + Z_SEAM)/2                      # vanh doc deu 49 -> 55 -> 49
 
     LW     = (W - SEAM)/2                                # be rong mot canh nap
-    PIN_X, PIN_Z = 0.0, Z_RIM                            # truc xoay o arris
+    # ---------------------------------------------------- ban le mong go
+    KN_HOLE = KN_PIN + KN_FIT
+    if HG_MODE == 'A':
+        # Truc o TAM mat dau canh nap. Ong go = dau canh nap bo tron, tiep tuyen
+        # ca mat tren lan mat duoi -> R BI EP bang nua be day nap.
+        R_KN  = T_LID/2
+        PIN_X, PIN_Z = R_KN, Z_RIM + R_KN
+        PROUD = 0.0                              # khong nho ra ngoai phu bi
+        STOP_H = 0.0                             # KHONG co mat chan tu nhien
+    else:
+        # Truc o arris. Hai goc dau canh nap trung voi truc -> khong phai bo tron.
+        # R tu do, chon theo do ben cua thanh go quanh lo chot.
+        R_KN  = KN_HOLE/2 + KN_WALL
+        PIN_X, PIN_Z = 0.0, Z_RIM
+        PROUD = R_KN                             # ong nho ra ngoai moi ben
+        STOP_H = T_LID - R_KN                    # mat chan bi ong an bot trong doan mong
+    KN_WALL_EFF = R_KN - KN_HOLE/2               # thanh go that quanh lo chot
+    KN_PITCH = KN_LEN + KN_GAP
+    KN_RUN   = N_KN*KN_LEN + (N_KN - 1)*KN_GAP
+    KN_Y0    = (LID_L - KN_RUN)/2                # chuoi mong dat giua chieu dai canh
+    N_KN_BODY = (N_KN + 1)//2                    # mong le thuoc THAN
+    N_KN_LID  = N_KN//2                          # mong chan thuoc NAP
+    if HG_MODE == 'A':
+        STOP_A = 0.0
+    else:
+        # trong doan mong, chan cao STOP_H; ngoai doan mong canh nap con vuong
+        # nen chan cao ca be day nap.
+        STOP_A = KN_RUN*STOP_H + (LID_L - KN_RUN)*T_LID
+    X_OA   = W + 2*PROUD                         # phu bi X ke ca ong go nho ra
     TAPER  = LW
     SLOPE  = 0.0
     ANG    = 0.0
@@ -238,10 +275,6 @@ def derive(wall_hinge=WALL_HINGE, bay=BAY, div=DIV, ac_bay=AC_BAY, handle=HANDLE
     OP_L   = LID_L - 2*RAIL                              # long khung theo Y
     PAN_W, PAN_L = OP_W + 2*TON, OP_L + 2*TON            # tam Nu
     X_SEAM = W/2                                         # tam khe rap giua
-    HG_Y   = tuple(LID_L*(i+1)/(HG_N+1) for i in range(HG_N))   # vi tri ban le theo Y
-    HG_RUN = HG_N*HG_L
-    STOP_H = T_LID - HG_R           # chieu cao mat chan 180 do sau khi bo luon arris
-    STOP_A = STOP_H*LID_L           # dien tich mat chan mot canh
 
     def z_rim_at(x):
         """Cao do vanh than tai toa do x.
@@ -305,11 +338,22 @@ def derive(wall_hinge=WALL_HINGE, bay=BAY, div=DIV, ac_bay=AC_BAY, handle=HANDLE
     v['day']            = W*Y_BODY*BOT
     v['vach truoc/sau'] = (2*(W*WALL_FB*(Z_RIM_AVG - Z_FLOOR))
                            - 4*(WELL_W*WELL_D*(z_rim_at(wall_hinge + bay/2) - Z_FLOOR)))
-    RELIEF_A = HG_R**2*(1 - math.pi/4)                   # tiet dien go bo luon o arris
-    v['vach trai/phai'] = (2*(INNER_Y*wall_hinge*(Z_RIM - Z_FLOOR))
-                           - 2*HG_N*HG_L*HG_W*HG_MORT           # mortise ban le tren vanh
-                           - 2*RELIEF_A*LID_L)                  # bo luon arris ngoai tren
-    v['ban le brass']   = 2*HG_N*(2*HG_L*HG_W*HG_T + math.pi*(HG_KN/2)**2*HG_L)
+    # --- go them/bot vi mat mong (tinh tren TIET DIEN, mm2, roi nhan chieu dai)
+    A_DISC = math.pi*R_KN**2                             # tiet dien ong go
+    A_HOLE = math.pi*(KN_HOLE/2)**2                      # lo chot
+    if HG_MODE == 'A':
+        # than: moi mat mong THAN la mot tru moc len tren vanh (ca dia nam tren Z_RIM)
+        dV_body = N_KN_BODY*KN_LEN*(A_DISC - A_HOLE)
+        # nap: cho mat mong THAN thi canh nap bi khoet lui het o vuong 2R x T_LID;
+        #      cho mat mong NAP thi dau canh bo tron (bot hai mieng goc)
+        A_NOSE  = R_KN*T_LID - A_DISC/2                  # phan bo di khi bo tron dau canh
+        dV_lid  = -(N_KN_BODY*KN_LEN*(2*R_KN*T_LID)
+                    + N_KN_LID*KN_LEN*(A_NOSE + A_HOLE))
+    else:
+        # arris: trong doan mong, phan them = nua dia nam ngoai mat phang x=0
+        dV_body = N_KN_BODY*KN_LEN*(A_DISC/2 - A_HOLE/2)
+        dV_lid  = N_KN_LID*KN_LEN*(A_DISC/2 - A_HOLE/2)
+    v['vach trai/phai'] = 2*(INNER_Y*wall_hinge*(Z_RIM - Z_FLOOR)) + 2*dV_body
     x_div = wall_hinge + bay + div/2                     # vach ngan cao toi vanh tai chinh no
     v['vach ngan']      = 2*(INNER_Y*div*(z_rim_at(x_div) - Z_FLOOR))
     v['khay quan']      = 4*(TRAY[0]*TRAY[1]*TRAY[2]
@@ -321,8 +365,7 @@ def derive(wall_hinge=WALL_HINGE, bay=BAY, div=DIV, ac_bay=AC_BAY, handle=HANDLE
                            - AC_W_IN*AC_AUX_L*AC_AUX_D)
     # khung nap: do doc canh mong (phan dac x 18..34) + do doc canh khe giua
     # + 2 do ngang ; tru ranh am song khoa va ranh om tam Nu
-    st_h   = (LID_L*_int_t(0.0, STILE) - 2*HG_N*HG_L*HG_W*HG_MORT  # tru mortise ban le
-              - RELIEF_A*LID_L)                                    # bo luon arris ngoai duoi
+    st_h   = LID_L*_int_t(0.0, STILE) + dV_lid           # do doc ban le, da ke mat mong
     st_s   = LID_L*_int_t(LW-STILE, LW)
     if handle == 'A':
         st_s -= (SPINE_W/2 - SEAM/2)*LID_L*SPINE_INSET   # ranh am cho song khoa
@@ -348,17 +391,17 @@ def derive(wall_hinge=WALL_HINGE, bay=BAY, div=DIV, ac_bay=AC_BAY, handle=HANDLE
         V_THAN = ['day','vach truoc/sau','vach trai/phai','vach ngan']
         V_NAP  = ['khung nap']
     V_KHAY = ['khay quan','khay phu kien'] + (['nap che o xuc xac'] if handle=='C' else [])
-    V_KIM  = ['ban le brass']        # kim loai — khong phai go, khong tinh vao Dalbergia
+    V_KIM  = []                      # KHONG co chi tiet kim loai nao trong ban le
 
     d.update({k: val for k, val in locals().items()
               if k.isupper() or k in ('t_lid', '_int_t', 'z_rim_at')})
-    d.update(dict(WALL_HINGE=wall_hinge, BAY=bay, DIV=div, AC_BAY=ac_bay,
+    d.update(dict(HG_MODE=HG_MODE, WALL_HINGE=wall_hinge, BAY=bay, DIV=div, AC_BAY=ac_bay,
                   HANDLE=handle, V=v, V_THAN=V_THAN, V_KHAY=V_KHAY, V_NAP=V_NAP,
                   V_KIM=V_KIM))
     return d
 
 globals().update(derive())
-MAT = {'tam Nu': 'Nu go do', 'ban le brass': 'brass'}
+MAT = {'tam Nu': 'Nu go do'}
 
 # ============================================================== KHOI LUONG
 def mass_of(d, khay='cocobolo'):
@@ -456,15 +499,16 @@ def selfcheck(d=None):
     if abs(2*d['LW'] + SEAM - d['W']) > 1e-9:      e.append("2 canh nap + khe != phu bi X")
     if abs(d['OP_W'] + 2*STILE - d['LW']) > 1e-9:  e.append("chuoi be rong canh nap khong khep")
     if abs(d['t_lid'](d['LW']) - T_SEAM) > 1e-9:   e.append("vat nap khong ve dung T_SEAM")
-    if d['STOP_H'] <= 0:                          e.append("bo luon arris an het be day nap, mat chan 180 do bien mat")
-    if HG_R > WALL_HINGE/2:                       e.append("bo luon arris sau hon nua be day vach ban le")
-    if d['HG_RUN'] > INNER_Y:                      e.append("tong chieu dai ban le dai hon long hop")
-    if HG_MORT*2 > HG_T + 1e-9:                    e.append("mortise ban le sau hon ca hai canh ban le")
+    if 2*d['R_KN'] > WALL_HINGE:                  e.append("ong go rong hon be day vach ban le")
+    if d['KN_RUN'] > LID_L:                       e.append("chuoi mat mong dai hon canh nap")
+    if d['KN_WALL_EFF'] < 2.0:                    e.append("thanh go quanh lo chot mong hon 2,0 mm")
+    if N_KN % 2 == 0:                             e.append("so mat mong phai le de hai dau thuoc THAN")
+    if KN_PIN_L*2 < d['KN_RUN']:                  e.append("hai chot khong phu het chuoi mat mong")
+    if HG_MODE == 'B' and d['STOP_H'] <= 0:       e.append("ong go an het be day nap, mat chan 180 do bien mat")
     if TRAY[1] + 2 > d['BAY']:                     e.append("khay quan khong lot khoang")
     if d['AC_W_IN'] < 2*TILE_MAX[0]:               e.append("long AC-01 khong du 4 quan du phong 2x2")
     if d['AC_DICE_L'] < 2*TILE_MAX[0]:             e.append("o xuc xac ngan hon 2 hang o 18x18")
     if SPINE_W/2 + d['X_SEAM'] > d['W']:           e.append("song khoa vuot ra ngoai hop")
-    if HG_W > d['WALL_HINGE']:                     e.append("canh ban le rong hon vanh vach")
     # ranh om tam nam o mep trong do doc; cho mong nhat la mep trong do doc
     # canh khe giua, vi nap vat mong dan ve phia do.
     lip = d['LIP_BOT']
@@ -511,12 +555,17 @@ if __name__ == '__main__':
         d = derive(handle=h)
         V = d['V']
         print("="*76)
-        print(f"PHUONG AN {h} — phu bi {d['W']:.0f} x {d['Y_OA']:.0f} x {d['Z_OA']:.0f}"
+        print(f"PHUONG AN {h} — phu bi {d['X_OA']:.1f} x {d['Y_OA']:.0f} x {d['Z_OA']:.0f}"
               f"   ({'song khoa + quai da, mot tay' if h=='A' else 'hoc am hai dau, hai tay'})")
         print("="*76)
         print(f"  Chuoi X : {d['WALL_HINGE']:.0f} + {d['BAY']:.0f} + {d['DIV']:.0f} + "
               f"{d['AC_BAY']:.0f} + {d['DIV']:.0f} + {d['BAY']:.0f} + {d['WALL_HINGE']:.0f}"
-              f" = {d['W']:.0f}")
+              f" = {d['W']:.0f}"
+              + (f"  (+2 x {d['PROUD']:.1f} ong go nho ra = {d['X_OA']:.1f})"
+                 if d['PROUD'] > 0 else "  (ong go khong nho ra)"))
+        print(f"  Ban le : mong go, truc ({d['PIN_X']:.1f} , {d['PIN_Z']:.1f}) "
+              f"mode {HG_MODE} ; ong O{2*d['R_KN']:.1f} ; {N_KN} mat mong x {KN_LEN:.0f}"
+              f" ; chot go O{KN_PIN:.0f}")
         print(f"  Chuoi Y : {WALL_FB:.0f} + {INNER_Y:.0f} + {WALL_FB:.0f} = {d['Y_BODY']:.0f}"
               f"  (+2 x {d['NHO_RA']:.0f} nho ra = {d['Y_OA']:.0f})")
         print(f"  Chuoi Z : chan {FOOT:.0f} + day {BOT:.0f} + {N_STACK} x khay {TRAY_H:.0f}"

@@ -120,7 +120,9 @@ def rot_xz(p, c, th):
     cs, sn = math.cos(th), math.sin(th)
     return (c[0] + x*cs - z*sn, c[1] + x*sn + z*cs)
 
-HG_Y = [FB + y for y in S['HG_Y']]      # tam ban le brass theo Y
+RK, KH = S['R_KN'], S['KN_HOLE']
+KN = [(FB + S['KN_Y0'] + i*S['KN_PITCH'], i % 2 == 0)   # (y bat dau, la mong THAN?)
+      for i in range(B.N_KN)]
 X_BAY = [(WH, WH+BAY), (W-WH-BAY, W-WH)]
 X_DIV = [(WH+BAY, WH+BAY+DIV), (W-WH-BAY-DIV, W-WH-BAY)]
 X_AC = (WH+BAY+DIV, WH+BAY+DIV+ACB)
@@ -156,13 +158,11 @@ def add_body(sc, show_mag=True):
     for x0, x1 in X_DIV:
         sc.prism_y([(x0, Z_FL), (x1, Z_FL), (x1, z_rim(x1)), (x0, z_rim(x0))],
                    FB, YB-FB, C, D)
-    # ban le brass: la nam trong mortise tren vanh + khop tren arris
-    for xa, xk in [(0.0, 0.0), (W - B.HG_W, W)]:
-        for yc in HG_Y:
-            sc.box(xa, xa + B.HG_W, yc - B.HG_L/2, yc + B.HG_L/2,
-                   Z_RIM - B.HG_MORT, Z_RIM, COL['brass'])
-            sc.prism_y(circle_xz(xk, Z_RIM, B.HG_R), yc - B.HG_L/2, yc + B.HG_L/2,
-                       COL['brass'], COL['brass'])
+    # mat mong go ben THAN: ong go O2R o arris, chi o cac mat mong LE
+    for xk in (0.0, W):
+        for y0, is_body in KN:
+            if not is_body: continue
+            sc.prism_y(circle_xz(xk, Z_RIM, RK), y0, y0 + B.KN_LEN, C, D)
     # nam cham tren vanh than (chi ve khi thuc su nhin thay duoc)
     for xc in (list(B.MAG_X) + [W-x for x in B.MAG_X]) if show_mag else []:
         for yc in (B.MAG_Y, YB-B.MAG_Y):
@@ -253,7 +253,7 @@ def leaf_polys(th, right):
     def r(p):
         c = (W - PIN[0], PIN[1]) if right else PIN
         return rot_xz(m(p), c, -th if right else th)
-    st, RR = B.STILE, B.HG_R
+    st, RR = B.STILE, RK
     def arc(a0, a1, n=8):        # bo luon arris ngoai duoi cua nap, tam tai truc
         return [(RR*math.cos(math.radians(a0 + (a1-a0)*i/n)),
                  Z_RIM + RR*math.sin(math.radians(a0 + (a1-a0)*i/n))) for i in range(n+1)]
@@ -277,14 +277,12 @@ def add_lid(sc, th=0.0, leaves=(True, True), show_mag=True):
         if not leaves[1 if right else 0]: continue
         for poly, y0, y1, ck in leaf_polys(th, right):
             sc.prism_y(poly, y0, y1, COL[ck], COL['cut'])
-        # la ban le brass ben NAP — nam trong mortise o mat duoi do doc
-        def mm(p): return (W - p[0], p[1]) if right else p
+        # mat mong go ben NAP — ong go quay theo canh
         c = (W - PIN[0], PIN[1]) if right else PIN
-        for yc in HG_Y:
-            q0 = rot_xz(mm((0.0, Z_RIM)), c, -th if right else th)
-            q1 = rot_xz(mm((B.HG_W, Z_RIM + B.HG_MORT)), c, -th if right else th)
-            sc.prism_y([q0, (q1[0], q0[1]), q1, (q0[0], q1[1])],
-                       yc - B.HG_L/2, yc + B.HG_L/2, COL['brass'], COL['brass'])
+        for y0, is_body in KN:
+            if is_body: continue
+            sc.prism_y(circle_xz(c[0], c[1], RK), y0, y0 + B.KN_LEN,
+                       COL['coco'], COL['cut'])
         # nam cham duoi nap
         if abs(th) < 1e-9 and show_mag:
             for xc in (B.MAG_X if not right else [W-x for x in B.MAG_X]):
@@ -341,9 +339,10 @@ def shot(name, title, sub_, build, eye, target=None, w=1000, h=620, focal=1500):
 # 1 — tong the, nap dong
 def v1(sc): add_body(sc, show_mag=False); add_lid(sc, show_mag=False)
 shot('fig12a-tong-the-nap-dong', 'HÌNH 12a — Tổng thể, nắp đóng',
-     f'{W:.0f} × {S["Y_OA"]:.0f} × {S["Z_OA"]:.0f} mm · {B.mass_of(S,"loi on dinh")[2]:.2f} kg. '
+     f'{S["X_OA"]:.1f} × {S["Y_OA"]:.0f} × {S["Z_OA"]:.0f} mm (thân {W:.0f}, ống bản lề nhô {S["PROUD"]:.1f}/bên) '
+     f'· {B.mass_of(S,"loi on dinh")[2]:.2f} kg. '
      f'Khe ráp giữa {B.SEAM}. Hốc âm hai tay nằm trong vách trái/phải, không nối gỗ ra ngoài. '
-     f'Bản lề lá brass, khớp Ø{B.HG_KN} chìm trong đường chỉ góc.',
+     f'Bản lề mắt mộng gỗ Ø{2*RK:.1f} ở arris — không một chi tiết kim loại.',
      v1, eye=(-250, -430, 260), target=(CX, CY, 22), focal=1250)
 
 # 2 — nap mo 180 do
@@ -396,5 +395,5 @@ def v5(sc):
     add_lid(sc, 0.0, leaves=(False, True))
 shot('fig12e-chi-tiet-goc', 'HÌNH 12e — Vách trái: hốc âm hai tay và bản lề',
      f'Hốc âm {B.GRIP_W:.0f} × {B.GRIP_H:.0f} sâu {B.GRIP_D:.0f} nằm gọn trong vách {S["WALL_GRIP"]:.0f} mm, '
-     f'dải gỗ trên hốc {S["GRIP_LEDGE"]:.0f} mm. Bản lề {B.HG_N} lá brass ngay trên arris.',
+     f'dải gỗ trên hốc {S["GRIP_LEDGE"]:.0f} mm. {B.N_KN} mắt mộng gỗ Ø{2*RK:.1f} ngay trên arris.',
      v5, eye=(-560, -315, 250), target=(105, 172, 24), focal=1450)

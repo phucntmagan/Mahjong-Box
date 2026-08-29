@@ -68,8 +68,11 @@ b=[panel(80,92,220,380,'A · Mặt bằng một cánh  TL 1:1,16'),
    p.rect(ST_H,ST_H+op_w,RAIL,RAIL+op_l,NU,sw=1.0),
    p.rect(ST_H-TON,ST_H+op_w+TON,RAIL-TON,RAIL+op_l+TON,'none','#a8332a',1.0,
           'stroke-dasharray="4,3"')]
-for yc in B.derive()['HG_Y']:                      # 3 ban le brass tren canh mong
-    b.append(p.rect(0, B.HG_W, yc-B.HG_L/2, yc+B.HG_L/2, '#c9a227', '#6b5410', 1.0))
+_S = B.derive()
+for i in range(B.N_KN):                            # chuoi mat mong go tren do doc
+    y0 = _S['KN_Y0'] + i*_S['KN_PITCH']
+    b.append(p.rect(-_S['R_KN'], _S['R_KN'], y0, y0+B.KN_LEN,
+                    SP if i % 2 == 0 else FR, sw=0.9))
 b += [p.dim(0,ST_H,0,f'{ST_H:.0f}',dy=16), p.dim(ST_H,ST_H+op_w,0,f'lòng {op_w:.2f}',dy=16),
       p.dim(ST_H+op_w,LW,0,f'{ST_S:.0f}',dy=16), p.dim(0,LW,0,f'{LW:.2f}',dy=38),
       T(p.X(LW/2), p.Z(LL)-10,f'{LL:.0f} dọc',text_anchor='middle',font_size=9.5,fill='#55524b')]
@@ -109,8 +112,8 @@ ann=[(908,330, s3.X(ST_H-2), s3.Z(13), f'Tấm Nu {PAN_T:.0f}, thụt {S_TOP:.0f
      (84,510, p.X(90), p.Z(90), 'tấm Nu THẢ — không nằm trong chuỗi kích thước'),
      (908,150, s2.X(LW-ST_S/2), s2.Z(T_S+6), 'Đố khe giữa — không còn rãnh sống khóa'),
      (908,167, s2.X(172), s2.Z(15), '(gỗ đặc) — không bao giờ vào tấm Nu'),
-     (908,246, s2.X(B.HG_W/2), s2.Z(T_H/2),
-      f'Mortise bản lề {B.HG_W:.0f} × sâu {B.HG_MORT:.1f} nằm trong đố gỗ đặc')]
+     (908,246, s2.X(2), s2.Z(0),
+      f'Mắt mộng gỗ Ø{2*_S["R_KN"]:.1f} phay thẳng từ đố gỗ đặc, lỗ chốt Ø{_S["KN_HOLE"]:.2f}')]
 open('figs/fig6-khung-tam-tha.svg','w').write(svg(940,528,
   hdr('HÌNH 6 — Nắp gỗ đặc: khung cocobolo ôm tấm Nu thả trong rãnh',
       'Chỉ hai thanh đố 34 mm nằm trong chuỗi kích thước bề rộng cánh. Tấm Nu thả tự do trong rãnh nên nở bao nhiêu cũng không đẩy khe ráp giữa.',

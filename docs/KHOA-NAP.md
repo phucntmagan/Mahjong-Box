@@ -11,8 +11,8 @@ Phần đáng đọc không phải con số đó mà là **vì sao mọi cách k
 
 ## 1. Khóa phải chặn hướng nào
 
-Trục xoay bản lề P = **(0 , 47)** — nằm đúng trên arris, không phải ở giữa bề dày nắp (xem
-`docs/DONG-HOC-BAN-LE.md`). Mép khe ráp giữa cách trục 184,9 mm. Quay cánh một góc nhỏ θ, mép khe
+Trục chốt bản lề P = **(0 , 47)** — nằm đúng trên arris, không phải ở giữa bề dày nắp (xem
+`docs/DONG-HOC-BAN-LE.md`; bản lề là **mắt mộng gỗ**, không kim loại). Mép khe ráp giữa cách trục 184,9 mm. Quay cánh một góc nhỏ θ, mép khe
 đi **gần như thẳng đứng lên**: tỉ lệ dọc/ngang 12,3 : 1.
 
 Điều đó sinh ra hai kiểu mở với hai chuyển động tương đối khác hẳn nhau:
@@ -64,14 +64,14 @@ mặt trong của nắp và cố xoay nó ra.
 
 | Thành phần | kg | Tay đòn | N·mm |
 |---|---:|---:|---:|
-| Trọng lượng một cánh nắp | 0,65 | 92 | 587 |
+| Trọng lượng một cánh nắp | 0,66 | 92 | 595 |
 | 2 khay quân đầy trong một khoang | 1,59 | 81 | 1267 |
 | Nửa khay phụ kiện + quân Joker | 0,39 | 185 | 711 |
-| **Tổng mô men quanh trục xoay** | | | **2564** |
+| **Tổng mô men quanh trục xoay** | | | **2572** |
 
 Bốn điểm giữ mỗi cánh, tay đòn 121 và 145 mm ở cả hai đầu hộp, tổng tay đòn 532 mm:
 
-- tĩnh: **4,82 N** mỗi điểm
+- tĩnh: **4,84 N** mỗi điểm
 - hệ số động 3: **14,5 N** mỗi điểm
 
 **Đặc tính chốt: giữ được hộp lật úp hoàn toàn với hệ số động 3.**
@@ -187,8 +187,8 @@ luồn ngón ↔ hốc âm hai tay.
 
 ## 8. Kéo theo
 
-- Khối lượng: **6,26 kg** (khay lõi ổn định) / **6,88 kg** (khay cocobolo) — đã tính cả 8 cặp nam châm,
-  6 bản lề brass, và trừ 16 hốc âm.
+- Khối lượng: **6,17 kg** (khay lõi ổn định) / **6,78 kg** (khay cocobolo) — đã tính cả 8 cặp nam châm
+  và trừ 16 hốc âm. Bản lề mắt mộng gỗ không thêm chi tiết nào ngoài gỗ.
 - BOM thêm: 16 nam châm khối 20 × 5 × 5 N45 mạ Ni, epoxy dán.
 - QA thêm: đo lực tách mỗi cặp trên mẫu đã hoàn thiện, ngưỡng 12,6 N.
 - Sheet BX-01 và sheet nắp phải thêm 16 hốc âm 20,2 × 5,2 × 5,2 với dung sai vị trí ±0,2 — sai lệch

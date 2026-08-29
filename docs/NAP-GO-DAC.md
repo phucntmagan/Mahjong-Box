@@ -1,10 +1,10 @@
 # Phương án nắp gỗ đặc — khung gỗ đỏ ôm tấm Nu
 
 > **Cập nhật 29-08-2026 — lập luận đã đổi trục, kết luận không đổi.** Bản gốc chứng minh "không dùng
-> tấm Nu đặc" bằng chuỗi **mắt mộng gỗ**. Mắt mộng đã bị bỏ (trục xoay dời ra arris, bản lề nay là lá
-> brass — xem `docs/DONG-HOC-BAN-LE.md`), nên lập luận đó không còn đối tượng. Kết luận **khung + tấm
-> thả vẫn đúng**, nhưng nay đứng trên hai chân khác: **khe ráp giữa** và **đố dọc bản lề**. Mục dưới đã
-> viết lại theo `tools/lid_solid_calc.py` hiện hành.
+> tấm Nu đặc" bằng chuỗi mắt mộng nằm ở **giữa bề dày nắp**. Trục xoay đã dời ra **arris** nên chuỗi
+> mắt mộng đổi vị trí và đường kính (Ø18 → **Ø12,2**) — xem `docs/DONG-HOC-BAN-LE.md`. Bản lề vẫn là
+> **mắt mộng gỗ, không kim loại**. Kết luận **khung + tấm thả vẫn đúng**, nhưng nay đứng trên hai chân
+> chắc hơn: **khe ráp giữa** và **đố dọc bản lề**. Mục dưới viết lại theo `tools/lid_solid_calc.py`.
 
 > Bản đầy đủ có hình: **`build/nap-go-dac.pdf`**.
 > Hình: `figs/fig6-khung-tam-tha`, `figs/fig7-khe-rap-giua`. Tính toán: `tools/lid_solid_calc.py`.
@@ -38,13 +38,14 @@ Xưởng làm ở 9 % MC, mùa nồm miền Bắc/Nam lên 13 % → ΔMC = 4 %.
 
 Không tính được bằng bảng, nhưng chặn thiết kế:
 
-- Bản lề brass ăn mortise **0,9 mm** vào mặt dưới đố dọc, giữ bằng **vít brass**. Vít bắt vào Nu: thớ
-  xoắn loạn, hay có lõi vỏ và lỗ rỗng, không có hướng nào đảm bảo → lực nhổ vít không thể đảm bảo được.
-- Khi mở 180°, **toàn bộ** tải của cánh dồn qua mặt chặn **12,75 × 350 mm** — chính là mặt cạnh của đố
+- Mắt mộng bản lề được **phay thẳng từ đố dọc**: ống gỗ Ø12,2 liền khối với đố, và một lỗ chốt Ø6,20
+  khoan dọc **160 mm** xuyên trong lòng đố. Nu thớ xoắn loạn, hay có lõi vỏ và lỗ rỗng — một lỗ sâu 160
+  trong Nu gần như chắc chắn gặp lỗ rỗng và ống gỗ sẽ tách.
+- Khi mở 180°, **toàn bộ** tải của cánh dồn qua mặt chặn **3 335 mm²** — chính là mặt cạnh của đố
   dọc bản lề. Người chơi tỳ 5 kg ở mép ngoài cho **9,62 N·m**. Ép mặt ngang thớ có trị số cho phép
   (14 MPa cho cocobolo); Nu **không có trị số nào ổn định**.
-- Bo lượn arris **R2,25** chạy suốt 350 mm nằm đúng trên cạnh đố dọc: cạnh mỏng nhất của chi tiết, chỗ
-  dễ vỡ nhất nếu gỗ có lỗ rỗng.
+- Thành gỗ quanh lỗ chốt chỉ **3,0 mm**, chạy suốt chuỗi mộng 314 mm trên cạnh đố dọc: chi tiết mỏng
+  nhất của cả cái hộp, chỗ dễ vỡ nhất nếu gỗ có lỗ rỗng.
 
 **⇒ Đố dọc bản lề bắt buộc là gỗ đặc thẳng thớ. Tức là KHUNG + TẤM THẢ.**
 
@@ -52,7 +53,7 @@ Không tính được bằng bảng, nhưng chặn thiết kế:
 
 | Chi tiết | Kích thước | Ghi chú |
 |---|---|---|
-| Đố dọc cạnh bản lề | 34 × 350 × 15 | cocobolo đặc, thớ dọc 350; mang mortise bản lề và bo lượn R2,25 |
+| Đố dọc cạnh bản lề | 34 × 350 × 15 | cocobolo đặc, thớ dọc 350; mang 3 mắt mộng Ø12,2 và lỗ chốt Ø6,20 |
 | Đố dọc cạnh khe giữa | 34 × 350 × 15 | không còn rãnh sống khóa |
 | Đố ngang trước/sau | 30 × 116,25 | |
 | Lòng khung | 116,25 × 290 | |
@@ -81,17 +82,17 @@ Giải luôn: §3.1 review Rev B (cánh nắp cần lòng lõm) và vấn đề 
 
 | Cấu tạo khay | Gỗ | + Quân | TỔNG |
 |---|---:|---:|---:|
-| Khay cocobolo | 4,45 | 2,43 | **6,88 kg** |
-| Khay lõi ổn định | 3,83 | 2,43 | **6,26 kg** |
+| Khay cocobolo | 4,35 | 2,43 | **6,78 kg** |
+| Khay lõi ổn định | 3,73 | 2,43 | **6,17 kg** |
 
-Tải thiết kế **203 N** (khay cocobolo) / **184 N** (khay lõi ổn định). Không còn sống khóa, không còn
+Tải thiết kế **200 N** (khay cocobolo) / **181 N** (khay lõi ổn định). Không còn sống khóa, không còn
 quai — xem `docs/CHOT-REV-C.md`.
 
 ## Mộng khung bằng cocobolo — rủi ro lớn nhất
 
 **Đã chốt: khung nắp và thân đều là cocobolo**, chỉ tấm nắp là Nu gõ đỏ — đồng màu như ảnh mẫu.
 
-Khung nắp là kết cấu **4 mộng mỗi cánh, 8 mộng cả bộ**, vừa giữ tấm Nu vừa mang mortise bản lề.
+Khung nắp là kết cấu **4 mộng mỗi cánh, 8 mộng cả bộ**, vừa giữ tấm Nu vừa mang mắt mộng bản lề.
 Mà cocobolo là một trong những loại **khó dán nhất**: chất chiết xuất (quinone) thổi lên bề mặt
 vừa gia công trong vòng vài phút và chặn kết dính.
 
@@ -122,7 +123,7 @@ Khối Nu thô tối thiểu ~168 × 342 × 36.
 
 Sống khóa 44 × 20, chốt xoay Ø16 và quai da đều **đã bỏ** cùng với phương án A. Khóa nắp nay là
 8 cặp nam châm nối nắp với thân — xem `docs/KHOA-NAP.md`. Nắp **đều 15, không vát**. Phủ bì
-**370 × 350 × 62**.
+**382,2 × 350 × 62** (thân 370 + ống bản lề nhô 6,1 mỗi bên).
 
 ## Pháp lý
 
@@ -137,8 +138,8 @@ Khung nắp cocobolo còn quyết định số hộp gửi được mỗi lô h�
 
 | Cấu tạo khay | Dalbergia / hộp | Tối đa mỗi lô (ngưỡng 10 kg) |
 |---|---:|---:|
-| Khay cocobolo | 3,83 kg | **2 hộp** |
-| Khay lõi ổn định | 2,36 kg | **4 hộp** |
+| Khay cocobolo | 3,86 kg | **2 hộp** |
+| Khay lõi ổn định | 2,40 kg | **4 hộp** |
 
 ## Thay đổi so với bản trước
 
@@ -152,4 +153,4 @@ Khung nắp cocobolo còn quyết định số hộp gửi được mỗi lô h�
 | 6 | Hồ sơ CITES: thêm *Afzelia* | trước chỉ có *Dalbergia* |
 | 7 | Khung nắp **cocobolo**, không phải gõ đỏ | đồng màu thân như ảnh mẫu; kéo theo quy trình epoxy + draw-bore |
 | 8 | Tấm Nu 10 → **7** | ở tấm 10 thì lip dưới của rãnh chỉ còn 0,23 mm |
-| 9 | Đố dọc bản lề: mang mắt mộng gỗ → mang **mortise bản lề brass 0,9 mm** | trục xoay dời ra arris |
+| 9 | Mắt mộng bản lề Ø18 → **Ø12,2**, dời từ giữa bề dày nắp ra **arris** | ống hết bị bề dày nắp ép |

@@ -271,7 +271,7 @@ CMP = [
   ("Canh nap", "176,7 tam lien", f"{S['LW']:.2f} khung + tam tha",
    f"Nu dac dong khe rap giua o dMC {BS.seam_close_dmc('nu'):.2f} %"),
   ("Ban le", "mat mong go + chot O6 x 322",
-   f"{2*BS.HG_N} ban le brass {BS.HG_L:.0f}x{BS.HG_W:.0f}x{BS.HG_T}",
+   f"{BS.N_KN} mat mong go x {BS.KN_LEN:.0f}, ong O{2*S['R_KN']:.1f}, chot go O{BS.KN_PIN:.0f}",
    "truc dua ra arris -> khong con ong go"),
   ("Truc xoay", "giua be day nap", f"({S['PIN_X']:.0f} , {S['PIN_Z']:.0f}) tren arris",
    "hinge_kinematics.py muc 1"),

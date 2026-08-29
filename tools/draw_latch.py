@@ -55,7 +55,7 @@ for right in (False, True):                       # canh mo (nhat, dut net)
 for right in (False, True):                       # canh dong
     b.append(v.poly(leaf(0.0, right), LID, CUT, 1.1))
 for x0 in (PX, W-PX):
-    b.append(v.circ((x0, PZ), B.HG_R, '#c9a227', '#6b5410', 1.1))
+    b.append(v.circ((x0, PZ), S['R_KN'], '#a9754a', '#2a241c', 1.1))
 zb = (Z_SEAM + Z_LID)/2
 b.append(v.rect(XS-14, XS+14, zb-1.6, zb+1.6, '#c9a227', CUT, 0.9))   # chot khi dong
 sA, sB = seam_pt(TH), seam_pt(TH, True)                                # chot khi tach

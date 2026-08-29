@@ -36,11 +36,13 @@ print(f"   - No cung la cho duy nhat khoet duoc khe luon ngon nhac khay. Hoc am 
 print(f"     {B.GRIP_D:.0f} tu ngoai + khe luon ngon {B.WELL_D:.0f} tu trong = an het be day vach.")
 print(f"  Ba chi tiet tranh nhau mot bo phan day {B.WALL_FB:.0f} mm.\n")
 print(f"  Vach TRAI/PHAI day {C['WALL_HINGE']:.0f} mm, va tren no KHONG co gi khac tranh cho:")
-print(f"  ban le brass nam TREN VANH (Z{C['Z_RIM']:.0f}, mortise sau {B.HG_MORT:.1f} mm),")
+print(f"  ong go ban le O{2*C['R_KN']:.1f} nam o ARRIS (0 , Z{C['Z_RIM']:.0f}), chiem {C['R_KN']:.1f} mm")
+print(f"  be day vach tinh tu mat ngoai,")
 print(f"  con hoc am o Z{C['GRIP_Z0']:.0f}..{C['GRIP_Z1']:.0f} — hai vung roi nhau hoan toan.")
 print(f"  (Chinh hoc am dinh ra be day {C['WALL_HINGE']:.0f}: sau {B.GRIP_D:.0f} + thanh sau"
       f" {B.GRIP_BACK:.0f} = {C['WALL_HINGE']:.0f}.")
-print(f"   Ban le chi an {B.HG_MORT:.1f} mm vao vanh nen khong doi hoi gi ve be day vach.)")
+print(f"   Ong go chi an {C['R_KN']:.1f} mm vao vach {C['WALL_HINGE']:.0f}, con {C['WALL_HINGE']-C['R_KN']:.1f} mm;")
+print(f"   hoc am moi la thu dinh ra be day vach.)")
 print(f"\n  => Hoc am dat o VACH TRAI/PHAI. Phu bi KHONG doi: {C['W']:.0f} x {C['Y_OA']:.0f}"
       f" x {C['Z_OA']:.0f}.")
 print(f"     (Ban truoc dat hoc am o vach truoc/sau va ket luan C phai noi phu bi Y")
