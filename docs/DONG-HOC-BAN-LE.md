@@ -1,124 +1,144 @@
-# Động học bản lề — giải điểm treo §2.5
+# Động học bản lề — trục ở arris
 
-> **Trạng thái 29-08-2026.** Phương pháp và kết luận giữ nguyên, nhưng **mọi con số trong đây đã đổi** vì
-> đáy hộp 8 → 6 và bỏ sống khóa: trục xoay nay là **P = (6 , 53)**, cánh mở vươn ra **172,25**, và nắp nay ĐỀU 12 nên KHÔNG còn dốc (bản này ghi 1,94° — tính nhầm trên cả bề rộng cánh thay vì trên đoạn vát thật).
-> Chạy `python3 tools/hinge_kinematics.py` để có bản hiện hành. Xem **`docs/CHOT-REV-C.md`**.
-
-> Bản đầy đủ có hình: **`build/Dong-hoc-ban-le-Mahjong.pdf`**.
+> Bản đầy đủ có hình: **`build/dong-hoc-ban-le.pdf`**.
 > Hình: `figs/fig8-dong-hoc-ban-le`. Tính toán: `tools/hinge_kinematics.py`.
+> Mọi con số trong tài liệu này do script sinh ra. Chạy lại để đối chiếu.
 
-## Kết luận
+## Bản này thay hoàn toàn bản trước
 
-**Trục xoay P = (9 , 58)** — suy ra từ ràng buộc, không phải chọn.
+Bản trước đặt trục xoay ở **giữa bề dày nắp** và suy ra một ống gỗ có bán kính bằng nửa bề dày nắp
+(Ø18 trên hộp cao 65, rồi Ø12 sau khi làm nắp mỏng đi). Lập luận khi đó là:
 
-Ống gỗ bán kính 9 phải tiếp tuyến cả mặt trên (Z67) lẫn mặt dưới (Z49) của nắp. Điều đó ép tâm ống
-vào đúng một điểm: giữa bề dày nắp, cách mặt ngoài thân đúng một bán kính. Hết bậc tự do.
+> *"Ống phải tiếp tuyến cả vành thân (để mắt mộng bên thân mọc lên được từ vách) lẫn mặt trên nắp
+> (để cánh mở 180° nằm phẳng đúng cao độ vành) → R = nửa bề dày nắp."*
+
+Câu đó **đúng, nhưng chỉ đúng bên trong một giả thiết chưa hề được đặt câu hỏi**: rằng trục nằm ở giữa
+bề dày nắp. Ràng buộc thật sự của bài toán chỉ có một — trong cả hành trình 0–180°, vật liệu cánh nắp
+không được cắt vào vật liệu thân hộp. Vị trí trục là **biến**, không phải dữ kiện.
+
+## Đặt trục ở đâu thì phải bỏ đi bao nhiêu
+
+`hinge_kinematics.py` §1 không lập luận bằng lời. Nó bo tròn đầu cánh nắp thành mũi tròn bán kính R
+quanh trục, quét cánh 0→180° từng nửa độ, và tìm **R lớn nhất mà cánh vẫn quay lọt**:
+
+| đặt trục ở | toạ độ | mũi tròn R | suy ra |
+|---|---:|---:|---|
+| giữa bề dày nắp (bản trước) | (7,5 , 54,5) | **7,52 mm** | ống gỗ Ø15,0 |
+| cạnh ngoài trên của thân — arris | (0 , 47) | **0,00 mm** | **không phải bỏ gì** |
+
+Hàng một tái tạo lại đúng kết quả cũ, và cho thấy nó đến từ đâu: R = 7,5 = **15/2** = nửa bề dày nắp.
+Không phải trùng hợp — mũi tròn buộc phải tiếp tuyến cả mặt trên lẫn mặt dưới nắp, mà hai mặt đó cách
+nhau đúng bề dày nắp. Nói cách khác: **"R = nửa bề dày nắp" là hệ quả bắt buộc của chỗ đặt trục, không
+phải một lựa chọn thiết kế.** Muốn ống thanh hơn thì chỉ còn cách làm nắp mỏng hơn — đó là lý do bản
+trước phải hạ nắp 18 → 12, và vẫn còn thô.
+
+Hàng hai là câu trả lời. Đưa trục ra **arris — góc chung của cả thân lẫn nắp** — thì hai góc đầu cánh
+nắp **trùng với chính trục**: bán kính quét bằng 0, chúng không quét ra cái gì cả.
+
+> **Quy tắc rút ra:** trục xoay phải nằm ở góc chung của hai chi tiết. Trục cắm sâu vào trong vật liệu
+> bao nhiêu thì phải bỏ đi bấy nhiêu.
+
+Đó là lý do bản lề trong ảnh tham chiếu gần như vô hình trong khi nắp vẫn dày: **họ không đặt trục vào
+giữa bề dày nắp.** Bề dày nắp không nói gì về bản lề cả.
+
+![Hành trình 0→180° và so sánh hai chỗ đặt trục: giữa bề dày nắp cần mũi tròn R7,5 (= ống gỗ Ø15), trên arris không cần bỏ gì.](figs/fig8-dong-hoc-ban-le.png)
 
 ## Cánh mở ra nằm ở đâu
 
-| Điểm | Đóng X | Đóng Z | Mở 180° X | Z |
+| Điểm | Đóng X | Đóng Z | Mở 180° X | Mở 180° Z |
 |---|---:|---:|---:|---:|
-| Mép mộng, mặt trên | 18,0 | 67,0 | 0,0 | 49,0 |
-| Mép mộng, mặt dưới | 18,0 | 49,0 | 0,0 | 67,0 |
-| Mép khe giữa, mặt trên | 176,7 | 67,0 | −158,7 | 49,0 |
-| Mép khe giữa, mặt dưới | 176,7 | 55,0 | −158,7 | 61,0 |
-| Đáy sống khóa | 154,7 | 83,0 | −136,7 | 33,0 |
+| mép bản lề, mặt dưới | 0,0 | 47,0 | 0,0 | 47,0 |
+| mép bản lề, mặt trên | 0,0 | 62,0 | 0,0 | 32,0 |
+| mép khe giữa, mặt dưới | 184,2 | 47,0 | −184,2 | 47,0 |
+| mép khe giữa, mặt trên | 184,2 | 62,0 | −184,2 | 32,0 |
 
-Cánh mở ra **nằm ngang, mặt dưới phẳng tại Z49** — đúng cao độ vành thân. Vươn ra **158,7 mm**.
-Mặt trên dốc từ Z67 xuống Z61 = **1,94° nghiêng về phía người chơi**, đúng thứ cần cho khay bỏ bài,
-có được miễn phí từ chính cái vát nắp 18→12.
+Cánh mở nằm **ngang**, mặt trên phẳng tại **Z47 — đúng cao độ vành thân**, vươn ra 184,25 mm.
 
-## Sống khóa chứng minh cánh không thể nằm xuống bàn
+Cái giá duy nhất của việc dời trục: cánh mở nằm thấp hơn dải cao độ của nắp lúc đóng đúng một bề dày
+nắp (Z32–47 thay vì Z47–62). Và đó **không phải giá**: mặt trên của cánh mở là cái mặt người chơi bỏ
+bài lên, nó phẳng với vành thân — đúng cái ta cần. Mặt đó chính là lòng lõm ôm tấm Nu khi đóng, tức
+khay bỏ bài sâu 5,0 mm.
 
-Mở hết, sống khóa chúc xuống Z33 — hở mặt bàn 33 mm, đạt. Nhưng nếu hạ trục để cánh nằm hẳn xuống
-bàn (cần Pz = 33,5), sống khóa **đâm xuống dưới mặt bàn 16 mm**.
+## Chặn 180° — tự nhiên, không phải phay thêm
 
-Chính chi tiết sống khóa loại bỏ toàn bộ họ nghiệm "cánh nằm phẳng trên bàn". Trục cao là bắt buộc.
+Ở 180°, mặt cạnh bản lề của nắp (mặt phẳng X = 0, từ Z44,75 xuống Z32) áp **đúng** vào mặt ngoài vách
+thân — cùng một mặt phẳng X = 0. Hai mặt đồng phẳng và chạm nhau, cánh không quay tiếp được.
 
-## Quét 0–180°
+Diện tích tiếp xúc **12,75 × 350 = 4 462 mm²**, cả chiều dài cánh.
 
-1° một bước, 11 điểm biên + đáy sống khóa, kiểm với vách thân / đáy hộp / khay / mặt bàn:
-**không va chạm ở bất kỳ góc nào**. Khoảng cách nhỏ nhất tới mặt bàn 33 mm.
+| trường hợp tải | M (N·m) | F (N) | MPa | hệ số |
+|---|---:|---:|---:|---:|
+| chỉ trọng lượng cánh | 0,59 | 69 | 0,015 | 905× |
+| + 2 kg quân bỏ trên khay | 2,39 | 282 | 0,063 | 222× |
+| + người chơi tỳ 5 kg ở mép ngoài | 9,62 | 1 132 | 0,254 | **55×** |
 
-## Vấn đề mới: không có mặt chặn 180° tự nhiên
+Bản trước phải phay một mặt chặn phẳng nằm trong lòng mắt mộng, hệ số 10×. Nay chặn là cả mặt cạnh nắp
+áp vào cả mặt vách thân: hệ số hàng trăm lần, và **không phải gia công gì thêm**.
 
-Ở 180° không bề mặt nào của cánh gặp bề mặt nào của thân. Khớp chốt không chịu được mô men quanh
-chính trục nó → cánh quay tiếp và rớt xuống nếu không chặn.
+## Quét 0–180° — kiểm va chạm
 
-**Giải:** phay một mặt phẳng trên ống gỗ của cả hai bên — chặn nằm trong lòng mộng, hoàn toàn khuất.
+Quét 1° một bước, 10 điểm biên trên cánh. **Không va chạm ở bất kỳ góc nào.** Điểm thấp nhất Z = 32,0
+(= vành thân trừ bề dày nắp — đúng vị trí cánh mở).
 
-| Trường hợp tải | Mô men | Lực chặn | Ứng suất |
-|---|---:|---:|---:|
-| Chỉ trọng lượng cánh (0,83 kg) | 0,72 N·m | 120 N | 0,11 MPa |
-| + 2 kg quân bỏ trên khay | 2,45 N·m | 409 N | 0,39 MPa |
-| + người chơi tỳ 5 kg mép ngoài | 8,94 N·m | 1491 N | **1,41 MPa** |
+![Bản lề brass trên arris, nhìn từ vách trái với một cánh mở 50°.](figs/fig12e-chi-tiet-goc.png)
 
-Mặt chặn 8 × 44 × 3 mắt mộng = 1056 mm², bán kính 6. Nén ngang thớ cocobolo ~14 MPa → **hệ số 10×**.
-
-## Độ võng đầu cánh
-
-Khe chốt 0,25 trong ống dài 44 → góc rơ 5,68 mrad → **võng 0,95 mm** ở mút 168 mm.
-Sụt mặt chặn dưới 5 kg chỉ 0,004 mm.
-
-**Đặc tính kiểm mới:** võng đầu cánh mở ≤ 1,5 mm dưới tải 5 kg tại mép ngoài. Muốn chặt hơn thì
-siết khe chốt — toàn bộ độ rơ nằm ở đó, không phải ở tiết diện.
-
-## Hệ quả bắt buộc: vách bản lề 10 → 18
-
-Ống R9 nghĩa là mắt mộng bên **thân** cũng phải dày 18. Vách 10 mm thì lỗ Ø6,2 chỉ còn **1,9 mm**
-thành mỗi bên — không dùng được.
-
-| Vách | Khay | Ngăn | Phụ kiện | TỔNG | |
-|---:|---:|---:|---:|---:|---|
-| 10 | 126 | 6 | 70 | **354** | hiện tại — không dùng được |
-| 18 | 126 | 6 | 70 | **370** | **khuyến nghị** — không động bố trí lòng hộp |
-| 18 | 126 | 4 | 70 | 366 | vách ngăn mỏng còn 4 |
-| 18 | 126 | 6 | 62 | 362 | AC-01 còn 60/50 — phải bố trí lại ổ xúc xắc và hốc quân dự phòng |
-
-**370 × 350** gần vuông, tỷ lệ đẹp hơn 354 × 350. Cánh nắp 184,2 mỗi bên, sống khóa X 163…207.
-
-## Ngưỡng CITES — biên chỉ còn 7 %
-
-Ở bề rộng 370 với khay cocobolo, lượng *Dalbergia* mỗi hộp là **4,66 kg** (ρ 1,00) — hai hộp
-9,32 kg, **vẫn lọt ngưỡng miễn trừ 10 kg**. Nhưng biên chỉ còn 7 %: lô gỗ về nặng hơn dự kiến là
-tụt xuống 1 hộp/lô. Khay lõi ổn định (3,18 kg/hộp) cho 3 hộp và bỏ hẳn rủi ro này.
-
-## Khối lượng
-
-| Mốc | Khối lượng | Tải TK |
-|---|---:|---:|
-| Bản đầu (ước, thiếu sống khóa) | 7,30 kg | 215 N |
-| Chốt khung cocobolo + tính cả sống khóa | 7,92 kg | 233 N |
-| Chốt ρ cocobolo = 1,00 | 7,48 kg | 220 N |
-| Vách bản lề 18, hộp 370 | **7,75 kg** | 228 N |
-
-Kiểm lại ở 228 N: sống uốn 11,5 MPa (hệ số 10×), võng 0,90 mm < 1,14, chốt xoay 0,89 MPa,
-chỉ khâu hệ số 3,2×. **Đạt hết — không phải sửa kích thước nào.**
-
-Chốt ρ = 1,00 kéo lại gần nửa cân. Nhưng 2,43 kg quân cờ là cố định nên vẫn còn 7,75 kg.
-Hai đòn bẩy còn lại: khay lõi ổn định (−0,62 kg) và phương án C (hốc âm hai tay).
-
-## Chốt trị số cho HD-01
+## Phần cứng
 
 | | |
 |---|---|
-| Trục xoay | X = 9 từ mặt ngoài vách, Z = 58 từ mặt bàn |
-| Bán kính ống gỗ | R9, tiếp tuyến mặt trên và mặt dưới nắp |
-| Dày vách bản lề | **18** (từ 10) — thành quanh lỗ 5,9 mm |
-| Lỗ chốt | Ø6,20 +0,05/0 · chốt Ø6,00 −0,05 |
-| Mặt chặn 180° | phay phẳng rộng 8, bán kính 6, hai bên, khuất trong mộng |
-| Góc mở | 180° +0/−2° |
-| Vị trí cánh khi mở | nằm ngang, mặt dưới Z49, vươn ra 159 |
-| Độ võng cho phép | ≤ 1,5 mm tại mép ngoài dưới tải 5 kg |
-| Phủ bì mới | **370 × 350 × 83** |
+| Kiểu | bản lề lá brass (butt hinge), khớp nằm **đúng trên arris** |
+| Số lượng | 3 chiếc mỗi cánh, tổng **6 chiếc** |
+| Kích thước | 40 dài × 14 rộng mỗi cánh × 1,8 dày, khớp **Ø4,5** |
+| Vị trí theo Y | 88 · 175 · 262 |
+| Mortise | 0,9 mm vào vành thân + 0,9 mm vào mặt dưới nắp → khép kín không hở khe |
+| **Bo lượn arris** | **R2,25** trên cạnh ngoài TRÊN của vách thân và cạnh ngoài DƯỚI của nắp |
+| Khớp lộ ra | không lộ ra ngoài mặt vách — chìm trong đường chỉ góc |
+| Vít | brass, 2 con mỗi cánh mỗi chiếc |
+| Vật liệu | brass CuZn39Pb3 |
+| Khối lượng | **135 g** cả bộ |
 
-## Còn lại phải làm
+Khớp Ø4,5 có tâm nằm đúng trên arris nên nó ăn vào gỗ **cả hai bên**. Phải bo lượn hai cạnh arris đúng
+R2,25; đóng lại, hai đường lượn khép thành một lỗ Ø4,5 ôm trọn khớp. Kết quả: khớp chìm trong đường chỉ
+góc, nhìn nghiêng chỉ thấy một sợi brass Ø4,5 chạy dọc cạnh hộp.
 
-| # | Việc | Trạng thái |
-|---|---|---|
-| 1 | Chốt bề rộng hộp: 370 / 366 / 362 | **chờ quyết định — chặn mọi thứ phía sau** |
-| 2 | Cập nhật `box_spec.py` theo bề rộng đã chốt | sau (1) |
-| 3 | Vẽ sheet BX-01 thân hộp (§2.2) | **vẫn chưa có** |
-| 4 | Hốc nhấc tay + hõm ngón rãnh Joker (§2.3) | chưa vẽ chi tiết |
-| 5 | Nắp trượt ổ xúc xắc | chưa vẽ chi tiết |
-| 6 | Xác minh CITES: *Dalbergia* + *Afzelia* | việc của bên mua |
+**Giá phải trả của việc bo lượn:** mặt chặn 180° còn 12,75 thay vì 15 mm — mất 15 %. Hệ số an toàn vẫn
+55×. Đây là chỗ cho **phần cứng** (R2,25), không phải chỗ cho **hình học** (R7,5): chênh 3,3 lần.
+
+## Độ võng đầu cánh khi mở
+
+Cánh mở là dầm console dài 184 mm, ngàm dọc mặt chặn 180°. Người chơi tỳ 5 kg ở mép ngoài, tải trải đều
+trên 100 mm bề rộng:
+
+- võng đầu cánh **0,28 mm** · uốn 2,4 MPa (MOR 110) → hệ số **46×**
+- cộng rơ của bản lề (~0,05 mm hướng kính) → tổng **~0,33 mm**
+
+**Đặc tính kiểm:** võng đầu cánh mở ≤ 1,5 mm dưới tải 5 kg tại mép ngoài.
+
+## Chốt lại cho HD-01
+
+| | |
+|---|---|
+| Trục xoay | X = 0 (mặt ngoài vách), Z = 47 (= vành thân) |
+| Suy ra từ | trục phải ở góc chung của hai chi tiết → bán kính quét = 0 |
+| Bản lề | 6 bản lề brass 40 × 14 × 1,8, khớp Ø4,5 |
+| Ống gỗ / mắt mộng | **KHÔNG CÒN** |
+| Bo lượn arris | R2,25 hai cạnh — khép thành lỗ Ø4,5 ôm khớp |
+| Chặn 180° | mặt cạnh nắp áp vào mặt ngoài vách thân — tự nhiên |
+| Góc mở | 180° +0/−1° |
+| Vị trí cánh khi mở | nằm ngang, mặt trên Z47 (= vành thân), vươn ra 184 |
+| Bề dày nắp | **15 đều, không vát** — không còn ràng buộc gì tới bản lề |
+| Phủ bì | 370 × 350 × 62 |
+| Khối lượng | **6,26 kg** (khay lõi ổn định) / **6,88 kg** (khay cocobolo) |
+
+## Cái bản này lấy đi khỏi thiết kế
+
+| bỏ đi | vì |
+|---|---|
+| ống gỗ Ø12–Ø18 | trục không còn nằm trong vật liệu |
+| 7 mắt mộng gỗ xen kẽ, bước 45 | không còn ống để cắt thành mắt |
+| 2 chốt brass Ø4 × 160 xuyên mắt mộng | bản lề lá tự mang khớp |
+| mặt chặn 180° phay trong lòng mộng | mặt cạnh nắp áp thẳng vào mặt vách |
+| ràng buộc "vách bản lề phải dày 18 để chứa ống" | vách 18 nay chỉ do hốc âm hai tay (12 + 6) |
+| ràng buộc "nắp phải mỏng để ống thanh" | nắp dày bao nhiêu cũng được → chọn 15 |
+
+Thêm vào: 6 bản lề brass mua sẵn, 135 g, và hai đường bo lượn R2,25.

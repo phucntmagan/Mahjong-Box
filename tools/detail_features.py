@@ -38,7 +38,7 @@ for t in [f"khoet vanh than chi lam lo MAT NGOAI cua khay, van khong co gi de mo
           f"khoet vanh khay thi ngay sau vanh la truong quan — dinh quan chi thap hon",
           f"  vanh khay {S['HEADROOM']:.1f} mm, nen hoc sau hon {S['HEADROOM']:.1f} la ho vao o quan;",
           f"'kep' can hai diem doi dien, ma hai ben doi dien cua khay deu bi chan:",
-          f"  mot ben la vach ban le (mat mong chiem {S['KN_RUN']:.0f}/{B.LID_L:.0f} mm),",
+          f"  mot ben la vach ban le go dac day {S['WALL_HINGE']:.0f} mm,",
           f"  ben kia la vach ngan day {S['DIV']:.0f} mm."]:
     print(f"   - {t}")
 

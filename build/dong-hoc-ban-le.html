@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8">
+<title>Động học bản lề — trục ở arris</title>
+<style>
+@page { size: A4; margin: 16mm 15mm 14mm 15mm; }
+* { box-sizing: border-box; }
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body { font-family: "DejaVu Sans", sans-serif; font-size: 9.3pt; line-height: 1.5;
+       color: #1a1a1a; margin: 0; }
+h1 { font-size: 17pt; margin: 0 0 2mm; letter-spacing: -0.2pt; }
+h2 { font-size: 12pt; margin: 7mm 0 2.5mm; padding-bottom: 1.2mm;
+     border-bottom: 1.2pt solid #1a1a1a; break-after: avoid; }
+h3 { font-size: 10pt; margin: 4.5mm 0 1.5mm; break-after: avoid; }
+p { margin: 0 0 2mm; }
+ul, ol { margin: 0 0 2mm; padding-left: 5mm; }
+li { margin-bottom: 0.8mm; }
+table { width: 100%; border-collapse: collapse; margin: 2mm 0 3mm; font-size: 8.4pt;
+        break-inside: avoid; }
+th { background: #ecebe7; text-align: left; font-weight: bold; padding: 1.3mm 1.8mm;
+     border: 0.4pt solid #b8b5ae; }
+td { padding: 1.2mm 1.8mm; border: 0.4pt solid #cfccc5; vertical-align: top; }
+td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; }
+td.c, th.c { text-align: center; }
+tr:nth-child(even) td { background: #f7f6f3; }
+code, pre { font-family: "DejaVu Sans Mono", monospace; }
+pre { background: #f4f3ef; border-left: 2.5pt solid #8a8madd; border-left-color: #8a877e;
+      padding: 2.5mm 3mm; font-size: 8pt; line-height: 1.45; margin: 2mm 0 3mm;
+      white-space: pre; break-inside: avoid; }
+code { font-size: 8.4pt; background: #f0efeb; padding: 0.2mm 0.8mm; border-radius: 1pt; }
+.head { border-bottom: 2.5pt solid #1a1a1a; padding-bottom: 3mm; margin-bottom: 4mm; }
+.head .meta { font-size: 8.2pt; color: #55524b; margin-top: 1.5mm; }
+.head .meta b { color: #1a1a1a; }
+.verdict { background: #f2f0ea; border: 0.8pt solid #b8b5ae; border-left: 3pt solid #1a1a1a;
+           padding: 3mm 3.5mm; margin: 3mm 0 4mm; break-inside: avoid; }
+.verdict .big { font-size: 10.5pt; font-weight: bold; display: block; margin-bottom: 1.5mm; }
+.warn { background: #fdf6e8; border: 0.6pt solid #d9c184; border-left: 3pt solid #c79a1e;
+        padding: 2.5mm 3mm; margin: 2.5mm 0; font-size: 8.6pt; break-inside: avoid; }
+.fix { background: #eef4ee; border-left: 3pt solid #4a7a52; padding: 2.5mm 3mm;
+       margin: 2.5mm 0; font-size: 8.8pt; break-inside: avoid; }
+.fix b:first-child { color: #2f5a36; }
+.ok  { color: #2f7a3c; font-weight: bold; }
+.bad { color: #a8332a; font-weight: bold; }
+.tag { display: inline-block; font-size: 7.4pt; font-weight: bold; padding: 0.4mm 1.6mm;
+       border-radius: 1.5pt; vertical-align: 1pt; margin-right: 1.5mm; letter-spacing: 0.3pt; }
+.t-crit { background: #a8332a; color: #fff; }
+.t-maj  { background: #c07a12; color: #fff; }
+.t-min  { background: #6b6862; color: #fff; }
+figure { margin: 3mm 0 4mm; break-inside: avoid; text-align: center; }
+figcaption { font-size: 7.8pt; color: #55524b; margin-top: 1.5mm; text-align: left; }
+.foot { margin-top: 6mm; padding-top: 2mm; border-top: 0.6pt solid #cfccc5;
+        font-size: 7.6pt; color: #6b6862; }
+.pb { break-before: page; }
+.nb { break-inside: avoid; }
+</style></head><body>
+<div class="head"><h1>Động học bản lề — trục ở arris</h1><div class="meta"><b>Bộ hồ sơ:</b> Hộp Mahjong 152 quân, BURLORA · <b>Đơn vị:</b> mm<br><b>Nguồn số:</b> tools/hinge_kinematics.py · <b>Hình:</b> tools/draw_hinge.py</div></div>
+<h1>Động học bản lề — trục ở arris</h1>
+<div class="warn">Bản đầy đủ có hình: <b><code>build/dong-hoc-ban-le.pdf</code></b>. Hình: <code>figs/fig8-dong-hoc-ban-le</code>. Tính toán: <code>tools/hinge_kinematics.py</code>. Mọi con số trong tài liệu này do script sinh ra. Chạy lại để đối chiếu.</div>
+<h2>Bản này thay hoàn toàn bản trước</h2>
+<p>Bản trước đặt trục xoay ở <b>giữa bề dày nắp</b> và suy ra một ống gỗ có bán kính bằng nửa bề dày nắp (Ø18 trên hộp cao 65, rồi Ø12 sau khi làm nắp mỏng đi). Lập luận khi đó là:</p>
+<div class="warn"><i>&quot;Ống phải tiếp tuyến cả vành thân (để mắt mộng bên thân mọc lên được từ vách) lẫn mặt trên nắp (để cánh mở 180° nằm phẳng đúng cao độ vành) → R = nửa bề dày nắp.&quot;</i></div>
+<p>Câu đó <b>đúng, nhưng chỉ đúng bên trong một giả thiết chưa hề được đặt câu hỏi</b>: rằng trục nằm ở giữa bề dày nắp. Ràng buộc thật sự của bài toán chỉ có một — trong cả hành trình 0–180°, vật liệu cánh nắp không được cắt vào vật liệu thân hộp. Vị trí trục là <b>biến</b>, không phải dữ kiện.</p>
+<h2>Đặt trục ở đâu thì phải bỏ đi bao nhiêu</h2>
+<p><code>hinge_kinematics.py</code> §1 không lập luận bằng lời. Nó bo tròn đầu cánh nắp thành mũi tròn bán kính R quanh trục, quét cánh 0→180° từng nửa độ, và tìm <b>R lớn nhất mà cánh vẫn quay lọt</b>:</p>
+<table><tr><th class="">đặt trục ở</th><th class="n">toạ độ</th><th class="n">mũi tròn R</th><th class="">suy ra</th></tr><tr><td class="">giữa bề dày nắp (bản trước)</td><td class="n">(7,5 , 54,5)</td><td class="n"><b>7,52 mm</b></td><td class="">ống gỗ Ø15,0</td></tr><tr><td class="">cạnh ngoài trên của thân — arris</td><td class="n">(0 , 47)</td><td class="n"><b>0,00 mm</b></td><td class=""><b>không phải bỏ gì</b></td></tr></table>
+<p>Hàng một tái tạo lại đúng kết quả cũ, và cho thấy nó đến từ đâu: R = 7,5 = <b>15/2</b> = nửa bề dày nắp. Không phải trùng hợp — mũi tròn buộc phải tiếp tuyến cả mặt trên lẫn mặt dưới nắp, mà hai mặt đó cách nhau đúng bề dày nắp. Nói cách khác: <b>&quot;R = nửa bề dày nắp&quot; là hệ quả bắt buộc của chỗ đặt trục, không phải một lựa chọn thiết kế.</b> Muốn ống thanh hơn thì chỉ còn cách làm nắp mỏng hơn — đó là lý do bản trước phải hạ nắp 18 → 12, và vẫn còn thô.</p>
+<p>Hàng hai là câu trả lời. Đưa trục ra <b>arris — góc chung của cả thân lẫn nắp</b> — thì hai góc đầu cánh nắp <b>trùng với chính trục</b>: bán kính quét bằng 0, chúng không quét ra cái gì cả.</p>
+<div class="warn"><b>Quy tắc rút ra:</b> trục xoay phải nằm ở góc chung của hai chi tiết. Trục cắm sâu vào trong vật liệu bao nhiêu thì phải bỏ đi bấy nhiêu.</div>
+<p>Đó là lý do bản lề trong ảnh tham chiếu gần như vô hình trong khi nắp vẫn dày: <b>họ không đặt trục vào giữa bề dày nắp.</b> Bề dày nắp không nói gì về bản lề cả.</p>
+<figure><img src="../figs/fig8-dong-hoc-ban-le.png" style="width:100%"><figcaption>Hành trình 0→180° và so sánh hai chỗ đặt trục: giữa bề dày nắp cần mũi tròn R7,5 (= ống gỗ Ø15), trên arris không cần bỏ gì.</figcaption></figure>
+<h2>Cánh mở ra nằm ở đâu</h2>
+<table><tr><th class="">Điểm</th><th class="n">Đóng X</th><th class="n">Đóng Z</th><th class="n">Mở 180° X</th><th class="n">Mở 180° Z</th></tr><tr><td class="">mép bản lề, mặt dưới</td><td class="n">0,0</td><td class="n">47,0</td><td class="n">0,0</td><td class="n">47,0</td></tr><tr><td class="">mép bản lề, mặt trên</td><td class="n">0,0</td><td class="n">62,0</td><td class="n">0,0</td><td class="n">32,0</td></tr><tr><td class="">mép khe giữa, mặt dưới</td><td class="n">184,2</td><td class="n">47,0</td><td class="n">−184,2</td><td class="n">47,0</td></tr><tr><td class="">mép khe giữa, mặt trên</td><td class="n">184,2</td><td class="n">62,0</td><td class="n">−184,2</td><td class="n">32,0</td></tr></table>
+<p>Cánh mở nằm <b>ngang</b>, mặt trên phẳng tại <b>Z47 — đúng cao độ vành thân</b>, vươn ra 184,25 mm.</p>
+<p>Cái giá duy nhất của việc dời trục: cánh mở nằm thấp hơn dải cao độ của nắp lúc đóng đúng một bề dày nắp (Z32–47 thay vì Z47–62). Và đó <b>không phải giá</b>: mặt trên của cánh mở là cái mặt người chơi bỏ bài lên, nó phẳng với vành thân — đúng cái ta cần. Mặt đó chính là lòng lõm ôm tấm Nu khi đóng, tức khay bỏ bài sâu 5,0 mm.</p>
+<h2>Chặn 180° — tự nhiên, không phải phay thêm</h2>
+<p>Ở 180°, mặt cạnh bản lề của nắp (mặt phẳng X = 0, từ Z44,75 xuống Z32) áp <b>đúng</b> vào mặt ngoài vách thân — cùng một mặt phẳng X = 0. Hai mặt đồng phẳng và chạm nhau, cánh không quay tiếp được.</p>
+<p>Diện tích tiếp xúc <b>12,75 × 350 = 4 462 mm²</b>, cả chiều dài cánh.</p>
+<table><tr><th class="">trường hợp tải</th><th class="n">M (N·m)</th><th class="n">F (N)</th><th class="n">MPa</th><th class="n">hệ số</th></tr><tr><td class="">chỉ trọng lượng cánh</td><td class="n">0,59</td><td class="n">69</td><td class="n">0,015</td><td class="n">905×</td></tr><tr><td class="">+ 2 kg quân bỏ trên khay</td><td class="n">2,39</td><td class="n">282</td><td class="n">0,063</td><td class="n">222×</td></tr><tr><td class="">+ người chơi tỳ 5 kg ở mép ngoài</td><td class="n">9,62</td><td class="n">1 132</td><td class="n">0,254</td><td class="n"><b>55×</b></td></tr></table>
+<p>Bản trước phải phay một mặt chặn phẳng nằm trong lòng mắt mộng, hệ số 10×. Nay chặn là cả mặt cạnh nắp áp vào cả mặt vách thân: hệ số hàng trăm lần, và <b>không phải gia công gì thêm</b>.</p>
+<h2>Quét 0–180° — kiểm va chạm</h2>
+<p>Quét 1° một bước, 10 điểm biên trên cánh. <b>Không va chạm ở bất kỳ góc nào.</b> Điểm thấp nhất Z = 32,0 (= vành thân trừ bề dày nắp — đúng vị trí cánh mở).</p>
+<figure><img src="../figs/fig12e-chi-tiet-goc.png" style="width:100%"><figcaption>Bản lề brass trên arris, nhìn từ vách trái với một cánh mở 50°.</figcaption></figure>
+<h2>Phần cứng</h2>
+<table><tr><td class="">Kiểu</td><td class="">bản lề lá brass (butt hinge), khớp nằm <b>đúng trên arris</b></td></tr><tr><td class="">Số lượng</td><td class="">3 chiếc mỗi cánh, tổng <b>6 chiếc</b></td></tr><tr><td class="">Kích thước</td><td class="">40 dài × 14 rộng mỗi cánh × 1,8 dày, khớp <b>Ø4,5</b></td></tr><tr><td class="">Vị trí theo Y</td><td class="">88 · 175 · 262</td></tr><tr><td class="">Mortise</td><td class="">0,9 mm vào vành thân + 0,9 mm vào mặt dưới nắp → khép kín không hở khe</td></tr><tr><td class=""><b>Bo lượn arris</b></td><td class=""><b>R2,25</b> trên cạnh ngoài TRÊN của vách thân và cạnh ngoài DƯỚI của nắp</td></tr><tr><td class="">Khớp lộ ra</td><td class="">không lộ ra ngoài mặt vách — chìm trong đường chỉ góc</td></tr><tr><td class="">Vít</td><td class="">brass, 2 con mỗi cánh mỗi chiếc</td></tr><tr><td class="">Vật liệu</td><td class="">brass CuZn39Pb3</td></tr><tr><td class="">Khối lượng</td><td class=""><b>135 g</b> cả bộ</td></tr></table>
+<p>Khớp Ø4,5 có tâm nằm đúng trên arris nên nó ăn vào gỗ <b>cả hai bên</b>. Phải bo lượn hai cạnh arris đúng R2,25; đóng lại, hai đường lượn khép thành một lỗ Ø4,5 ôm trọn khớp. Kết quả: khớp chìm trong đường chỉ góc, nhìn nghiêng chỉ thấy một sợi brass Ø4,5 chạy dọc cạnh hộp.</p>
+<p><b>Giá phải trả của việc bo lượn:</b> mặt chặn 180° còn 12,75 thay vì 15 mm — mất 15 %. Hệ số an toàn vẫn 55×. Đây là chỗ cho <b>phần cứng</b> (R2,25), không phải chỗ cho <b>hình học</b> (R7,5): chênh 3,3 lần.</p>
+<h2>Độ võng đầu cánh khi mở</h2>
+<p>Cánh mở là dầm console dài 184 mm, ngàm dọc mặt chặn 180°. Người chơi tỳ 5 kg ở mép ngoài, tải trải đều trên 100 mm bề rộng:</p>
+<ul><li>võng đầu cánh <b>0,28 mm</b> · uốn 2,4 MPa (MOR 110) → hệ số <b>46×</b></li><li>cộng rơ của bản lề (~0,05 mm hướng kính) → tổng <b>~0,33 mm</b></li></ul>
+<p><b>Đặc tính kiểm:</b> võng đầu cánh mở ≤ 1,5 mm dưới tải 5 kg tại mép ngoài.</p>
+<h2>Chốt lại cho HD-01</h2>
+<table><tr><td class="">Trục xoay</td><td class="">X = 0 (mặt ngoài vách), Z = 47 (= vành thân)</td></tr><tr><td class="">Suy ra từ</td><td class="">trục phải ở góc chung của hai chi tiết → bán kính quét = 0</td></tr><tr><td class="">Bản lề</td><td class="">6 bản lề brass 40 × 14 × 1,8, khớp Ø4,5</td></tr><tr><td class="">Ống gỗ / mắt mộng</td><td class=""><b>KHÔNG CÒN</b></td></tr><tr><td class="">Bo lượn arris</td><td class="">R2,25 hai cạnh — khép thành lỗ Ø4,5 ôm khớp</td></tr><tr><td class="">Chặn 180°</td><td class="">mặt cạnh nắp áp vào mặt ngoài vách thân — tự nhiên</td></tr><tr><td class="">Góc mở</td><td class="">180° +0/−1°</td></tr><tr><td class="">Vị trí cánh khi mở</td><td class="">nằm ngang, mặt trên Z47 (= vành thân), vươn ra 184</td></tr><tr><td class="">Bề dày nắp</td><td class=""><b>15 đều, không vát</b> — không còn ràng buộc gì tới bản lề</td></tr><tr><td class="">Phủ bì</td><td class="">370 × 350 × 62</td></tr><tr><td class="">Khối lượng</td><td class=""><b>6,26 kg</b> (khay lõi ổn định) / <b>6,88 kg</b> (khay cocobolo)</td></tr></table>
+<h2>Cái bản này lấy đi khỏi thiết kế</h2>
+<table><tr><th class="">bỏ đi</th><th class="">vì</th></tr><tr><td class="">ống gỗ Ø12–Ø18</td><td class="">trục không còn nằm trong vật liệu</td></tr><tr><td class="">7 mắt mộng gỗ xen kẽ, bước 45</td><td class="">không còn ống để cắt thành mắt</td></tr><tr><td class="">2 chốt brass Ø4 × 160 xuyên mắt mộng</td><td class="">bản lề lá tự mang khớp</td></tr><tr><td class="">mặt chặn 180° phay trong lòng mộng</td><td class="">mặt cạnh nắp áp thẳng vào mặt vách</td></tr><tr><td class="">ràng buộc &quot;vách bản lề phải dày 18 để chứa ống&quot;</td><td class="">vách 18 nay chỉ do hốc âm hai tay (12 + 6)</td></tr><tr><td class="">ràng buộc &quot;nắp phải mỏng để ống thanh&quot;</td><td class="">nắp dày bao nhiêu cũng được → chọn 15</td></tr></table>
+<p>Thêm vào: 6 bản lề brass mua sẵn, 135 g, và hai đường bo lượn R2,25.</p>
+<div class="foot">Sinh tu <code>docs/DONG-HOC-BAN-LE.md</code> bang <code>tools/md2html.py</code>. Moi tri so sinh tu <code>tools/box_spec.py</code>.</div>
+</body></html>

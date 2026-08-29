@@ -22,7 +22,7 @@ def rot_about(p, c, th):
     return (c[0] + x*cs - z*sn, c[1] + x*sn + z*cs)
 PIN_L, PIN_R = (PX, PZ), (W-PX, PZ)
 def leaf(th, right=False):
-    p = [(2*B.R_KN, Z_RIM), (LW, Z_SEAM), (LW, Z_LID), (2*B.R_KN, Z_LID)]
+    p = [(0, Z_RIM), (LW, Z_SEAM), (LW, Z_LID), (0, Z_LID)]
     if right:
         p = [(W-x, z) for x, z in p]
         return [rot_about(q, PIN_R, -th) for q in p]
@@ -55,8 +55,7 @@ for right in (False, True):                       # canh mo (nhat, dut net)
 for right in (False, True):                       # canh dong
     b.append(v.poly(leaf(0.0, right), LID, CUT, 1.1))
 for x0 in (PX, W-PX):
-    b.append(v.circ((x0, PZ), B.R_KN, 'none', GRN, 1.0))
-    b.append(v.circ((x0, PZ), B.D_PIN/2, '#1a1208', CUT, 0.9))
+    b.append(v.circ((x0, PZ), B.HG_R, '#c9a227', '#6b5410', 1.1))
 zb = (Z_SEAM + Z_LID)/2
 b.append(v.rect(XS-14, XS+14, zb-1.6, zb+1.6, '#c9a227', CUT, 0.9))   # chot khi dong
 sA, sB = seam_pt(TH), seam_pt(TH, True)                                # chot khi tach
@@ -70,7 +69,7 @@ b.append(T(v.X(XS-88), (v.Z(Z_LID)+v.Z(ztop))/2 + 3, f'venh len {ztop-Z_LID:.0f}
            font_size=9.5, fill=ACC, text_anchor='end'))
 b.append(T(356, 330, f'ca HAI canh cung mo {math.degrees(TH):.1f}° — day la truong hop'
            f' lat up hop', font_size=9.5, fill=ACC, text_anchor='middle'))
-b.append(T(v.X(2*B.R_KN+4), v.Z(Z_LID)-6, 'canh nap khi DONG', font_size=9, fill=DIM))
+b.append(T(v.X(6), v.Z(Z_LID)-6, 'canh nap khi DONG', font_size=9, fill=DIM))
 b.append(T(v.X(PX)+16, v.Z(PZ)+4, f'P = ({PX:.0f} , {PZ:.0f})', font_size=9, fill=GRN))
 
 # ============================================================ PANEL C

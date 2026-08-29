@@ -4,15 +4,16 @@
 ## Kết luận
 
 **Khóa nắp = 8 cặp nam châm khối 20 × 5 × 5 nối NẮP với THÂN.** Không có chi tiết chuyển động,
-không nhìn thấy, không phải thao tác khi mở. Hệ số an toàn 1,7× so với đặc tính "giữ được hộp lật úp
-hoàn toàn với hệ số động 3".
+không nhìn thấy, không phải thao tác khi mở. Hệ số an toàn **1,6×** so với đặc tính "giữ được hộp lật
+úp hoàn toàn với hệ số động 3" — tức 4,7× so với tải tĩnh.
 
 Phần đáng đọc không phải con số đó mà là **vì sao mọi cách khóa hiển nhiên đều sai**.
 
 ## 1. Khóa phải chặn hướng nào
 
-Trục chốt bản lề P = (6 , 53). Mép khe ráp giữa cách trục 178,4 mm. Quay cánh một góc nhỏ θ, mép khe
-đi **gần như thẳng đứng lên**: tỉ lệ dọc/ngang 29,7 : 1.
+Trục xoay bản lề P = **(0 , 47)** — nằm đúng trên arris, không phải ở giữa bề dày nắp (xem
+`docs/DONG-HOC-BAN-LE.md`). Mép khe ráp giữa cách trục 184,9 mm. Quay cánh một góc nhỏ θ, mép khe
+đi **gần như thẳng đứng lên**: tỉ lệ dọc/ngang 12,3 : 1.
 
 Điều đó sinh ra hai kiểu mở với hai chuyển động tương đối khác hẳn nhau:
 
@@ -29,13 +30,13 @@ không khóa được**, vì kiểu (b) rút nó ra đúng theo trục của nó
 
 | Chốt ăn sâu | Tuột khi mỗi cánh mở | Khe đã vênh lên |
 |---:|---:|---:|
-| 5,0 | 9,6° | 30 mm |
-| 6,5 | 11,0° | 34 mm |
-| 8,0 | 12,2° | 37 mm |
-| 12,0 | 14,9° | 46 mm |
+| 5,0 | 7,4° | 24 mm |
+| 6,5 | 8,7° | 28 mm |
+| 8,0 | 9,9° | 31 mm |
+| 12,0 | 12,5° | 40 mm |
 
-Đặt chốt cao hay thấp cũng không cứu được. Với chốt ăn sâu 6,5, khe vênh **28 mm** nếu chốt sát mặt
-trên nắp, **34 mm** ở giữa bề dày, **40 mm** nếu sát mặt dưới. Không có cao độ nào cứu được.
+Đặt chốt cao hay thấp cũng không cứu được. Với chốt ăn sâu 6,5, khe vênh **23 mm** nếu chốt sát mặt
+trên nắp, **28 mm** ở giữa bề dày, **34 mm** nếu sát mặt dưới. Không có cao độ nào cứu được.
 
 ![Vì sao khóa nối cánh với cánh không dùng được, bố trí nam châm, và mặt cắt qua một cặp.](figs/fig11-khoa-nap.png)
 
@@ -45,7 +46,7 @@ Mỗi cánh nắp có 68 mm gỗ ngang thớ nằm trong chuỗi bề rộng (ha
 đóng góp). Ở ΔMC 5 % mỗi cánh nở 0,54 mm → **khe ráp giữa đóng lại 1,09 mm**.
 
 Bất kỳ khóa nào nối hai cánh với nhau đều phải có 1,09 mm rơ theo X để còn lắp được quanh năm. Mà
-1,09 mm rơ đó, theo mục 1, cho mỗi cánh mở 4,5° và **khe vênh lên 13,9 mm** — ngay cả khi chốt còn
+1,09 mm rơ đó, theo mục 1, cho mỗi cánh mở 2,7° và **khe vênh lên 8,5 mm** — ngay cả khi chốt còn
 nguyên trong ổ.
 
 **Hai mục đầu cộng lại cho một kết luận cứng:**
@@ -63,15 +64,15 @@ mặt trong của nắp và cố xoay nó ra.
 
 | Thành phần | kg | Tay đòn | N·mm |
 |---|---:|---:|---:|
-| Trọng lượng một cánh nắp | 0,47 | 95 | 438 |
-| 2 khay quân đầy trong một khoang | 1,59 | 75 | 1169 |
-| Nửa khay phụ kiện + quân Joker | 0,39 | 179 | 688 |
-| **Tổng mô men quanh trục chốt** | | | **2295** |
+| Trọng lượng một cánh nắp | 0,65 | 92 | 587 |
+| 2 khay quân đầy trong một khoang | 1,59 | 81 | 1267 |
+| Nửa khay phụ kiện + quân Joker | 0,39 | 185 | 711 |
+| **Tổng mô men quanh trục xoay** | | | **2564** |
 
-Bốn điểm giữ mỗi cánh, tay đòn 115 và 139 mm ở cả hai đầu hộp, tổng tay đòn 508 mm:
+Bốn điểm giữ mỗi cánh, tay đòn 121 và 145 mm ở cả hai đầu hộp, tổng tay đòn 532 mm:
 
-- tĩnh: **4,52 N** mỗi điểm
-- hệ số động 3: **13,6 N** mỗi điểm
+- tĩnh: **4,82 N** mỗi điểm
+- hệ số động 3: **14,5 N** mỗi điểm
 
 **Đặc tính chốt: giữ được hộp lật úp hoàn toàn với hệ số động 3.**
 
@@ -86,7 +87,7 @@ Bốn điểm giữ mỗi cánh, tay đòn 115 và 139 mm ở cả hai đầu h�
 | Gỗ còn lại | 3,0 mm ra mép nắp, 2,0 mm vào lòng hộp |
 | Hốc âm | 20,2 × 5,2 × sâu 5,2; dán epoxy; mặt nam châm **thụt 0,1** dưới bề mặt |
 | Đối ứng | nam châm thứ hai, **không** dùng đĩa thép |
-| Dày nắp còn lại | 6,8 mm |
+| Dày nắp còn lại | 9,8 mm |
 | Khối lượng thêm | 60 g |
 
 Vì sao hợp: nam châm hút theo **phương Z** — đúng hướng mạnh nhất của nó — và **hoàn toàn tự do theo
@@ -98,21 +99,27 @@ hiện vết rỉ sớm.
 
 | Kiểm | |
 |---|---:|
-| Yêu cầu mỗi điểm (hệ số động 3) | 13,6 N |
+| Yêu cầu mỗi điểm (hệ số động 3) | 14,5 N |
 | Lực kéo một cặp, tiếp xúc trực tiếp | 30,0 N |
 | Sau khi tụt do lớp hoàn thiện (−25 %) | 22,5 N |
-| **Hệ số an toàn** | **1,7×** |
+| **Hệ số an toàn** | **1,6×** |
 | Tổng lực giữ một cánh | 90 N |
+
+Hệ số 1,6 đó **nằm trên hệ số động 3 rồi**. So với tải tĩnh khi lật úp hoàn toàn, biên là **4,7 lần**.
+Nhưng 1,6 không còn chỗ để sai nếu mẫu đo không đạt: tay đòn nam châm bị **chặn trên** bởi ba khe luồn
+ngón (dải 50 mm quanh X = 81, 185, 289), nên **không thể** đẩy nam châm ra xa hơn 145 để ăn gian bằng
+tay đòn.
 
 > **30 N mỗi cặp là trị số catalogue.** Lớp hoàn thiện dày 0,1–0,2 mm chen giữa hai mặt làm tụt lực
 > 15–25 %, và trị số công bố của nhà cung cấp thường lạc quan.
 > **Đặc tính kiểm (đưa vào QA, không phải vào BOM):** mỗi cặp nam châm lắp trên mẫu đã hoàn thiện phải
-> đo được ≥ **13,6 N**. Chọn nam châm theo kết quả đo, không theo catalogue. Khối 20 × 5 × 5 N45 là
+> đo được ≥ **14,5 N**. Chọn nam châm theo kết quả đo, không theo catalogue. Khối 20 × 5 × 5 N45 là
 > điểm xuất phát.
 >
-> **Bề dày là biến tự do duy nhất.** Chiều dài bị khe luồn ngón ép, chiều rộng bị vách 10 mm ép, còn
-> bề dày thì cả nắp lẫn vành thân đều còn dư gỗ. Nếu đo thực tế thiếu lực, tăng bề dày (và chiều sâu
-> hốc) chứ không đổi gì khác.
+> **Dự phòng đã tính sẵn.** Chiều dài bị khoảng hở 24 mm giữa hai hốc ép, chiều rộng bị vách 10 mm ép;
+> chỉ **bề dày** là tự do. Nếu mẫu đo không đạt: đổi sang **20 × 5 × 8**, hốc sâu 8,2 → nắp còn 6,8 mm
+> (tối thiểu 6,0) và vách trước còn 32,8 mm thân dưới hốc. Đủ chỗ, và **không đổi bất kỳ kích thước phủ
+> bì nào**.
 
 **Nam châm không làm được ba việc, phải nói rõ với khách:**
 
@@ -130,15 +137,15 @@ lật qua mép nắp**: xoay lên đè lên mặt nắp, xoay xuống thì nằm
 | Vị trí | X = **100** và **270**, trên mặt ngoài vách trước |
 | Vì sao không ở giữa | khe ráp giữa X = 185 nằm giữa dải hốc âm 125…245; lưỡi gài khi mở sẽ thõng xuống hốc, vướng tay |
 | Vì sao đủ một cái mỗi cánh | giữ bất kỳ một điểm nào của cánh là cánh đó không xoay được nữa — động học chỉ có một bậc tự do |
-| Đế bắt mã | vành thân tại X = 100 ở Z50,2; đỉnh hốc âm ở Z38 → dải gỗ 12,2 mm để bắt đế |
+| Đế bắt mã | vách trước dày 10, vành ở Z47; hốc âm nằm ở vách trái/phải nên mặt trước còn trống |
 | Đế | brass 40 × 12 × 3, hạ bậc 3 mm vào mặt vách |
-| Trục xoay | chốt brass Ø3, trục chạy theo X, ở Z42 |
+| Trục xoay | chốt brass Ø3, trục chạy theo X, ở Z40 |
 | Lưỡi gài | brass dày 3, vươn ra 20, đầu lưỡi đè lên mặt nắp 10 mm |
 | Hạ bậc trên nắp | 10 (Y) × 34 (X) × sâu 3,2 → lưỡi phẳng với mặt nắp |
 | Giữ vị trí | vòng ép sóng ở trục cho ma sát ~0,3 N·m; lưỡi đứng yên ở cả hai vị trí, không cần lò xo |
 
-Kiểm: một khóa mỗi cánh, tay đòn 91 mm. Lực trên lưỡi ở hệ số động 3 là **77 N** → uốn lưỡi 15 MPa
-(hệ số 16×), ép mặt gỗ dưới lưỡi 0,23 MPa (hệ số 62×).
+Kiểm: một khóa mỗi cánh, tay đòn 100 mm. Lực trên lưỡi ở hệ số động 3 là **77 N** → uốn lưỡi 15 MPa
+(hệ số 17×), ép mặt gỗ dưới lưỡi 0,23 MPa (hệ số 62×).
 
 Đổi lại: **hai chi tiết chuyển động quay lại vào thiết kế** — đúng cái mà phương án C vừa bỏ đi. Và
 phải thao tác mỗi lần mở hộp.
@@ -151,7 +158,7 @@ phải thao tác mỗi lần mở hộp.
 | Chi tiết mòn | **không** | trục xoay |
 | Phải thao tác khi mở | **không** | có |
 | Nhìn thấy | không | có |
-| Hệ số an toàn khi lật úp | 1,7× (lực hút) | 16× (bền lưỡi gài) |
+| Hệ số an toàn khi lật úp | 1,6× (lực hút) | 17× (bền lưỡi gài) |
 | Khóa chống mở | KHÔNG | KHÔNG — không có chốt |
 | Chống xóc / lạch cạch | có | có, và ép chặt hơn |
 | Chịu được giãn nở theo mùa | có | có |
@@ -172,16 +179,16 @@ hình 3D bắt được va chạm này khi mô hình đầu tiên đặt nam ch�
 trong băng khe luồn ngón.
 
 Sau khi hốc âm hai tay chuyển sang vách trái/phải, cả ba khe luồn ngón đều tồn tại (rộng 50, ở X 81, 185,
-289). Băng trống trên cánh trái là X 106…160, đủ chỗ cho hai nam châm ở **121** và **145**, tay đòn 115 và
-139 mm.
+289). Băng trống trên cánh trái là X 106…160, đủ chỗ cho hai nam châm ở **121** và **145**, tay đòn 121 và
+145 mm (trục xoay nay ở X = 0).
 
 `box_spec.selfcheck()` nay kiểm chéo cả ba: nam châm ↔ khe luồn ngón, nam châm ↔ nam châm, và khe
 luồn ngón ↔ hốc âm hai tay.
 
 ## 8. Kéo theo
 
-- Khối lượng: **5,86 kg** (khay lõi ổn định) / **6,48 kg** (khay cocobolo) — đã tính cả 8 cặp nam châm
-  và trừ 16 hốc âm.
+- Khối lượng: **6,26 kg** (khay lõi ổn định) / **6,88 kg** (khay cocobolo) — đã tính cả 8 cặp nam châm,
+  6 bản lề brass, và trừ 16 hốc âm.
 - BOM thêm: 16 nam châm khối 20 × 5 × 5 N45 mạ Ni, epoxy dán.
 - QA thêm: đo lực tách mỗi cặp trên mẫu đã hoàn thiện, ngưỡng 12,6 N.
 - Sheet BX-01 và sheet nắp phải thêm 16 hốc âm 20,2 × 5,2 × 5,2 với dung sai vị trí ±0,2 — sai lệch

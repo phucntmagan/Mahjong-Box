@@ -21,7 +21,7 @@ WH, BAY, DIV, ACB = S['WALL_HINGE'], S['BAY'], S['DIV'], S['AC_BAY']
 FB, IY = B.WALL_FB, B.INNER_Y
 Z_FL, Z_RIM, Z_SEAM, Z_LID = S['Z_FLOOR'], S['Z_RIM'], S['Z_SEAM'], S['Z_LID']
 XS, LW = S['X_SEAM'], S['LW']
-PIN = (B.R_KN, Z_RIM + B.R_KN)
+PIN = (S['PIN_X'], S['PIN_Z'])          # truc xoay nam DUNG tren arris
 
 # --------------------------------------------------------------- mau sac
 COL = dict(
@@ -54,7 +54,7 @@ class Scene:
         self.faces = []          # (verts, colour)
         self.clip_y = clip_y     # (y0, y1) — cat bo phan ngoai khoang
     # ---- nguyen thuy
-    MAXCELL = 26.0     # canh o luoi toi da khi chia nho mat
+    MAXCELL = 13.0     # canh o luoi toi da khi chia nho mat
     def quad(self, v, col, split=True):
         """Them mot tu giac. Chia nho neu no lon.
 
@@ -80,8 +80,15 @@ class Scene:
                 w0, w1 = j/nv, (j+1)/nv
                 self.faces.append(([P(u0, w0), P(u1, w0), P(u1, w1), P(u0, w1)], col))
     def poly(self, v, col):
+        """Da giac n dinh. n>4 duoc chia quat quanh trong tam: thuat toan tho son
+        sap xep theo TAM mat, ma trong tam cua mot da giac co cung bo luon bi keo
+        lech ve phia chum dinh -> sap sai. Chia quat lam moi manh co tam rieng."""
         if len(v) == 4: self.quad(v, col); return
-        self.faces.append((v, col))
+        if len(v) < 4: self.faces.append((v, col)); return
+        n = len(v)
+        c = tuple(sum(p[i] for p in v)/n for i in range(3))
+        for i in range(n):
+            self.faces.append(([c, v[i], v[(i+1) % n]], col))
     def _cy(self, y0, y1):
         """Cat theo mat phang Y. Tra ve (y0, y1, bi_cat_dau, bi_cat_cuoi)."""
         if self.clip_y is None: return y0, y1, False, False
@@ -113,8 +120,7 @@ def rot_xz(p, c, th):
     cs, sn = math.cos(th), math.sin(th)
     return (c[0] + x*cs - z*sn, c[1] + x*sn + z*cs)
 
-KN = [((n-1)*B.KN_PITCH, (n-1)*B.KN_PITCH + B.KN_LEN, n % 2 == 1) for n in range(1, B.N_KN+1)]
-KN_Y0 = (IY - S['KN_RUN'])/2 + FB
+HG_Y = [FB + y for y in S['HG_Y']]      # tam ban le brass theo Y
 X_BAY = [(WH, WH+BAY), (W-WH-BAY, W-WH)]
 X_DIV = [(WH+BAY, WH+BAY+DIV), (W-WH-BAY-DIV, W-WH-BAY)]
 X_AC = (WH+BAY+DIV, WH+BAY+DIV+ACB)
@@ -150,11 +156,13 @@ def add_body(sc, show_mag=True):
     for x0, x1 in X_DIV:
         sc.prism_y([(x0, Z_FL), (x1, Z_FL), (x1, z_rim(x1)), (x0, z_rim(x0))],
                    FB, YB-FB, C, D)
-    # mat mong ban le ben THAN
-    for x0 in (0, W-WH):
-        for a, b, is_body in KN:
-            if not is_body: continue
-            sc.prism_y(circle_xz(x0 + B.R_KN, PIN[1], B.R_KN), KN_Y0+a, KN_Y0+b, C, D)
+    # ban le brass: la nam trong mortise tren vanh + khop tren arris
+    for xa, xk in [(0.0, 0.0), (W - B.HG_W, W)]:
+        for yc in HG_Y:
+            sc.box(xa, xa + B.HG_W, yc - B.HG_L/2, yc + B.HG_L/2,
+                   Z_RIM - B.HG_MORT, Z_RIM, COL['brass'])
+            sc.prism_y(circle_xz(xk, Z_RIM, B.HG_R), yc - B.HG_L/2, yc + B.HG_L/2,
+                       COL['brass'], COL['brass'])
     # nam cham tren vanh than (chi ve khi thuc su nhin thay duoc)
     for xc in (list(B.MAG_X) + [W-x for x in B.MAG_X]) if show_mag else []:
         for yc in (B.MAG_Y, YB-B.MAG_Y):
@@ -245,18 +253,22 @@ def leaf_polys(th, right):
     def r(p):
         c = (W - PIN[0], PIN[1]) if right else PIN
         return rot_xz(m(p), c, -th if right else th)
-    ub = lambda x: Z_RIM + (Z_SEAM - Z_RIM)*(x - 2*B.R_KN)/(LW - 2*B.R_KN)
-    st = B.STILE
+    st, RR = B.STILE, B.HG_R
+    def arc(a0, a1, n=8):        # bo luon arris ngoai duoi cua nap, tam tai truc
+        return [(RR*math.cos(math.radians(a0 + (a1-a0)*i/n)),
+                 Z_RIM + RR*math.sin(math.radians(a0 + (a1-a0)*i/n))) for i in range(n+1)]
     out = []
-    out.append(([r((2*B.R_KN, ub(2*B.R_KN))), r((2*B.R_KN+st, ub(2*B.R_KN+st))),
-                 r((2*B.R_KN+st, Z_LID)), r((2*B.R_KN, Z_LID))], 0.0, B.LID_L, 'coco'))
-    out.append(([r((LW-st, ub(LW-st))), r((LW, ub(LW))), r((LW, Z_LID)), r((LW-st, Z_LID))],
+    # do doc ban le: co bo luon R o goc ngoai duoi
+    out.append(([r(p) for p in [(0, Z_RIM+RR)] + arc(90, 0)
+                 + [(st, Z_RIM), (st, Z_LID), (0, Z_LID)]], 0.0, B.LID_L, 'coco'))
+    # do doc khe giua
+    out.append(([r((LW-st, Z_RIM)), r((LW, Z_RIM)), r((LW, Z_LID)), r((LW-st, Z_LID))],
                 0.0, B.LID_L, 'coco'))
     for y0, y1 in [(0.0, B.RAIL), (B.LID_L-B.RAIL, B.LID_L)]:
-        out.append(([r((2*B.R_KN+st, ub(2*B.R_KN+st))), r((LW-st, ub(LW-st))),
-                     r((LW-st, Z_LID)), r((2*B.R_KN+st, Z_LID))], y0, y1, 'coco'))
+        out.append(([r((st, Z_RIM)), r((LW-st, Z_RIM)), r((LW-st, Z_LID)), r((st, Z_LID))],
+                    y0, y1, 'coco'))
     zp1 = Z_LID - B.S_TOP; zp0 = zp1 - B.PAN_T
-    out.append(([r((2*B.R_KN+st, zp0)), r((LW-st, zp0)), r((LW-st, zp1)), r((2*B.R_KN+st, zp1))],
+    out.append(([r((st, zp0)), r((LW-st, zp0)), r((LW-st, zp1)), r((st, zp1))],
                 B.RAIL, B.LID_L-B.RAIL, 'burl'))
     return out
 
@@ -265,12 +277,14 @@ def add_lid(sc, th=0.0, leaves=(True, True), show_mag=True):
         if not leaves[1 if right else 0]: continue
         for poly, y0, y1, ck in leaf_polys(th, right):
             sc.prism_y(poly, y0, y1, COL[ck], COL['cut'])
-        # mat mong ben NAP
+        # la ban le brass ben NAP — nam trong mortise o mat duoi do doc
+        def mm(p): return (W - p[0], p[1]) if right else p
         c = (W - PIN[0], PIN[1]) if right else PIN
-        for a, b, is_body in KN:
-            if is_body: continue
-            sc.prism_y(circle_xz(c[0], c[1], B.R_KN), KN_Y0+a, KN_Y0+b,
-                       COL['coco'], COL['cut'])
+        for yc in HG_Y:
+            q0 = rot_xz(mm((0.0, Z_RIM)), c, -th if right else th)
+            q1 = rot_xz(mm((B.HG_W, Z_RIM + B.HG_MORT)), c, -th if right else th)
+            sc.prism_y([q0, (q1[0], q0[1]), q1, (q0[0], q1[1])],
+                       yc - B.HG_L/2, yc + B.HG_L/2, COL['brass'], COL['brass'])
         # nam cham duoi nap
         if abs(th) < 1e-9 and show_mag:
             for xc in (B.MAG_X if not right else [W-x for x in B.MAG_X]):
@@ -306,6 +320,8 @@ def render(sc, eye, target, w, h, focal, title, sub_):
     for _, pts, c, k in out:
         d = ' '.join(f'{x:.1f},{y:.1f}' for x, y in pts)
         body.append(f'<polygon points="{d}" fill="{c}" stroke="{k}" stroke-width="0.3"/>')
+    body.append(f'<rect x="0" y="0" width="{w}" height="58" fill="#f7f5f1" '
+                f'fill-opacity="0.94"/>')
     body.append(f'<text x="24" y="30" font-size="15" font-weight="bold" '
                 f'font-family="DejaVu Sans" fill="#1a1a1a">{title}</text>')
     body.append(f'<text x="24" y="48" font-size="10.5" font-family="DejaVu Sans" '
@@ -327,7 +343,7 @@ def v1(sc): add_body(sc, show_mag=False); add_lid(sc, show_mag=False)
 shot('fig12a-tong-the-nap-dong', 'HÌNH 12a — Tổng thể, nắp đóng',
      f'{W:.0f} × {S["Y_OA"]:.0f} × {S["Z_OA"]:.0f} mm · {B.mass_of(S,"loi on dinh")[2]:.2f} kg. '
      f'Khe ráp giữa {B.SEAM}. Hốc âm hai tay nằm trong vách trái/phải, không nối gỗ ra ngoài. '
-     f'Ống bản lề Ø{2*B.R_KN:.0f}.',
+     f'Bản lề lá brass, khớp Ø{B.HG_KN} chìm trong đường chỉ góc.',
      v1, eye=(-250, -430, 260), target=(CX, CY, 22), focal=1250)
 
 # 2 — nap mo 180 do
@@ -339,7 +355,7 @@ def v2(sc):
     add_ac(sc)
     add_lid(sc, math.pi)
 shot('fig12b-nap-mo-180', 'HÌNH 12b — Nắp mở 180°',
-     f'Hai cánh nằm ngang đúng cao độ vành thân Z{Z_RIM:.0f}, vươn ra {LW-2*B.R_KN:.0f} mm mỗi bên. '
+     f'Hai cánh nằm ngang, mặt trên phẳng đúng cao độ vành thân Z{Z_RIM:.0f}, vươn ra {LW:.0f} mm mỗi bên. '
      f'Lòng lõm của khung nắp chính là khay bỏ bài.',
      v2, eye=(-90, -600, 430), target=(CX, CY, 18), w=1180, h=680, focal=1180)
 
@@ -366,7 +382,7 @@ def v4(sc):
     add_lid(sc)
 shot('fig12d-mat-cat', 'HÌNH 12d — Cắt dọc giữa hộp',
      f'Cắt tại Y = 140. Chuỗi Z: chân {B.FOOT:.0f} + đáy {B.BOT:.0f} + 2 × khay {B.TRAY_H:.0f} '
-     f'+ khe {B.CLR_Z:.0f} = vành Z{Z_RIM:.0f}; nắp vát {B.T_HINGE:.0f} → {B.T_SEAM:.0f}. '
+     f'+ khe {B.CLR_Z:.0f} = vành Z{Z_RIM:.0f}; nắp dày {B.T_LID:.0f} đều → Z{Z_LID:.0f}. '
      f'Mặt cắt tô sáng.',
      v4, eye=(-150, -520, 215), target=(CX, 215, 28), focal=1350)
 
@@ -379,7 +395,6 @@ def v5(sc):
     add_lid(sc, math.radians(50), leaves=(True, False))
     add_lid(sc, 0.0, leaves=(False, True))
 shot('fig12e-chi-tiet-goc', 'HÌNH 12e — Vách trái: hốc âm hai tay và bản lề',
-     f'Hốc âm {B.GRIP_W:.0f} × {B.GRIP_H:.0f} sâu {B.GRIP_D:.0f} nằm gọn trong vách bản lề dày '
-     f'{S["WALL_GRIP"]:.0f} — không phải nối gỗ ra ngoài. Dải gỗ trên hốc {S["GRIP_LEDGE"]:.0f} mm. '
-     f'Bản lề: ống gỗ Ø{2*B.R_KN:.0f} (từ Ø18), chốt brass Ø{B.D_PIN-0.2:.0f}.',
+     f'Hốc âm {B.GRIP_W:.0f} × {B.GRIP_H:.0f} sâu {B.GRIP_D:.0f} nằm gọn trong vách {S["WALL_GRIP"]:.0f} mm, '
+     f'dải gỗ trên hốc {S["GRIP_LEDGE"]:.0f} mm. Bản lề {B.HG_N} lá brass ngay trên arris.',
      v5, eye=(-560, -315, 250), target=(105, 172, 24), focal=1450)

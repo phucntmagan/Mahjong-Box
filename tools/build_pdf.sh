@@ -18,3 +18,9 @@ b docs/KHOA-NAP.md khoa-nap "Khóa nắp — nam châm nối nắp với thân" 
 b docs/CHOT-REV-C.md chot-rev-c "Chốt Rev C — quyết định và hệ quả" \
   "<b>Bộ hồ sơ:</b> Hộp Mahjong 152 quân, BURLORA · <b>Đơn vị:</b> mm" \
   "<b>Nguồn số:</b> tools/box_spec.py"
+b docs/DONG-HOC-BAN-LE.md dong-hoc-ban-le "Động học bản lề — trục ở arris" \
+  "<b>Bộ hồ sơ:</b> Hộp Mahjong 152 quân, BURLORA · <b>Đơn vị:</b> mm" \
+  "<b>Nguồn số:</b> tools/hinge_kinematics.py · <b>Hình:</b> tools/draw_hinge.py"
+b docs/NAP-GO-DAC.md nap-go-dac "Nắp gỗ đặc — khung ôm tấm Nu thả" \
+  "<b>Bộ hồ sơ:</b> Hộp Mahjong 152 quân, BURLORA · <b>Đơn vị:</b> mm" \
+  "<b>Nguồn số:</b> tools/lid_solid_calc.py · <b>Hình:</b> tools/draw_lid.py"

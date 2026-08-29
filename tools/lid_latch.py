@@ -44,7 +44,9 @@ def theta_for_gap(g, z=Z_BOLT):
 
 # ==========================================================================
 hr("1. KHOA PHAI CHAN HUONG NAO — dong hoc")
-print(f"  Truc chot P = ({PX:.0f} , {PZ:.0f}). Mep khe rap giua = ({XA:.2f} , {ZT:.0f}),")
+print(f"  Truc chot P = ({PX:.0f} , {PZ:.0f}) — canh ngoai tren cua vach ban le,")
+print(f"  KHONG phai giua be day nap (xem hinge_kinematics.py muc 1).")
+print(f"  Mep khe rap giua = ({XA:.2f} , {ZT:.0f}),")
 print(f"  cach truc {Rs:.2f} mm.\n")
 print(f"  Quay canh mot goc nho theta, mep khe di chuyen:")
 print(f"    dX = -{DZ:.2f}*theta     dZ = +{DX:.2f}*theta     -> ty le {DX/DZ:.1f} : 1")
@@ -91,9 +93,11 @@ print(f"     chong lai {mv:.2f} mm gian no theo mua va tu pha go.")
 # ==========================================================================
 hr("3. CAN BAO NHIEU LUC GIU")
 V = S['V']
-m_leaf = ((V['khung nap'] + V['mat mong nap'])/2/1e6*B.RHO['cocobolo']
+m_leaf = (V['khung nap']/2/1e6*B.RHO['cocobolo']
           + V['tam Nu']/2/1e6*B.RHO['Nu go do'])
-arm_leaf = (2*B.R_KN + S['LW'])/2 - PX
+# Truc xoay nam DUNG tai canh ngoai tren cua than (arris): canh nap trai roi tu
+# x=PIN_X den x=LW, nen tay don trong tam = nua be rong canh.
+arm_leaf = (S['LW'] - PX)/2
 m_tray = V['khay quan']/4/1e6*B.RHO['cocobolo'] + 36*B.M_TILE_G/1000
 m_bay = 2*m_tray
 arm_bay = S['WALL_HINGE'] + S['BAY']/2 - PX
@@ -158,6 +162,21 @@ print(f"  > lam tut luc 15-25 %, va tri so cong bo cua hang Trung Quoc thuong la
 print(f"  > DAC TINH KIEM (dua vao QA, khong phai vao BOM): moi cap nam cham lap")
 print(f"  > tren mau da hoan thien phai do duoc >= {F1*3:.1f} N. Chon nam cham theo")
 print(f"  > ket qua do, khong theo catalogue. Khoi {mw:.0f} x {md:.0f} x {mt:.0f} N45 la diem xuat phat.")
+print(f"\n  > HE SO 1,6 do la NAM TREN he so dong 3 roi. So voi tai TINH khi lat up")
+print(f"  > hoan toan, bien la {P_eff/F1:.1f} lan. Nhung 1,6 khong con cho de sai neu")
+print(f"  > mau do khong dat: tay don nam cham bi CHAN TREN boi ba khe luon ngon")
+print(f"  > (dai {B.WELL_W:.0f} mm quanh X = {', '.join(f'{x:.0f}' for x in S['WELL_X'])}), nen KHONG the")
+print(f"  > day nam cham ra xa hon {max(B.MAG_X):.0f} de an gian bang tay don.")
+_t_hi = 8.0
+_rec_hi = _t_hi + 0.2
+_left = S['t_lid'](max(B.MAG_X)) - _rec_hi
+print(f"\n  DU PHONG neu mau do khong dat {F1*3:.1f} N: TANG BE DAY nam cham, khong")
+print(f"  tang chieu dai (chieu dai bi chan boi khoang ho {B.MAG_X[1]-B.MAG_X[0]:.0f} mm giua hai hoc).")
+print(f"   {mw:.0f} x {md:.0f} x {_t_hi:.0f} , hoc am sau {_rec_hi:.1f}"
+      f" -> nap con {_left:.1f} mm (toi thieu 6,0) : {'DU CHO' if _left >= 6.0 else 'KHONG DU CHO'}")
+print(f"   Vach truoc day {B.WALL_FB:.0f} mm, hoc khoet THANG DUNG tu vanh Z{S['Z_SEAM']:.0f}"
+      f" xuong, con {S['Z_SEAM']-B.BOT-_rec_hi:.1f} mm than vach: du cho.")
+print(f"   => co san mot buoc tang luc ma khong doi bat ky kich thuoc phu bi nao.")
 print(f"\n  Cai nam cham KHONG lam duoc:")
 print(f"   - Khong khoa. Ai cung mo duoc nap bang cach nhac len. Do la nap hop, khong")
 print(f"     phai ket sat — nhung phai noi ro voi khach de khong ai ky vong sai.")

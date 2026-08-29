@@ -5,31 +5,33 @@ các tài liệu trước đó sai hoặc đã hết hiệu lực**. Đọc nó 
 
 | | Rev B | Chốt hiện tại | Nguồn |
 |---|---|---|---|
-| Phủ bì | 354 × 350 × 80 | **370 × 350 × 59** | `box_spec.py` |
+| Phủ bì | 354 × 350 × 80 | **370 × 350 × 62** | `box_spec.py` |
 | Chuỗi X | 10+126+6+70+6+126+10 | **18+126+6+70+6+126+18** | `width_options.py` |
 | Phương án xách | (chưa có) | **C — hốc âm hai tay** | `handle_option_c.py` |
 | Đáy hộp | 8 | **6** | `detail_features.py` |
-| Tấm nắp Nu | 10 | **8** | `lid_solid_calc.py` |
-| Nắp | 18 → 8 (vát) | **đều 12, không vát** | `box_spec.py` |
-| Ống bản lề | không định nghĩa | **Ø12**, chốt brass Ø4 | `hinge_kinematics.py` |
+| Tấm nắp Nu | 10 | **7** | `lid_solid_calc.py` |
+| Nắp | 18 → 8 (vát) | **đều 15, không vát** | `box_spec.py` |
+| **Trục xoay bản lề** | không định nghĩa | **P = (0 , 47) — trên arris** | `hinge_kinematics.py` |
+| **Bản lề** | mắt mộng gỗ + chốt Ø6 | **6 bản lề lá brass 40×14×1,8, khớp Ø4,5** | `hinge_kinematics.py` |
+| Ống gỗ | Ø18 | **KHÔNG CÒN** | `hinge_kinematics.py` |
 | Khe ráp giữa | 0,6 | **1,5 ±0,3** | `lid_solid_calc.py` |
-| Trục xoay bản lề | không định nghĩa | **P = (6 , 53)** | `hinge_kinematics.py` |
 | Khóa nắp | không có | **8 cặp nam châm nắp↔thân** | `lid_latch.py` |
-| Khối lượng | không tính | **5,86 / 6,48 kg** | `box_spec.py` |
-| Tải thiết kế | — | **172 / 191 N** | `box_spec.py` |
+| Khối lượng | không tính | **6,26 / 6,88 kg** | `box_spec.py` |
+| Tải thiết kế | — | **184 / 203 N** | `box_spec.py` |
 
 ## 1. Bề rộng: 370
 
-Vách bản lề buộc phải dày 18 vì mắt mộng là ống gỗ R9 quanh lỗ Ø6,20. Vách 10 của Rev B chỉ còn 1,9 mm
-thành mỗi bên. Nên chuỗi X 354 không dùng được nữa. Ba cách đóng lại:
+Vách bản lề buộc phải dày 18 — lúc quyết định là vì ống gỗ R9, nay là vì **hốc âm hai tay** (sâu 12 +
+thành sau 6). Lý do đổi nhưng con số không đổi, nên chuỗi X 354 của Rev B vẫn không dùng được. Ba cách
+đóng lại:
 
 | Vách | Khay | Ngăn | Phụ kiện | Tổng | Khối lượng | Hộp/lô | Đổi lại |
 |---:|---:|---:|---:|---:|---:|---:|---|
-| 18 | 126 | 6 | 70 | **370** | 7,61 kg | 2 | không đổi gì |
-| 18 | 126 | 4 | 70 | 366 | 7,52 kg | 2 | vách ngăn 4 mm, mảnh 82:1 |
-| 18 | 126 | 6 | 62 | 362 | 7,48 kg | 2 | mất 2 chi tiết công năng |
+| 18 | 126 | 6 | 70 | **370** | 6,88 kg | 2 | không đổi gì |
+| 18 | 126 | 4 | 70 | 366 | 6,81 kg | 2 | vách ngăn 4 mm, mảnh 82:1 |
+| 18 | 126 | 6 | 62 | 362 | 6,76 kg | 2 | mất 2 chi tiết công năng |
 
-*(khối lượng trong bảng này tính ở cấu hình lúc so sánh — phương án A, đáy 8, tấm Nu 10)*
+*(khối lượng khay cocobolo ở cấu hình hiện hành; chạy `python3 tools/width_options.py` để đối chiếu)*
 
 Hai điều làm quyết định này dễ hơn tưởng:
 
@@ -54,10 +56,12 @@ tiết tranh nhau một bộ phận dày 10 mm.)*
 
 | | A · sống khóa + quai da | C · hốc âm hai tay |
 |---|---|---|
-| Phủ bì | 370 × 362 × 75 | **370 × 350 × 59** |
-| Thể tích bao | 10,05 L | **7,64 L** |
+| Phủ bì | 370 × 362 × 78 | **370 × 350 × 62** |
+| Thể tích bao | 10,45 L | **8,03 L** |
+| Khối lượng (khay cocobolo) | 7,19 kg | **6,88 kg** |
+| Khối lượng (khay lõi ổn định) | 6,59 kg | **6,26 kg** |
 | Số tay | một | hai |
-| Tải mỗi tay | 67 N | **32 N** |
+| Tải mỗi tay | 71 N | **34 N** |
 | Chi tiết chuyển động | 2 chốt xoay | **0** |
 | Chi tiết mòn | lỗ chốt + da | **không có** |
 | Vật liệu ngoài gỗ | da bò bridle | **không** |
@@ -137,30 +141,56 @@ kê; và ngay cả loài châu Phi thì #17 không phủ thành phẩm), cả ha
 06/2019 sửa bởi 84/2021; có dấu hiệu danh mục hiện hành đã chuyển sang Thông tư 85/2025/TT-BNNMT — **phải
 xác nhận**.
 
-## 6. Hai lỗi số của bản trước
+## 6. Ba lỗi của bản trước
 
-1. **Góc vát nắp.** Bản trước ghi 1,945°, tính bằng `atan(6/176,7)` — chia cho cả bề rộng cánh. Nhưng đoạn
-   vát thật chỉ chạy từ X = 18 (mép trong ống gỗ) ra tới mép khe giữa. Ở bề rộng 370 thì đoạn đó là 166,25 và
-   góc đúng là **2,067°**.
+1. **Góc vát nắp.** Bản trước ghi 1,945°, tính bằng `atan(6/176,7)` — chia cho cả bề rộng cánh, trong khi
+   đoạn vát thật ngắn hơn. Ở bề rộng 370 góc đúng là 2,067°. **Nay không còn ý nghĩa: nắp đều 15, không vát.**
 2. **Khối lượng ở bề rộng 370.** Đoạn ước lượng bằng tay ở cuối `hinge_kinematics.py` cộng cả phần vách dày
    thêm lẫn phần vách trước/sau dài thêm, đếm trùng. Con số 7,75 kg sai; tính lại bằng `derive()` cho 7,60 kg.
+3. **"Ống phải bằng nửa bề dày nắp" — đúng, nhưng là hệ quả của một giả thiết chưa ai đặt câu hỏi.**
+   Xem mục 7 dưới.
 
-## 7. Hai lần sửa sau khi dựng hình 3D
+## 7. Ba lần sửa sau khi dựng hình 3D và đối chiếu ảnh mẫu
 
-Bản dựng 3D và ảnh mẫu thật buộc phải sửa hai chỗ, và cả hai đều kéo theo hệ quả tốt:
+**(a) Hốc âm chuyển từ vách trước/sau sang vách trái/phải.** Lý do gốc: ba chi tiết (hốc âm, khe luồn ngón,
+nam châm) tranh nhau vách 10 mm. Kéo theo: phủ bì Y về lại 350, khoang phụ kiện lấy lại được khe luồn ngón,
+và cách nhấc AC-01 bằng kẹp hai dải gỗ qua hõm ngón rãnh Joker — vốn xấu — bị bỏ.
 
-**Hốc âm chuyển từ vách trước/sau sang vách trái/phải.** Lý do gốc là ba chi tiết tranh nhau vách 10 mm.
-Kéo theo: phủ bì Y về lại 350, khoang phụ kiện lấy lại được khe luồn ngón, và cách nhấc AC-01 bằng kẹp hai
-dải gỗ qua hõm ngón rãnh Joker — vốn xấu — bị bỏ.
+**(b) Ống bản lề Ø18 → Ø12** (bước trung gian, nay đã bỏ). Lập luận khi đó: ống phải tiếp tuyến cả vành thân
+lẫn mặt trên nắp, nên R = nửa bề dày nắp; muốn ống thanh hơn thì phải làm nắp mỏng hơn.
 
-**Ống bản lề Ø18 → Ø12.** Ống phải tiếp tuyến cả vành thân lẫn mặt trên nắp, nên R = nửa bề dày nắp. Muốn
-ống thanh hơn thì phải làm nắp mỏng hơn: nắp **đều 12** thay cho vát 18 → 12. Ống Ø18 chiếm 27,7 % chiều
-cao hộp, Ø12 chiếm 20,3 %. Chốt đổi từ gỗ Ø6 sang **brass Ø4** vì thành ống chỉ còn 3,9 mm.
+![Tổng thể nắp đóng: bản lề chỉ còn là sợi brass Ø4,5 chìm trong đường chỉ góc trái.](figs/fig12a-tong-the-nap-dong.png)
 
-Giá phải trả: khay bỏ bài trên mặt dưới nắp từ 7 mm xuống 3,5 mm, và tấm Nu từ 8 xuống 6 mm.
+**(c) Bỏ hẳn ống gỗ: trục xoay ra arris.** Đây là thay đổi lớn nhất của phiên này, và nó bắt đầu từ một câu
+hỏi: *bản lề trong ảnh gần như vô hình, mà nắp vẫn dày — sao họ làm được?*
 
-Phần thưởng ngoài dự tính: **5,86 kg** — lần đầu xuống dưới ngưỡng 6 kg. Riêng việc làm nắp mỏng lấy đi
-0,62 kg, và đó là hệ quả phụ của một thay đổi thẩm mỹ.
+Lập luận (b) **đúng, nhưng chỉ đúng bên trong một giả thiết chưa hề được đặt câu hỏi**: rằng trục xoay nằm ở
+giữa bề dày nắp. Giả thiết đó là **thẩm mỹ** — để cánh mở nằm đúng dải cao độ của nắp lúc đóng — chứ không
+phải hình học. Ràng buộc thật sự chỉ có một: cánh không được cắt vào thân trong cả hành trình.
+
+`hinge_kinematics.py` §1 nay quét bài toán bằng số, không bằng lời:
+
+| đặt trục ở | toạ độ | mũi tròn bắt buộc | suy ra |
+|---|---:|---:|---|
+| giữa bề dày nắp | (7,5 , 54,5) | R **7,52** | ống gỗ Ø15,0 |
+| **arris — góc chung của hai chi tiết** | **(0 , 47)** | **R 0,00** | **không phải bỏ gì** |
+
+Hàng một tái tạo đúng kết luận cũ *và cho thấy nó đến từ đâu*: 7,5 = 15/2 = nửa bề dày nắp, vì mũi tròn phải
+tiếp tuyến cả mặt trên lẫn mặt dưới nắp. **Quy tắc rút ra: trục xoay phải nằm ở góc chung của hai chi tiết;
+trục cắm sâu vào vật liệu bao nhiêu thì phải bỏ đi bấy nhiêu.**
+
+Đưa trục ra arris thì rơi một lúc: ống gỗ, 7 mắt mộng, 2 chốt brass xuyên, mặt chặn 180° phay trong lòng
+mộng, ràng buộc "vách 18 để chứa ống", và ràng buộc "nắp phải mỏng để ống thanh". Thay vào: **6 bản lề lá
+brass mua sẵn (135 g)** và hai đường bo lượn R2,25 khép thành lỗ Ø4,5 ôm khớp.
+
+Vì bề dày nắp hết bị ràng buộc, nó được chọn lại theo công năng chứ không theo bản lề: **15 mm**, cho khay
+bỏ bài sâu **5,0 mm** (thay vì 3,5) và tấm Nu **7 mm** (lip rãnh phay được).
+
+Khối lượng: **6,26 kg** (khay lõi ổn định) / **6,88 kg** (khay cocobolo). Cao hơn con số 5,86 kg của bước
+(b) vì nắp dày lại 12 → 15, cộng 135 g brass. Đổi lại: bản lề gần như vô hình, chặn 180° hệ số 55× thay vì
+10×, và bớt sáu chi tiết gia công khó.
+
+![Nắp mở 180°: hai cánh nằm ngang, mặt trên phẳng đúng cao độ vành thân Z47.](figs/fig12b-nap-mo-180.png)
 
 ## 8. Còn lại
 
@@ -172,7 +202,12 @@ Phần thưởng ngoài dự tính: **5,86 kg** — lần đầu xuống dưới
 | 4 | Xác minh CITES bằng văn bản gốc | việc của bên mua |
 | 5 | Đo tối thiểu 20 quân thuộc đúng lô mua | chưa làm — chặn mọi thứ về khay |
 | 6 | Ép thử 1 mộng khung cocobolo, để 7 ngày rồi phá huỷ | chưa làm |
+| 7 | Mua mẫu bản lề lá brass 40 × 14 × 1,8 khớp Ø4,5, đo dung sai khớp thật | chưa làm |
 
 Mục 5 và 6 là hai rủi ro thi công lớn nhất. Mộng khung cocobolo: 8 mộng, gỗ nhiều dầu, bắt buộc epoxy + lau
 acetone trong vòng 15 phút kể từ khi phay xong má mộng + chốt draw-bore Ø5. Đường phá của mẫu thử phải đi
 qua thớ gỗ, không được đi dọc đường keo.
+
+Mục 7 mới: bo lượn arris R2,25 khép thành lỗ Ø4,5 phải ôm đúng khớp thật. Bản lề lá brass sẵn có trên thị
+trường không chuẩn hoá đường kính khớp — phải mua mẫu, đo, rồi mới chốt R bo lượn. `HG_KN` trong
+`box_spec.py` là biến; đổi nó thì R bo lượn, chiều cao mặt chặn 180° và thể tích gỗ tự cập nhật theo.

@@ -67,7 +67,7 @@ print(f"  Neu dat quai tai X=177,Y=175       : hop treo NGANG, khay nam yen tron
 hr("5. DUONG TRUYEN LUC - vi sao khong treo vao ban le")
 print("  Cac diem CO THE neo tren mat tren cua hop:")
 x_d0 = A["WALL_HINGE"] + A["BAY"]
-anchors = [(f"Vach trai/phai (X=0-{A['WALL_HINGE']:.0f}, {A['W']-A['WALL_HINGE']:.0f}-{A['W']:.0f})", f"KHONG - {A['KN_RUN']:.0f}/{B.LID_L:.0f} mm da la mat mong ban le"),
+anchors = [(f"Vach trai/phai (X=0-{A['WALL_HINGE']:.0f}, {A['W']-A['WALL_HINGE']:.0f}-{A['W']:.0f})", f"KHONG - vach nay mang hoc am hai tay va mortise ban le"),
            (f"Vach truoc/sau (Y=0-{B.WALL_FB:.0f}, {A['Y_BODY']-B.WALL_FB:.0f}-{A['Y_BODY']:.0f})", "CO   - lien khoi voi day, chiu luc tot"),
            (f"2 vach ngan (X={x_d0:.0f}-{x_d0+A['DIV']:.0f}, {A['W']-x_d0-A['DIV']:.0f}-{A['W']-x_d0:.0f})", f"CO nhung chi cach nhau {A['AC_BAY']:.0f} mm - qua hep de nam"),
            ("Canh nap", "KHONG truc tiep - canh xoay tu do, se bung ra")]

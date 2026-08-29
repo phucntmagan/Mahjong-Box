@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8">
+<title>Nắp gỗ đặc — khung ôm tấm Nu thả</title>
+<style>
+@page { size: A4; margin: 16mm 15mm 14mm 15mm; }
+* { box-sizing: border-box; }
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body { font-family: "DejaVu Sans", sans-serif; font-size: 9.3pt; line-height: 1.5;
+       color: #1a1a1a; margin: 0; }
+h1 { font-size: 17pt; margin: 0 0 2mm; letter-spacing: -0.2pt; }
+h2 { font-size: 12pt; margin: 7mm 0 2.5mm; padding-bottom: 1.2mm;
+     border-bottom: 1.2pt solid #1a1a1a; break-after: avoid; }
+h3 { font-size: 10pt; margin: 4.5mm 0 1.5mm; break-after: avoid; }
+p { margin: 0 0 2mm; }
+ul, ol { margin: 0 0 2mm; padding-left: 5mm; }
+li { margin-bottom: 0.8mm; }
+table { width: 100%; border-collapse: collapse; margin: 2mm 0 3mm; font-size: 8.4pt;
+        break-inside: avoid; }
+th { background: #ecebe7; text-align: left; font-weight: bold; padding: 1.3mm 1.8mm;
+     border: 0.4pt solid #b8b5ae; }
+td { padding: 1.2mm 1.8mm; border: 0.4pt solid #cfccc5; vertical-align: top; }
+td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; }
+td.c, th.c { text-align: center; }
+tr:nth-child(even) td { background: #f7f6f3; }
+code, pre { font-family: "DejaVu Sans Mono", monospace; }
+pre { background: #f4f3ef; border-left: 2.5pt solid #8a8madd; border-left-color: #8a877e;
+      padding: 2.5mm 3mm; font-size: 8pt; line-height: 1.45; margin: 2mm 0 3mm;
+      white-space: pre; break-inside: avoid; }
+code { font-size: 8.4pt; background: #f0efeb; padding: 0.2mm 0.8mm; border-radius: 1pt; }
+.head { border-bottom: 2.5pt solid #1a1a1a; padding-bottom: 3mm; margin-bottom: 4mm; }
+.head .meta { font-size: 8.2pt; color: #55524b; margin-top: 1.5mm; }
+.head .meta b { color: #1a1a1a; }
+.verdict { background: #f2f0ea; border: 0.8pt solid #b8b5ae; border-left: 3pt solid #1a1a1a;
+           padding: 3mm 3.5mm; margin: 3mm 0 4mm; break-inside: avoid; }
+.verdict .big { font-size: 10.5pt; font-weight: bold; display: block; margin-bottom: 1.5mm; }
+.warn { background: #fdf6e8; border: 0.6pt solid #d9c184; border-left: 3pt solid #c79a1e;
+        padding: 2.5mm 3mm; margin: 2.5mm 0; font-size: 8.6pt; break-inside: avoid; }
+.fix { background: #eef4ee; border-left: 3pt solid #4a7a52; padding: 2.5mm 3mm;
+       margin: 2.5mm 0; font-size: 8.8pt; break-inside: avoid; }
+.fix b:first-child { color: #2f5a36; }
+.ok  { color: #2f7a3c; font-weight: bold; }
+.bad { color: #a8332a; font-weight: bold; }
+.tag { display: inline-block; font-size: 7.4pt; font-weight: bold; padding: 0.4mm 1.6mm;
+       border-radius: 1.5pt; vertical-align: 1pt; margin-right: 1.5mm; letter-spacing: 0.3pt; }
+.t-crit { background: #a8332a; color: #fff; }
+.t-maj  { background: #c07a12; color: #fff; }
+.t-min  { background: #6b6862; color: #fff; }
+figure { margin: 3mm 0 4mm; break-inside: avoid; text-align: center; }
+figcaption { font-size: 7.8pt; color: #55524b; margin-top: 1.5mm; text-align: left; }
+.foot { margin-top: 6mm; padding-top: 2mm; border-top: 0.6pt solid #cfccc5;
+        font-size: 7.6pt; color: #6b6862; }
+.pb { break-before: page; }
+.nb { break-inside: avoid; }
+</style></head><body>
+<div class="head"><h1>Nắp gỗ đặc — khung ôm tấm Nu thả</h1><div class="meta"><b>Bộ hồ sơ:</b> Hộp Mahjong 152 quân, BURLORA · <b>Đơn vị:</b> mm<br><b>Nguồn số:</b> tools/lid_solid_calc.py · <b>Hình:</b> tools/draw_lid.py</div></div>
+<h1>Phương án nắp gỗ đặc — khung gỗ đỏ ôm tấm Nu</h1>
+<div class="warn"><b>Cập nhật 29-08-2026 — lập luận đã đổi trục, kết luận không đổi.</b> Bản gốc chứng minh &quot;không dùng tấm Nu đặc&quot; bằng chuỗi <b>mắt mộng gỗ</b>. Mắt mộng đã bị bỏ (trục xoay dời ra arris, bản lề nay là lá brass — xem <code>docs/DONG-HOC-BAN-LE.md</code>), nên lập luận đó không còn đối tượng. Kết luận <b>khung + tấm thả vẫn đúng</b>, nhưng nay đứng trên hai chân khác: <b>khe ráp giữa</b> và <b>đố dọc bản lề</b>. Mục dưới đã viết lại theo <code>tools/lid_solid_calc.py</code> hiện hành.</div>
+<div class="warn">Bản đầy đủ có hình: <b><code>build/nap-go-dac.pdf</code></b>. Hình: <code>figs/fig6-khung-tam-tha</code>, <code>figs/fig7-khe-rap-giua</code>. Tính toán: <code>tools/lid_solid_calc.py</code>.</div>
+<h2>Kết luận</h2>
+<p>Nắp gỗ đặc làm được — <b>nhưng không phải bằng một tấm Nu nguyên khối.</b></p>
+<p>Nắp gập đôi: hai cánh 184,25 mm, khe ráp giữa 1,5 mm. Cả hai cánh cùng hút ẩm và cùng lớn ra, mỗi bên ăn vào khe một nửa. Nu không có hướng thớ nên nở đều mọi phương và <b>cả bề rộng cánh nằm trong chuỗi kích thước</b>; ở <b>ΔMC 1,85 %</b> khe đã đóng hoàn toàn — chưa hết một mùa. Hai cánh chống nhau rồi tự phá gỗ hoặc đẩy bung bản lề.</p>
+<p>Lời giải: <b>khung gỗ đặc thẳng thớ ôm tấm Nu thả trong rãnh</b> — đúng thứ trong ảnh mẫu. Khung chỉ đưa <b>68 mm</b> gỗ ngang thớ (hai đố dọc 34) vào chuỗi bề rộng; tấm Nu thả tự do trong rãnh nên nở bao nhiêu cũng không đẩy khe.</p>
+<h2>Khe ráp giữa còn lại theo ΔMC (mm)</h2>
+<table><tr><th class="">Cấu tạo cánh nắp</th><th class="n">Hệ số</th><th class="n">2 %</th><th class="n">3 %</th><th class="n">4 %</th><th class="n">5 %</th><th class="n">khe đóng ở ΔMC</th></tr><tr><td class="">Tấm Nu ĐẶC</td><td class="n">0,22 %</td><td class="n">−0,12</td><td class="n">−0,93</td><td class="n">−1,74</td><td class="n">−2,55</td><td class="n"><b>1,85 %</b></td></tr><tr><td class="">Lõi ổn định + veneer</td><td class="n">0,05 %</td><td class="n">1,13</td><td class="n">0,95</td><td class="n">0,76</td><td class="n">0,58</td><td class="n">8,14 %</td></tr><tr><td class="">Khung gỗ đặc + tấm thả</td><td class="n">0,16 %</td><td class="n">1,06</td><td class="n">0,85</td><td class="n">0,63</td><td class="n">0,41</td><td class="n">6,89 %</td></tr></table>
+<p>Xưởng làm ở 9 % MC, mùa nồm miền Bắc/Nam lên 13 % → ΔMC = 4 %.</p>
+<figure><img src="../figs/fig7-khe-rap-giua.png" style="width:100%"><figcaption>Khe ráp giữa đóng lại theo ΔMC: tấm Nu đặc đóng ở 1,85 %, khung + tấm thả còn 0,63 mm ở ΔMC 4 %.</figcaption></figure>
+<h2>Vấn đề thứ hai — đố dọc bản lề phải chịu được gì</h2>
+<p>Không tính được bằng bảng, nhưng chặn thiết kế:</p>
+<ul><li>Bản lề brass ăn mortise <b>0,9 mm</b> vào mặt dưới đố dọc, giữ bằng <b>vít brass</b>. Vít bắt vào Nu: thớ xoắn loạn, hay có lõi vỏ và lỗ rỗng, không có hướng nào đảm bảo → lực nhổ vít không thể đảm bảo được.</li><li>Khi mở 180°, <b>toàn bộ</b> tải của cánh dồn qua mặt chặn <b>12,75 × 350 mm</b> — chính là mặt cạnh của đố dọc bản lề. Người chơi tỳ 5 kg ở mép ngoài cho <b>9,62 N·m</b>. Ép mặt ngang thớ có trị số cho phép (14 MPa cho cocobolo); Nu <b>không có trị số nào ổn định</b>.</li><li>Bo lượn arris <b>R2,25</b> chạy suốt 350 mm nằm đúng trên cạnh đố dọc: cạnh mỏng nhất của chi tiết, chỗ dễ vỡ nhất nếu gỗ có lỗ rỗng.</li></ul>
+<p><b>⇒ Đố dọc bản lề bắt buộc là gỗ đặc thẳng thớ. Tức là KHUNG + TẤM THẢ.</b></p>
+<h2>Cấu tạo</h2>
+<table><tr><th class="">Chi tiết</th><th class="">Kích thước</th><th class="">Ghi chú</th></tr><tr><td class="">Đố dọc cạnh bản lề</td><td class="">34 × 350 × 15</td><td class="">cocobolo đặc, thớ dọc 350; mang mortise bản lề và bo lượn R2,25</td></tr><tr><td class="">Đố dọc cạnh khe giữa</td><td class="">34 × 350 × 15</td><td class="">không còn rãnh sống khóa</td></tr><tr><td class="">Đố ngang trước/sau</td><td class="">30 × 116,25</td><td class=""></td></tr><tr><td class="">Lòng khung</td><td class="">116,25 × 290</td><td class=""></td></tr><tr><td class="">Tấm Nu</td><td class="">128,25 × 302 × <b>7</b></td><td class="">mộng 6 vào rãnh sâu 9 → <b>thả 3 mm mỗi phía</b></td></tr><tr><td class="">Khe ráp giữa</td><td class="">0,6 → <b>1,5 ±0,3</b></td><td class="">không có sống khóa phủ, nên đây là <b>đặc tính nhìn thấy</b></td></tr></table>
+<p>Chỉ hai thanh đố nằm trong chuỗi kích thước bề rộng: 184,25 = 34 + 116,25 (THẢ) + 34. Tấm Nu nở vào khoảng trống 3 mm trong rãnh, không đẩy vào khe ráp giữa.</p>
+<p>Tấm Nu <b>7 mm chứ không phải 10</b>: ở tấm 10 thì lip dưới của rãnh ôm tấm chỉ còn 0,23 mm — không phay được. Đó là lỗi tiềm ẩn của bản trước, không phải chuyện giảm cân.</p>
+<p><b>Chỉ chốt hoặc dán tấm ở đúng một điểm giữa tấm.</b> Dán quanh rãnh là tấm nứt.</p>
+<figure><img src="../figs/fig6-khung-tam-tha.png" style="width:100%"><figcaption>Khung cocobolo ôm tấm Nu thả trong rãnh; mặt cắt ngang cánh và chi tiết mộng–rãnh.</figcaption></figure>
+<h2>Khay bỏ bài hình thành miễn phí</h2>
+<p>Khung dày đều 15, tấm Nu dày 7 thụt 3 mm dưới mặt trên khung → mặt dưới tấm cao hơn mặt dưới khung <b>5,0 mm</b>. Lòng lõm 116,25 × 290 đó chính là khay bỏ bài, và khi mở 180° nó nằm ngửa lên đúng cao độ vành thân Z47.</p>
+<p>Giải luôn: §3.1 review Rev B (cánh nắp cần lòng lõm) và vấn đề &quot;không phay được lòng ở mép 8 mm&quot;.</p>
+<h2>Khối lượng</h2>
+<table><tr><th class="">Cấu tạo khay</th><th class="n">Gỗ</th><th class="n">+ Quân</th><th class="n">TỔNG</th></tr><tr><td class="">Khay cocobolo</td><td class="n">4,45</td><td class="n">2,43</td><td class="n"><b>6,88 kg</b></td></tr><tr><td class="">Khay lõi ổn định</td><td class="n">3,83</td><td class="n">2,43</td><td class="n"><b>6,26 kg</b></td></tr></table>
+<p>Tải thiết kế <b>203 N</b> (khay cocobolo) / <b>184 N</b> (khay lõi ổn định). Không còn sống khóa, không còn quai — xem <code>docs/CHOT-REV-C.md</code>.</p>
+<h2>Mộng khung bằng cocobolo — rủi ro lớn nhất</h2>
+<p><b>Đã chốt: khung nắp và thân đều là cocobolo</b>, chỉ tấm nắp là Nu gõ đỏ — đồng màu như ảnh mẫu.</p>
+<p>Khung nắp là kết cấu <b>4 mộng mỗi cánh, 8 mộng cả bộ</b>, vừa giữ tấm Nu vừa mang mortise bản lề. Mà cocobolo là một trong những loại <b>khó dán nhất</b>: chất chiết xuất (quinone) thổi lên bề mặt vừa gia công trong vòng vài phút và chặn kết dính.</p>
+<table><tr><th class="">Hạng mục</th><th class="">Yêu cầu bắt buộc</th></tr><tr><td class="">Keo</td><td class=""><b>EPOXY</b>, không dùng PVA. PVA trên cocobolo là kiểu hỏng đã biết.</td></tr><tr><td class="">Lau dầu</td><td class="">Acetone, lau <b>ngay trước khi ép</b> — trong vòng 15 phút kể từ khi phay xong má mộng</td></tr><tr><td class="">Chốt khóa</td><td class="">Chốt gỗ Ø5 <b>xuyên mộng</b>, khoan lệch 0,8 mm (draw-bore). Không phải để chịu tải — mỗi mộng chỉ chịu ~20 N — mà để khung không bung nếu đường keo hỏng sau vài mùa</td></tr><tr><td class="">Kiểm tra</td><td class="">Ép thử 1 mộng mẫu, để 7 ngày rồi phá huỷ. <b>Đường phá phải đi qua thớ gỗ</b>, không được đi dọc đường keo</td></tr></table>
+<p>Nếu xưởng không chạy được quy trình này: chuyển khung sang gõ đỏ (dễ dán hơn nhiều) và chấp nhận lệch màu ở mép nắp.</p>
+<h2>Tấm Nu — mua và xử lý</h2>
+<p>Cần 2 tấm đã lạng <b>128,25 × 302 × 9</b> (bào xuống 7), lạng liên tiếp để book-match. Khối Nu thô tối thiểu ~168 × 342 × 36.</p>
+<table><tr><td class="">Ổn định hoá</td><td class="">ngâm nhựa chân không <b>trước</b> khi gia công tinh</td></tr><tr><td class="">Mắt / lõi vỏ</td><td class="">trám epoxy <b>trước</b> khi chà tinh</td></tr><tr><td class="">Chiều dày</td><td class=""><b>7 mm</b> — dày hơn thì lip dưới của rãnh không phay được</td></tr><tr><td class="">Dán tấm</td><td class="">chỉ chốt 1 điểm ở đúng tâm</td></tr><tr><td class="">Hoàn thiện</td><td class="">bít lỗ (grain filler) rồi mới phủ</td></tr></table>
+<h2>Đã bỏ khỏi bản này</h2>
+<p>Sống khóa 44 × 20, chốt xoay Ø16 và quai da đều <b>đã bỏ</b> cùng với phương án A. Khóa nắp nay là 8 cặp nam châm nối nắp với thân — xem <code>docs/KHOA-NAP.md</code>. Nắp <b>đều 15, không vát</b>. Phủ bì <b>370 × 350 × 62</b>.</p>
+<h2>Pháp lý</h2>
+<p>Gõ đỏ = <i>Afzelia xylocarpa</i>, IUCN <b>Endangered</b>. CoP18 (2019) đưa <i>Afzelia</i> spp. <b>quần thể châu Phi</b> vào Phụ lục II CITES. Loài châu Á và quy định <b>Nhóm IIA</b> trong nước là hai chuyện khác nhau và có thể đã thay đổi — phần này viết theo trí nhớ, <b>bắt buộc xác minh</b> với Cơ quan quản lý CITES Việt Nam và Chi cục Kiểm lâm trước khi mua.</p>
+<p>Cộng với cocobolo (<i>Dalbergia</i>, Phụ lục II) — hộp này nay có <b>hai loài</b> cần giấy tờ.</p>
+<p>Khung nắp cocobolo còn quyết định số hộp gửi được mỗi lô hàng:</p>
+<table><tr><th class="">Cấu tạo khay</th><th class="n">Dalbergia / hộp</th><th class="n">Tối đa mỗi lô (ngưỡng 10 kg)</th></tr><tr><td class="">Khay cocobolo</td><td class="n">3,83 kg</td><td class="n"><b>2 hộp</b></td></tr><tr><td class="">Khay lõi ổn định</td><td class="n">2,36 kg</td><td class="n"><b>4 hộp</b></td></tr></table>
+<h2>Thay đổi so với bản trước</h2>
+<table><tr><th class="">#</th><th class="">Thay đổi</th><th class="">Lý do</th></tr><tr><td class="">1</td><td class="">Cánh nắp: tấm liền → <b>khung + tấm thả</b></td><td class="">Nu đặc đóng khe ráp giữa ở ΔMC 1,85 %</td></tr><tr><td class="">2</td><td class="">Khe ráp giữa 0,6 → <b>1,5 ±0,3</b></td><td class="">chuyển vị hai đố ở ΔMC 5 % là 1,09 mm</td></tr><tr><td class="">3</td><td class="">Bỏ nguyên công phay lòng lõm cánh nắp</td><td class="">khung–tấm tự sinh ra khay bỏ bài</td></tr><tr><td class="">4</td><td class="">Thêm nguyên công ổn định hoá tấm Nu</td><td class="">chống nứt, chống hút hoàn thiện không đều</td></tr><tr><td class="">5</td><td class="">BOM thêm: 2 tấm Nu, epoxy trám, grain filler</td><td class=""></td></tr><tr><td class="">6</td><td class="">Hồ sơ CITES: thêm <i>Afzelia</i></td><td class="">trước chỉ có <i>Dalbergia</i></td></tr><tr><td class="">7</td><td class="">Khung nắp <b>cocobolo</b>, không phải gõ đỏ</td><td class="">đồng màu thân như ảnh mẫu; kéo theo quy trình epoxy + draw-bore</td></tr><tr><td class="">8</td><td class="">Tấm Nu 10 → <b>7</b></td><td class="">ở tấm 10 thì lip dưới của rãnh chỉ còn 0,23 mm</td></tr><tr><td class="">9</td><td class="">Đố dọc bản lề: mang mắt mộng gỗ → mang <b>mortise bản lề brass 0,9 mm</b></td><td class="">trục xoay dời ra arris</td></tr></table>
+<div class="foot">Sinh tu <code>docs/NAP-GO-DAC.md</code> bang <code>tools/md2html.py</code>. Moi tri so sinh tu <code>tools/box_spec.py</code>.</div>
+</body></html>

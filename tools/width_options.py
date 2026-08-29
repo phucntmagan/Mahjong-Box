@@ -3,8 +3,8 @@
 So sanh ba phuong an be rong hop, dung CHINH bo cong thuc cua box_spec.derive().
 Chay: python3 tools/width_options.py
 
-Nen tang: vach ban le buoc phai 18 (ong go R9 quanh lo Ø6,2), nen chuoi X 354
-cu khong dung duoc nua. Ba cach dong lai chuoi X:
+Nen tang: vach ban le buoc phai 18 (hoc am hai tay: sau 12 + thanh sau 6), nen
+chuoi X 354 cu khong dung duoc nua. Ba cach dong lai chuoi X:
    370  giu nguyen bo tri long hop
    366  vach ngan mong con 4
    362  khoang phu kien con 62
@@ -26,16 +26,15 @@ OPTS = [
 def summarise(kw):
     d = B.derive(**kw)
     V = d['V']
-    go_c  = sum(V[k] for k in B.V_THAN + B.V_NAP + B.V_KHAY)/1e6*B.RHO['cocobolo']
-    go_s  = (sum(V[k] for k in B.V_THAN + B.V_NAP)/1e6*B.RHO['cocobolo']
-             + sum(V[k] for k in B.V_KHAY)/1e6*B.RHO['loi on dinh'])
-    nu    = V['tam Nu']/1e6*B.RHO['Nu go do']
+    # dung dung ham cua box_spec — de khong bo sot nhom nao (vd. ban le brass)
+    m_c = B.mass_of(d, 'cocobolo')[2]
+    m_s = B.mass_of(d, 'loi on dinh')[2]
     tiles = B.N_TILES*B.M_TILE_G/1000
-    dal_c = sum(V[k] for k in B.V_THAN + B.V_NAP + B.V_KHAY)/1e6*B.RHO['cocobolo']
-    dal_s = sum(V[k] for k in B.V_THAN + B.V_NAP)/1e6*B.RHO['cocobolo']
+    dal_c = B.dalbergia_of(d, 'cocobolo')
+    dal_s = B.dalbergia_of(d, 'loi on dinh')
     ac_in = (d['AC_BAY'] - 2.0) - 2*B.AC_WALL
     return dict(d=d, W=d['W'], LW=d['LW'], OP_W=d['OP_W'], ANG=d['ANG'],
-                m_c=go_c+nu+tiles, m_s=go_s+nu+tiles,
+                m_c=m_c, m_s=m_s,
                 dal_c=dal_c, dal_s=dal_s, ac_in=ac_in,
                 strip=(ac_in - B.AC_JOKER[0])/2, div=d['DIV'])
 

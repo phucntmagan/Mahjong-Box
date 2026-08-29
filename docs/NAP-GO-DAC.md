@@ -1,59 +1,79 @@
 # Phương án nắp gỗ đặc — khung gỗ đỏ ôm tấm Nu
 
-> **Trạng thái 29-08-2026.** Lập luận khung + tấm thả vẫn đúng nguyên vẹn. Ba trị số đã đổi: tấm Nu
-> **10 → 6** (không phải để giảm cân — ở tấm 10 thì lip dưới của rãnh ôm tấm chỉ còn 0,23 mm, không phay
-> được), phủ bì **370 × 350 × 59**, và phần "không đổi" ở cuối nói về sống khóa nay không còn áp dụng.
-> Bảng "số hộp mỗi lô" cũng đã lỗi thời. Xem **`docs/CHOT-REV-C.md`**.
+> **Cập nhật 29-08-2026 — lập luận đã đổi trục, kết luận không đổi.** Bản gốc chứng minh "không dùng
+> tấm Nu đặc" bằng chuỗi **mắt mộng gỗ**. Mắt mộng đã bị bỏ (trục xoay dời ra arris, bản lề nay là lá
+> brass — xem `docs/DONG-HOC-BAN-LE.md`), nên lập luận đó không còn đối tượng. Kết luận **khung + tấm
+> thả vẫn đúng**, nhưng nay đứng trên hai chân khác: **khe ráp giữa** và **đố dọc bản lề**. Mục dưới đã
+> viết lại theo `tools/lid_solid_calc.py` hiện hành.
 
-> Bản đầy đủ có hình: **`build/Nap-go-dac-Mahjong.pdf`**.
-> Hình: `figs/fig6-khung-tam-tha`, `figs/fig7-ket-ban-le`. Tính toán: `tools/lid_solid_calc.py`.
+> Bản đầy đủ có hình: **`build/nap-go-dac.pdf`**.
+> Hình: `figs/fig6-khung-tam-tha`, `figs/fig7-khe-rap-giua`. Tính toán: `tools/lid_solid_calc.py`.
 
 ## Kết luận
 
 Nắp gỗ đặc làm được — **nhưng không phải bằng một tấm Nu nguyên khối.**
 
-Mặt mộng bản lề nằm dọc cạnh 350 của cánh nắp. Nu không có hướng thớ nên nở đều mọi phương;
-ở **ΔMC 4,1 %** — đúng bằng chênh lệch xưởng (9 %) ↔ mùa nồm (13 %) — khe dọc trục 1,0 mm giữa
-các mắt mộng đóng hoàn toàn và **bản lề kẹt cứng**.
+Nắp gập đôi: hai cánh 184,25 mm, khe ráp giữa 1,5 mm. Cả hai cánh cùng hút ẩm và cùng lớn ra, mỗi bên
+ăn vào khe một nửa. Nu không có hướng thớ nên nở đều mọi phương và **cả bề rộng cánh nằm trong chuỗi
+kích thước**; ở **ΔMC 1,85 %** khe đã đóng hoàn toàn — chưa hết một mùa. Hai cánh chống nhau rồi tự phá
+gỗ hoặc đẩy bung bản lề.
 
-Lời giải: **khung gỗ đặc thẳng thớ ôm tấm Nu thả trong rãnh** — đúng thứ trong ảnh mẫu.
+Lời giải: **khung gỗ đặc thẳng thớ ôm tấm Nu thả trong rãnh** — đúng thứ trong ảnh mẫu. Khung chỉ đưa
+**68 mm** gỗ ngang thớ (hai đố dọc 34) vào chuỗi bề rộng; tấm Nu thả tự do trong rãnh nên nở bao nhiêu
+cũng không đẩy khe.
 
-## Khe mộng còn lại theo ΔMC (mm)
+## Khe ráp giữa còn lại theo ΔMC (mm)
 
-| Cấu tạo cánh nắp | Hệ số | 2 % | 3 % | 4 % | 5 % |
-|---|---:|---:|---:|---:|---:|
-| Tấm Nu ĐẶC | 0,22 % | 0,51 | 0,26 | 0,01 | **−0,23** |
-| Khung gỗ đặc (dọc thớ) | 0,01 % | 0,98 | 0,97 | 0,96 | 0,94 |
-| Lõi ổn định + veneer | 0,05 % | 0,89 | 0,83 | 0,78 | 0,72 |
+| Cấu tạo cánh nắp | Hệ số | 2 % | 3 % | 4 % | 5 % | khe đóng ở ΔMC |
+|---|---:|---:|---:|---:|---:|---:|
+| Tấm Nu ĐẶC | 0,22 % | −0,12 | −0,93 | −1,74 | −2,55 | **1,85 %** |
+| Lõi ổn định + veneer | 0,05 % | 1,13 | 0,95 | 0,76 | 0,58 | 8,14 % |
+| Khung gỗ đặc + tấm thả | 0,16 % | 1,06 | 0,85 | 0,63 | 0,41 | 6,89 % |
 
-Khe đóng khi vật liệu giãn ε = 1,0/112 = 0,893 %. Nu đặc: ngưỡng ΔMC 4,1 %. Khung gỗ đặc: 89 %.
+Xưởng làm ở 9 % MC, mùa nồm miền Bắc/Nam lên 13 % → ΔMC = 4 %.
 
-Vấn đề thứ hai không tính được bằng số: mắt mộng là ống gỗ thành 5,8 mm quanh lỗ Ø6,2, dài 44.
-Nu thớ xoắn loạn, hay có lõi vỏ và lỗ rỗng → có thể tách, và **không có trị số cho phép ổn định**
-để thiết kế theo.
+![Khe ráp giữa đóng lại theo ΔMC: tấm Nu đặc đóng ở 1,85 %, khung + tấm thả còn 0,63 mm ở ΔMC 4 %.](figs/fig7-khe-rap-giua.png)
+
+## Vấn đề thứ hai — đố dọc bản lề phải chịu được gì
+
+Không tính được bằng bảng, nhưng chặn thiết kế:
+
+- Bản lề brass ăn mortise **0,9 mm** vào mặt dưới đố dọc, giữ bằng **vít brass**. Vít bắt vào Nu: thớ
+  xoắn loạn, hay có lõi vỏ và lỗ rỗng, không có hướng nào đảm bảo → lực nhổ vít không thể đảm bảo được.
+- Khi mở 180°, **toàn bộ** tải của cánh dồn qua mặt chặn **12,75 × 350 mm** — chính là mặt cạnh của đố
+  dọc bản lề. Người chơi tỳ 5 kg ở mép ngoài cho **9,62 N·m**. Ép mặt ngang thớ có trị số cho phép
+  (14 MPa cho cocobolo); Nu **không có trị số nào ổn định**.
+- Bo lượn arris **R2,25** chạy suốt 350 mm nằm đúng trên cạnh đố dọc: cạnh mỏng nhất của chi tiết, chỗ
+  dễ vỡ nhất nếu gỗ có lỗ rỗng.
+
+**⇒ Đố dọc bản lề bắt buộc là gỗ đặc thẳng thớ. Tức là KHUNG + TẤM THẢ.**
 
 ## Cấu tạo
 
 | Chi tiết | Kích thước | Ghi chú |
 |---|---|---|
-| Đố dọc cạnh mộng | 34 × 350 × 18 | cocobolo đặc, thớ dọc 350; mang mặt mộng và lỗ Ø6,2 |
-| Đố dọc cạnh khe giữa | 34 × 350 × 12 | mang rãnh âm 4 × 21,7 cho sống khóa |
-| Đố ngang trước/sau | 30 × 108,7 | |
-| Lòng khung | 108,7 × 290 | |
-| Tấm Nu | 120,7 × 302 × 10 | mộng 6 vào rãnh sâu 9 → **thả 3 mm mỗi phía** |
-| Khe ráp giữa | 0,6 → **1,5 ±0,3** | sống khóa 44 phủ kín nên không lộ |
+| Đố dọc cạnh bản lề | 34 × 350 × 15 | cocobolo đặc, thớ dọc 350; mang mortise bản lề và bo lượn R2,25 |
+| Đố dọc cạnh khe giữa | 34 × 350 × 15 | không còn rãnh sống khóa |
+| Đố ngang trước/sau | 30 × 116,25 | |
+| Lòng khung | 116,25 × 290 | |
+| Tấm Nu | 128,25 × 302 × **7** | mộng 6 vào rãnh sâu 9 → **thả 3 mm mỗi phía** |
+| Khe ráp giữa | 0,6 → **1,5 ±0,3** | không có sống khóa phủ, nên đây là **đặc tính nhìn thấy** |
 
-Chỉ hai thanh đố nằm trong chuỗi kích thước bề rộng: 176,7 = 34 + 108,7 (THẢ) + 34.
+Chỉ hai thanh đố nằm trong chuỗi kích thước bề rộng: 184,25 = 34 + 116,25 (THẢ) + 34.
 Tấm Nu nở vào khoảng trống 3 mm trong rãnh, không đẩy vào khe ráp giữa.
 
-Chuyển vị tấm Nu cần nuốt ở ΔMC 5 %: 0,66 mm (bề rộng), 1,66 mm (chiều dài) — chỗ trống 3,0 mm.
+Tấm Nu **7 mm chứ không phải 10**: ở tấm 10 thì lip dưới của rãnh ôm tấm chỉ còn 0,23 mm — không phay
+được. Đó là lỗi tiềm ẩn của bản trước, không phải chuyện giảm cân.
 
 **Chỉ chốt hoặc dán tấm ở đúng một điểm giữa tấm.** Dán quanh rãnh là tấm nứt.
 
+![Khung cocobolo ôm tấm Nu thả trong rãnh; mặt cắt ngang cánh và chi tiết mộng–rãnh.](figs/fig6-khung-tam-tha.png)
+
 ## Khay bỏ bài hình thành miễn phí
 
-Khung dày 18 → 12, tấm Nu dày đều 10 phẳng mặt trên → mặt dưới tấm cao hơn mặt dưới khung
-**8 mm tại cạnh mộng, 2 mm tại khe giữa**. Lòng lõm 108,7 × 290 đó chính là khay bỏ bài.
+Khung dày đều 15, tấm Nu dày 7 thụt 3 mm dưới mặt trên khung → mặt dưới tấm cao hơn mặt dưới khung
+**5,0 mm**. Lòng lõm 116,25 × 290 đó chính là khay bỏ bài, và khi mở 180° nó nằm ngửa lên đúng cao độ
+vành thân Z47.
 
 Giải luôn: §3.1 review Rev B (cánh nắp cần lòng lõm) và vấn đề "không phay được lòng ở mép 8 mm".
 
@@ -61,17 +81,17 @@ Giải luôn: §3.1 review Rev B (cánh nắp cần lòng lõm) và vấn đề 
 
 | Cấu tạo khay | Gỗ | + Quân | TỔNG |
 |---|---:|---:|---:|
-| Khay cocobolo | 5,05 | 2,43 | **7,48 kg** |
-| Khay lõi ổn định | 4,43 | 2,43 | **6,86 kg** |
+| Khay cocobolo | 4,45 | 2,43 | **6,88 kg** |
+| Khay lõi ổn định | 3,83 | 2,43 | **6,26 kg** |
 
-Tải thiết kế **220 N** (ρ cocobolo chốt 1,00). Hệ số an toàn thấp nhất **10×**, võng sống 0,87 mm
-trên giới hạn 1,14. **Kích thước sống khóa, chốt xoay và quai giữ nguyên — không phải sửa.**
+Tải thiết kế **203 N** (khay cocobolo) / **184 N** (khay lõi ổn định). Không còn sống khóa, không còn
+quai — xem `docs/CHOT-REV-C.md`.
 
 ## Mộng khung bằng cocobolo — rủi ro lớn nhất
 
 **Đã chốt: khung nắp và thân đều là cocobolo**, chỉ tấm nắp là Nu gõ đỏ — đồng màu như ảnh mẫu.
 
-Khung nắp là kết cấu **4 mộng mỗi cánh, 8 mộng cả bộ**, vừa giữ tấm Nu vừa mang mặt mộng bản lề.
+Khung nắp là kết cấu **4 mộng mỗi cánh, 8 mộng cả bộ**, vừa giữ tấm Nu vừa mang mortise bản lề.
 Mà cocobolo là một trong những loại **khó dán nhất**: chất chiết xuất (quinone) thổi lên bề mặt
 vừa gia công trong vòng vài phút và chặn kết dính.
 
@@ -87,21 +107,22 @@ lệch màu ở mép nắp.
 
 ## Tấm Nu — mua và xử lý
 
-Cần 2 tấm đã lạng **121 × 302 × 12** (bào xuống 10), lạng liên tiếp để book-match.
-Khối Nu thô tối thiểu ~161 × 342 × 40.
+Cần 2 tấm đã lạng **128,25 × 302 × 9** (bào xuống 7), lạng liên tiếp để book-match.
+Khối Nu thô tối thiểu ~168 × 342 × 36.
 
 | | |
 |---|---|
 | Ổn định hoá | ngâm nhựa chân không **trước** khi gia công tinh |
 | Mắt / lõi vỏ | trám epoxy **trước** khi chà tinh |
-| Chiều dày | 10 mm là điểm cân |
+| Chiều dày | **7 mm** — dày hơn thì lip dưới của rãnh không phay được |
 | Dán tấm | chỉ chốt 1 điểm ở đúng tâm |
 | Hoàn thiện | bít lỗ (grain filler) rồi mới phủ |
 
-## Không đổi
+## Đã bỏ khỏi bản này
 
-Sống khóa 44 × 20, chốt xoay Ø16, quai — giữ nguyên. Sống bắt vào **đố dọc cạnh khe giữa**
-(cocobolo đặc), không bao giờ vào tấm Nu thả. Vát nắp 18 → 12. Phủ bì 354 × 362 × 83.
+Sống khóa 44 × 20, chốt xoay Ø16 và quai da đều **đã bỏ** cùng với phương án A. Khóa nắp nay là
+8 cặp nam châm nối nắp với thân — xem `docs/KHOA-NAP.md`. Nắp **đều 15, không vát**. Phủ bì
+**370 × 350 × 62**.
 
 ## Pháp lý
 
@@ -114,19 +135,21 @@ Cộng với cocobolo (*Dalbergia*, Phụ lục II) — hộp này nay có **hai
 
 Khung nắp cocobolo còn quyết định số hộp gửi được mỗi lô hàng:
 
-| Cấu tạo khay | Dalbergia / hộp | 3 hộp | Tối đa mỗi lô |
-|---|---:|---:|---:|
-| Khay cocobolo | 4,40 kg | 13,19 | **2 hộp** |
-| Khay lõi ổn định | 2,92 kg | 8,75 | **3 hộp** |
+| Cấu tạo khay | Dalbergia / hộp | Tối đa mỗi lô (ngưỡng 10 kg) |
+|---|---:|---:|
+| Khay cocobolo | 3,83 kg | **2 hộp** |
+| Khay lõi ổn định | 2,36 kg | **4 hộp** |
 
 ## Thay đổi so với bản trước
 
 | # | Thay đổi | Lý do |
 |---|---|---|
-| 1 | Cánh nắp: tấm liền → **khung + tấm thả** | Nu đặc kẹt bản lề ở ΔMC 4,1 % |
-| 2 | Khe ráp giữa 0,6 → **1,5 ±0,3** | chuyển vị hai đố ở ΔMC 5 % là 1,02 mm |
+| 1 | Cánh nắp: tấm liền → **khung + tấm thả** | Nu đặc đóng khe ráp giữa ở ΔMC 1,85 % |
+| 2 | Khe ráp giữa 0,6 → **1,5 ±0,3** | chuyển vị hai đố ở ΔMC 5 % là 1,09 mm |
 | 3 | Bỏ nguyên công phay lòng lõm cánh nắp | khung–tấm tự sinh ra khay bỏ bài |
 | 4 | Thêm nguyên công ổn định hoá tấm Nu | chống nứt, chống hút hoàn thiện không đều |
 | 5 | BOM thêm: 2 tấm Nu, epoxy trám, grain filler | |
 | 6 | Hồ sơ CITES: thêm *Afzelia* | trước chỉ có *Dalbergia* |
 | 7 | Khung nắp **cocobolo**, không phải gõ đỏ | đồng màu thân như ảnh mẫu; kéo theo quy trình epoxy + draw-bore |
+| 8 | Tấm Nu 10 → **7** | ở tấm 10 thì lip dưới của rãnh chỉ còn 0,23 mm |
+| 9 | Đố dọc bản lề: mang mắt mộng gỗ → mang **mortise bản lề brass 0,9 mm** | trục xoay dời ra arris |

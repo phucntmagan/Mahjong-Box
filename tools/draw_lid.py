@@ -68,9 +68,8 @@ b=[panel(80,92,220,380,'A · Mặt bằng một cánh  TL 1:1,16'),
    p.rect(ST_H,ST_H+op_w,RAIL,RAIL+op_l,NU,sw=1.0),
    p.rect(ST_H-TON,ST_H+op_w+TON,RAIL-TON,RAIL+op_l+TON,'none','#a8332a',1.0,
           'stroke-dasharray="4,3"')]
-for i in range(B.N_KN):
-    a = i*B.KN_PITCH
-    if i % 2 == 1: b.append(p.rect(-4,0,a,a+B.KN_LEN,SP,sw=0.9))
+for yc in B.derive()['HG_Y']:                      # 3 ban le brass tren canh mong
+    b.append(p.rect(0, B.HG_W, yc-B.HG_L/2, yc+B.HG_L/2, '#c9a227', '#6b5410', 1.0))
 b += [p.dim(0,ST_H,0,f'{ST_H:.0f}',dy=16), p.dim(ST_H,ST_H+op_w,0,f'lòng {op_w:.2f}',dy=16),
       p.dim(ST_H+op_w,LW,0,f'{ST_S:.0f}',dy=16), p.dim(0,LW,0,f'{LW:.2f}',dy=38),
       T(p.X(LW/2), p.Z(LL)-10,f'{LL:.0f} dọc',text_anchor='middle',font_size=9.5,fill='#55524b')]
@@ -110,7 +109,8 @@ ann=[(908,330, s3.X(ST_H-2), s3.Z(13), f'Tấm Nu {PAN_T:.0f}, thụt {S_TOP:.0f
      (84,510, p.X(90), p.Z(90), 'tấm Nu THẢ — không nằm trong chuỗi kích thước'),
      (908,150, s2.X(LW-ST_S/2), s2.Z(T_S+6), 'Đố khe giữa — không còn rãnh sống khóa'),
      (908,167, s2.X(172), s2.Z(15), '(gỗ đặc) — không bao giờ vào tấm Nu'),
-     (908,246, s2.X(10),  s2.Z(9),  'Lỗ chốt bản lề Ø6,2 nằm trong đố gỗ đặc')]
+     (908,246, s2.X(B.HG_W/2), s2.Z(T_H/2),
+      f'Mortise bản lề {B.HG_W:.0f} × sâu {B.HG_MORT:.1f} nằm trong đố gỗ đặc')]
 open('figs/fig6-khung-tam-tha.svg','w').write(svg(940,528,
   hdr('HÌNH 6 — Nắp gỗ đặc: khung cocobolo ôm tấm Nu thả trong rãnh',
       'Chỉ hai thanh đố 34 mm nằm trong chuỗi kích thước bề rộng cánh. Tấm Nu thả tự do trong rãnh nên nở bao nhiêu cũng không đẩy khe ráp giữa.',
@@ -119,62 +119,70 @@ open('figs/fig6-khung-tam-tha.svg','w').write(svg(940,528,
 print('fig6 xong')
 
 # ================================================================== HINH 7
-K_BURL, K_LONG, K_CORE = 0.0022, 0.0001, 0.0005
-PITCH, KLEN, GAP = 45.0, 44.0, 1.0
-KN=[((n-1)*PITCH,(n-1)*PITCH+KLEN,'THAN' if n%2 else 'NAP') for n in range(1,8)]
-CTR=(6*PITCH+KLEN)/2
-def mingap(e):
-    return min((KN[i+1][0] if KN[i+1][2]=='THAN' else CTR+(KN[i+1][0]-CTR)*(1+e))
-             - (KN[i][1]   if KN[i][2]  =='THAN' else CTR+(KN[i][1]  -CTR)*(1+e)) for i in range(6))
+# Vi sao KHONG lam nap bang mot tam Nu DAC: khe rap giua dong lai theo mua.
+# (Ban truoc lap luan bang mat mong go — mat mong da bi bo, nhung ket luan
+#  khung + tam tha van dung, chi doi cho lap luan sang KHE RAP GIUA.)
+K_BURL, K_LONG, K_CORE = B.K['Nu moi phuong'], B.K['doc tho'], B.K['loi on dinh']
+K_XG = B.K['cocobolo ngang tho']
+SEAM = B.SEAM
 
-def junction(v, e, lbl, col, y_lbl, y_names):
-    o=[v.rect(28,44,0,18,BODY,sw=1.1)]
-    a = CTR+(45-CTR)*(1+e)
-    o.append(v.rect(a,a+16,0,18,NU,sw=1.1))
-    o += [v.dim(44,a,20,f'khe {a-44:.2f}',dy=-2,col=col,fs=11),
-          T(v.X(36),y_names,'mắt mộng THÂN',text_anchor='middle',font_size=9.5,fill='#55524b'),
-          T(v.X(a+8),y_names,'mắt mộng NẮP',text_anchor='middle',font_size=9.5,fill='#55524b'),
-          T(v.X(44.5),y_lbl,lbl,text_anchor='middle',font_size=11.5,font_weight='bold',fill=col)]
+seam_left = B.seam_left          # dung chung voi lid_solid_calc.py — khong tinh lai
+
+DMC_MAX = 6.0
+def junction(v, dmc, kind, lbl, col, y_lbl, y_names):
+    g = seam_left(dmc, kind)
+    o = [v.rect(-30, -max(g, 0)/2, 0, 15, FR, sw=1.1),
+         v.rect(max(g, 0)/2, 30, 0, 15, FR, sw=1.1)]
+    o += [v.dim(-max(g, 0)/2, max(g, 0)/2, 17, f'khe {max(g,0):.2f}', dy=-2, col=col, fs=11),
+          T(v.X(-16), y_names, 'cánh TRÁI', text_anchor='middle', font_size=9.5, fill='#55524b'),
+          T(v.X(16), y_names, 'cánh PHẢI', text_anchor='middle', font_size=9.5, fill='#55524b'),
+          T(v.X(0), y_lbl, lbl, text_anchor='middle', font_size=11.5, font_weight='bold', fill=col)]
+    if g <= 0:
+        o.append(T(v.X(0), y_names+16, f'ĐÃ CHẠM NHAU — thừa {-g:.2f} mm',
+                   text_anchor='middle', font_size=10, font_weight='bold', fill='#a8332a'))
     return ''.join(o)
 
-vA, vB = V(306-44.5*5.5, 246, 5.5), V(306-44.5*5.5, 452, 5.5)
-b=[panel(96,92,420,178,'A · Khe giữa mắt mộng 1 và 2  TL 5,5:1'),
-   panel(96,286,420,214,'B · Cùng chỗ đó sau khi hút ẩm  ΔMC 4 %'),
-   junction(vA,0,'Lúc làm — 9 % MC','#2f7a3c',120,264),
-   junction(vB,K_BURL*4,'Mùa nồm — 13 % MC','#a8332a',324,470),
-   T(306,492,'nắp Nu ĐẶC: khe đóng — bản lề kẹt cứng',text_anchor='middle',
-     font_size=11.5,font_weight='bold',fill='#a8332a')]
+vA, vB = V(306, 250, 5.5), V(306, 456, 5.5)
+b = [panel(96, 92, 420, 178, 'A · Khe ráp giữa hai cánh nắp  TL 5,5:1'),
+     panel(96, 286, 420, 214, 'B · Cùng chỗ đó sau khi hút ẩm  ΔMC 4 %'),
+     junction(vA, 0, 'nu', 'Lúc làm — 9 % MC', '#2f7a3c', 120, 264),
+     junction(vB, 4.0, 'nu', 'Mùa nồm — 13 % MC', '#a8332a', 324, 470),
+     T(306, 496, 'nắp Nu ĐẶC: khe đóng — hai cánh chống nhau, tự phá gỗ',
+       text_anchor='middle', font_size=11.5, font_weight='bold', fill='#a8332a')]
 # bieu do
-gx0,gy0,gw,gh = 588, 140, 300, 250
-b.append(panel(552,92,360,398,'C · Khe nhỏ nhất còn lại theo ΔMC'))
+gx0, gy0, gw, gh = 588, 140, 300, 250
+b.append(panel(552, 92, 360, 398, 'C · Khe ráp giữa còn lại theo ΔMC'))
 b.append(f'<rect x="{gx0}" y="{gy0}" width="{gw}" height="{gh}" fill="#fdf6f4" stroke="none"/>')
-def gY(v): return gy0+gh-(v+0.62)/1.85*gh
-def gX(m): return gx0+m/6*gw
-b.append(f'<rect x="{gx0}" y="{gY(0)}" width="{gw}" height="{gy0+gh-gY(0):.1f}" fill="#f4dcd8"/>')
+G_LO, G_HI = -0.9, 1.8
+def gY(v): return gy0 + gh - (v - G_LO)/(G_HI - G_LO)*gh
+def gX(m): return gx0 + m/DMC_MAX*gw
+b.append(f'<rect x="{gx0}" y="{gY(0):.1f}" width="{gw}" height="{gy0+gh-gY(0):.1f}" fill="#f4dcd8"/>')
 b.append(f'<line x1="{gx0}" y1="{gY(0):.1f}" x2="{gx0+gw}" y2="{gY(0):.1f}" stroke="#a8332a" stroke-width="1.4"/>')
-b.append(T(gx0+gw-4, gY(0)+14,'khe = 0 · mắt mộng chạm nhau',text_anchor='end',font_size=9.5,fill='#a8332a'))
-for v in (0,0.5,1.0):
-    b.append(f'<line x1="{gx0-4}" y1="{gY(v):.1f}" x2="{gx0}" y2="{gY(v):.1f}" stroke="#55524b" stroke-width="0.8"/>')
-    b.append(T(gx0-8,gY(v)+3.5,f'{v:.1f}',text_anchor='end',font_size=9.5,fill='#55524b'))
-for m in range(7):
+b.append(T(gx0+gw-4, gY(0)+14, 'khe = 0 · hai cánh chạm nhau', text_anchor='end',
+           font_size=9.5, fill='#a8332a'))
+for val in (0, 0.5, 1.0, 1.5):
+    b.append(f'<line x1="{gx0-4}" y1="{gY(val):.1f}" x2="{gx0}" y2="{gY(val):.1f}" stroke="#55524b" stroke-width="0.8"/>')
+    b.append(T(gx0-8, gY(val)+3.5, f'{val:.1f}', text_anchor='end', font_size=9.5, fill='#55524b'))
+for m in range(int(DMC_MAX)+1):
     b.append(f'<line x1="{gX(m):.1f}" y1="{gy0+gh}" x2="{gX(m):.1f}" y2="{gy0+gh+4}" stroke="#55524b" stroke-width="0.8"/>')
-    b.append(T(gX(m),gy0+gh+16,str(m),text_anchor='middle',font_size=9.5,fill='#55524b'))
-b.append(T(gx0+gw/2,gy0+gh+34,'ΔMC (%)',text_anchor='middle',font_size=10,fill='#55524b'))
-b.append(T(gx0+4,gy0-8,'khe còn lại (mm)',font_size=10,fill='#55524b'))
-for k,col,lbl,ly in [(K_BURL,'#a8332a','Nu ĐẶC',0),(K_CORE,'#c07a12','lõi ổn định',1),
-                     (K_LONG,'#2f7a3c','khung gỗ đặc',2)]:
-    pts=' '.join(f'{gX(m/4):.1f},{gY(mingap(k*m/4)):.1f}' for m in range(0,25))
+    b.append(T(gX(m), gy0+gh+16, str(m), text_anchor='middle', font_size=9.5, fill='#55524b'))
+b.append(T(gx0+gw/2, gy0+gh+34, 'ΔMC (%)', text_anchor='middle', font_size=10, fill='#55524b'))
+b.append(T(gx0+4, gy0-8, 'khe còn lại (mm)', font_size=10, fill='#55524b'))
+for kind, col, lbl, dy in [('nu', '#a8332a', 'Nu ĐẶC', 0), ('core', '#c07a12', 'lõi ổn định', -13),
+                           ('frame', '#2f7a3c', 'khung + tấm thả', 15)]:
+    pts = ' '.join(f'{gX(DMC_MAX*m/40):.1f},{gY(max(seam_left(DMC_MAX*m/40, kind), G_LO)):.1f}'
+                   for m in range(41))
     b.append(f'<polyline points="{pts}" fill="none" stroke="{col}" stroke-width="2.4"/>')
-    b.append(T(gx0+gw+4, gY(mingap(k*6))+4+ (0 if k!=K_LONG else -10), lbl, font_size=10,
+    b.append(T(gx0+gw-4, gY(max(seam_left(DMC_MAX, kind), G_LO))+4+dy, lbl, font_size=10,
                font_weight='bold', fill=col, text_anchor='end'))
-xc = GAP/(CTR-45)/K_BURL
+xc = B.seam_close_dmc('nu')
 b.append(f'<line x1="{gX(xc):.1f}" y1="{gy0}" x2="{gX(xc):.1f}" y2="{gY(0):.1f}" stroke="#a8332a" '
          f'stroke-width="1.2" stroke-dasharray="4,3"/>')
-b.append(T(gX(xc)-6,gy0+16,f'ΔMC {xc:.1f} %',text_anchor='end',font_size=10,font_weight='bold',fill='#a8332a'))
-b.append(T(gX(xc)-6,gy0+30,'xưởng 9 % → nồm 13 %',text_anchor='end',font_size=9.5,fill='#a8332a'))
-open('figs/fig7-ket-ban-le.svg','w').write(svg(940,540,
-  hdr('HÌNH 7 — Vì sao tấm Nu ĐẶC không phay mặt mộng trực tiếp được',
-      'Thân hộp thẳng thớ, thớ chạy dọc cạnh 350 → mặt mộng thân đứng yên. Nu không có hướng thớ, nở đều mọi phương, kéo mặt mộng nắp trượt dọc trục.',
-      'Khe dọc trục 1,0 mm đóng hoàn toàn ở ΔMC 4,1 % — đúng bằng chênh lệch xưởng ↔ mùa nồm.')
+b.append(T(gX(xc)+6, gy0+16, f'ΔMC {xc:.1f} %', font_size=10, font_weight='bold', fill='#a8332a'))
+b.append(T(gX(xc)+6, gy0+30, 'chưa hết một mùa', font_size=9.5, fill='#a8332a'))
+open('figs/fig7-khe-rap-giua.svg', 'w').write(svg(940, 540,
+  hdr('HÌNH 7 — Vì sao nắp không làm bằng một tấm Nu ĐẶC',
+      f'Nu không có hướng thớ, nở đều mọi phương {K_BURL*100:.2f} %/1 % MC. Cả bề rộng cánh {LW:.2f} mm nằm trong chuỗi, nên hai cánh cùng lớn ra ăn vào khe giữa.',
+      f'Khe {SEAM} mm đóng hết ở ΔMC {xc:.1f} % — chưa hết một mùa. Khung gỗ đặc chỉ đưa {2*B.STILE:.0f} mm gỗ ngang thớ vào chuỗi: khe còn {seam_left(4.0,"frame"):.2f} mm ở ΔMC 4 %.')
   + ''.join(b)))
 print('fig7 xong')
