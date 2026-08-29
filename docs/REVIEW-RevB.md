@@ -1,5 +1,10 @@
 # Review bản vẽ sản xuất — Hộp Mahjong 152 quân, Rev B
 
+> **Trạng thái 29-08-2026.** Đây là bản review gốc của Rev B, giữ nguyên làm hồ sơ. Bốn kết luận trong đây
+> đã thay đổi: §2.3 (đề xuất hốc nhấc khay không đóng được), §3.2 (mép tự do nắp không còn cần chi tiết đỡ),
+> §8.1 (phần CITES đã tra lại, xem `tools/cites_check.py`), và toàn bộ chuỗi kích thước.
+> Số hiện hành: **`docs/CHOT-REV-C.md`** và **`docs/BX-01.md`**.
+
 **Tài liệu được review:** `Ban_ve_san_xuat_hop_Mahjong_152_quan_RevB.pdf` (BURLORA, 6 sheet, Rev B 24-08-2026)
 **Phạm vi:** kiểm tra độc lập toàn bộ chuỗi kích thước, dung sai, sức chứa và tính khả thi chế tạo.
 **Công cụ kiểm tra:** `tools/check_dimensions.py` (chạy lại được, không phụ thuộc thư viện ngoài).

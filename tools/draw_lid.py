@@ -51,10 +51,14 @@ def hdr(t,s1,s2=''):
             +(T(28,68,s2,fill='#55524b') if s2 else ''))
 
 FR, NU, SP, BODY = '#7a3f28', '#c8873f', '#6b3520', '#7a4f2c'
-LW, LL = 176.7, 350.0
-ST_H, ST_S, RAIL = 34.0, 34.0, 30.0
-op_w, op_l = LW-ST_H-ST_S, LL-2*RAIL
-GRV, TON, PAN_T = 9.0, 6.0, 10.0
+import box_spec as B
+S = B.derive()
+LW, LL = S['LW'], B.LID_L
+ST_H = ST_S = B.STILE
+RAIL = B.RAIL
+op_w, op_l = S['OP_W'], S['OP_L']
+GRV, TON, PAN_T = B.GRV, B.TON, B.PAN_T
+T_H, T_S, S_TOP = B.T_HINGE, B.T_SEAM, B.S_TOP
 os.makedirs('figs', exist_ok=True)
 
 # ================================================================== HINH 6
@@ -64,25 +68,25 @@ b=[panel(80,92,220,380,'A · Mặt bằng một cánh  TL 1:1,16'),
    p.rect(ST_H,ST_H+op_w,RAIL,RAIL+op_l,NU,sw=1.0),
    p.rect(ST_H-TON,ST_H+op_w+TON,RAIL-TON,RAIL+op_l+TON,'none','#a8332a',1.0,
           'stroke-dasharray="4,3"')]
-for i in range(7):
-    a=(i*45); 
-    if i%2==1: b.append(p.rect(-4,0,a,a+44,SP,sw=0.9))
-b += [p.dim(0,ST_H,0,'34',dy=16), p.dim(ST_H,ST_H+op_w,0,'lòng 108,7',dy=16),
-      p.dim(ST_H+op_w,LW,0,'34',dy=16), p.dim(0,LW,0,'176,7',dy=38),
-      T(p.X(LW/2), p.Z(LL)-10,'350 dọc',text_anchor='middle',font_size=9.5,fill='#55524b')]
+for i in range(B.N_KN):
+    a = i*B.KN_PITCH
+    if i % 2 == 1: b.append(p.rect(-4,0,a,a+B.KN_LEN,SP,sw=0.9))
+b += [p.dim(0,ST_H,0,f'{ST_H:.0f}',dy=16), p.dim(ST_H,ST_H+op_w,0,f'lòng {op_w:.2f}',dy=16),
+      p.dim(ST_H+op_w,LW,0,f'{ST_S:.0f}',dy=16), p.dim(0,LW,0,f'{LW:.2f}',dy=38),
+      T(p.X(LW/2), p.Z(LL)-10,f'{LL:.0f} dọc',text_anchor='middle',font_size=9.5,fill='#55524b')]
 
 s2 = V(403, 252, 2.50)                    # mat cat ngang 2,5x
 b.append(panel(336,92,576,190,'B · Mặt cắt ngang cánh nắp  TL 2,5:1'))
-b += [s2.poly([(0,0),(ST_H,0),(ST_H,18),(0,18)],FR,sw=1.1),
-      s2.poly([(LW-ST_S,0),(LW,0),(LW,12),(LW-ST_S,12)],FR,sw=1.1),
-      s2.poly([(ST_H,18),(LW-ST_S,12),(LW-ST_S,8),(ST_H,8)],'#faf9f6','#faf9f6',0),
-      s2.rect(ST_H-GRV,LW-ST_S+GRV,18-PAN_T,18,NU,sw=1.1)]
+b += [s2.poly([(0,0),(ST_H,0),(ST_H,T_H),(0,T_H)],FR,sw=1.1),
+      s2.poly([(LW-ST_S,0),(LW,0),(LW,T_S),(LW-ST_S,T_S)],FR,sw=1.1),
+      s2.poly([(ST_H,T_H),(LW-ST_S,T_S),(LW-ST_S,T_S-8),(ST_H,T_H-10)],'#faf9f6','#faf9f6',0),
+      s2.rect(ST_H-GRV,LW-ST_S+GRV,T_H-S_TOP-PAN_T,T_H-S_TOP,NU,sw=1.1)]
 cx,cy = s2.X(10), s2.Z(9)
 b.append(f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="{3.1*2.50:.1f}" fill="#faf9f6" stroke="#2a241c" stroke-width="1"/>')
 b += [s2.rect(LW-22,LW+22,18,38,SP,sw=1.2),
       s2.rect(LW-22,LW,14,18,'#faf9f6','#faf9f6',0),
       s2.poly([(LW-22,14),(LW,14)],'none','#2a241c',1.0),
-      s2.dim(ST_H,LW-ST_S,42,'lòng khung 108,7',dy=-2),
+      s2.dim(ST_H,LW-ST_S,42,f'lòng khung {op_w:.2f}',dy=-2),
       s2.dim(0,ST_H,-6,'đố 34'), s2.dim(LW-ST_S,LW,-6,'đố 34'),
       arrow(s2.X(76),s2.Z(21),s2.X(76),s2.Z(14.5),'#a8332a',1.6,5),
       arrow(s2.X(76),s2.Z(2),s2.X(76),s2.Z(7.5),'#a8332a',1.6,5),
@@ -98,19 +102,19 @@ b += [s3.poly([(ST_H-14,0),(ST_H,0),(ST_H,18),(ST_H-14,18)],FR,sw=1.1),
       arrow(s3.X(ST_H-GRV+3),s3.Z(13),s3.X(ST_H-GRV),s3.Z(13),'#a8332a',1.8,5),
       T(s3.X(ST_H-GRV+1.4),s3.Z(15.6),'thả 3',text_anchor='middle',font_size=9.5,fill='#a8332a')]
 
-ann=[(908,330, s3.X(ST_H-2), s3.Z(13), 'Tấm Nu 10, phẳng với mặt trên'),
+ann=[(908,330, s3.X(ST_H-2), s3.Z(13), f'Tấm Nu {PAN_T:.0f}, thụt {S_TOP:.0f} dưới mặt trên khung'),
      (908,347, s3.X(ST_H-7.5), s3.Z(4),  'Đáy rãnh — 3 mm trống để tấm nở'),
      (908,412, s3.X(ST_H-6.2), s3.Z(11), 'KHÔNG keo quanh rãnh —'),
      (908,429, s3.X(ST_H-3), s3.Z(6),  'chỉ chốt 1 điểm ở đúng tâm tấm'),
      (84,494, p.X(17), p.Z(60), 'Đố dọc 34 gỗ đặc thẳng thớ mang mặt mộng;'),
      (84,510, p.X(90), p.Z(90), 'tấm Nu THẢ — không nằm trong chuỗi kích thước'),
-     (908,150, s2.X(190), s2.Z(30), 'Sống khóa bắt vào ĐỐ khe giữa'),
+     (908,150, s2.X(LW-ST_S/2), s2.Z(T_S+6), 'Đố khe giữa — không còn rãnh sống khóa'),
      (908,167, s2.X(172), s2.Z(15), '(gỗ đặc) — không bao giờ vào tấm Nu'),
      (908,246, s2.X(10),  s2.Z(9),  'Lỗ chốt bản lề Ø6,2 nằm trong đố gỗ đặc')]
 open('figs/fig6-khung-tam-tha.svg','w').write(svg(940,528,
-  hdr('HÌNH 6 — Nắp gỗ đặc: khung gỗ đỏ ôm tấm Nu thả trong rãnh',
+  hdr('HÌNH 6 — Nắp gỗ đặc: khung cocobolo ôm tấm Nu thả trong rãnh',
       'Chỉ hai thanh đố 34 mm nằm trong chuỗi kích thước bề rộng cánh. Tấm Nu thả tự do trong rãnh nên nở bao nhiêu cũng không đẩy khe ráp giữa.',
-      'Khung dày 18 tại mộng → 12 tại khe giữa, tấm Nu dày đều 10 phẳng mặt trên: mặt dưới tự thành khay bỏ bài, không phải phay thêm.')
+      f'Khung dày {T_H:.0f} tại mộng → {T_S:.0f} tại khe giữa; tấm Nu dày đều {PAN_T:.0f} thụt {S_TOP:.0f} dưới mặt khung: mặt dưới tự thành khay bỏ bài.')
   + ''.join(b) + annot(ann, 620)))
 print('fig6 xong')
 

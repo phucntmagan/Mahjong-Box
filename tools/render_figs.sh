@@ -2,8 +2,16 @@
 # Render SVG -> PNG. Cua so phai CAO HON SVG roi crop, neu khong Chromium cat mat day.
 set -e
 CHROME=/opt/pw-browsers/chromium-1194/chrome-linux/chrome
-VENV=/tmp/claude-0/-home-user-Mahjong-Box/c895b263-5c9c-5e62-8a1f-70bdc49db222/scratchpad/venv/bin/python
-for f in figs/*.svg; do
+# Pillow chi dung de crop. Tim trong venv cua scratchpad phien lam viec, neu
+# khong co thi tao. Duong dan scratchpad doi theo phien nen KHONG go cung.
+PY=$(command -v python3)
+if ! $PY -c "import PIL" 2>/dev/null; then
+  VDIR="${SCRATCH:-${TMPDIR:-/tmp}}/mahjong-figs-venv"
+  [ -x "$VDIR/bin/python" ] || { $PY -m venv "$VDIR" && "$VDIR/bin/pip" -q install Pillow; }
+  PY="$VDIR/bin/python"
+fi
+VENV=$PY
+for f in ${@:-figs/*.svg}; do
   n=$(basename "$f" .svg)
   W=$(grep -o 'width="[0-9]*"' "$f" | head -1 | grep -o '[0-9]*')
   H=$(grep -o 'height="[0-9]*"' "$f" | head -1 | grep -o '[0-9]*')

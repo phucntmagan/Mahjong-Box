@@ -1,5 +1,10 @@
 # Thiết kế quai xách — Hộp Mahjong 152 quân
 
+> **Trạng thái 29-08-2026. Phương án A trong tài liệu này ĐÃ BỊ LOẠI**, thay bằng phương án C (hốc âm hai tay).
+> Giữ lại làm hồ sơ vì nó là cơ sở của các trị số vẫn còn hiệu lực: vát nắp 18 → 12 và khe ráp giữa 1,5.
+> Bảng khối lượng và bảng "số hộp mỗi lô" trong đây đều đã lỗi thời — xem **`docs/CHOT-REV-C.md`**.
+> So sánh A ↔ C: `tools/handle_option_c.py`.
+
 > Bản đầy đủ có hình: **`build/Thiet-ke-quai-xach-Mahjong.pdf`** (7 trang).
 > Hình rời: `figs/fig1..fig5`. Tính toán: `tools/handle_calc.py`. Dựng hình: `tools/draw_handle.py`.
 

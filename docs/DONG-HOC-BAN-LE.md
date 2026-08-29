@@ -1,5 +1,10 @@
 # Động học bản lề — giải điểm treo §2.5
 
+> **Trạng thái 29-08-2026.** Phương pháp và kết luận giữ nguyên, nhưng **mọi con số trong đây đã đổi** vì
+> đáy hộp 8 → 6 và bỏ sống khóa: trục xoay nay là **P = (9 , 56)**, cánh mở vươn ra **166,25**, dốc
+> **2,067°** (bản này ghi 1,94° — tính nhầm trên cả bề rộng cánh thay vì trên đoạn vát thật).
+> Chạy `python3 tools/hinge_kinematics.py` để có bản hiện hành. Xem **`docs/CHOT-REV-C.md`**.
+
 > Bản đầy đủ có hình: **`build/Dong-hoc-ban-le-Mahjong.pdf`**.
 > Hình: `figs/fig8-dong-hoc-ban-le`. Tính toán: `tools/hinge_kinematics.py`.
 

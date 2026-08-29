@@ -1,63 +1,74 @@
-# Hộp Mahjong 152 quân — hồ sơ review thiết kế
+# Hộp Mahjong 152 quân — hồ sơ thiết kế
 
-Review kỹ thuật độc lập cho bản vẽ sản xuất **Rev B** (BURLORA, 6 sheet, 24-08-2026):
-hộp gỗ đựng bộ Mahjong 152 quân, 4 khay 3 × 12, khay phụ kiện trung tâm,
-nắp hai cánh vát với mộng gỗ và chốt xoay giấu kín.
+Hộp gỗ đựng bộ Mahjong 152 quân (BURLORA), tham chiếu bộ Mahjong của Hermès.
+Khởi đầu là một bản review độc lập cho bản vẽ sản xuất **Rev B**; nay là hồ sơ thiết kế đang tiến hoá.
 
-## Nội dung
+**Phủ bì đã chốt: 370 × 374 × 65 mm · 6,26 kg** (khay lõi ổn định) hoặc **6,87 kg** (khay cocobolo).
 
-| Đường dẫn | Nội dung |
+## Đọc theo thứ tự này
+
+| # | Đường dẫn | Nội dung |
+|---|---|---|
+| 1 | `docs/CHOT-REV-C.md` | **Bắt đầu ở đây.** Quyết định đã chốt, và những chỗ tài liệu cũ sai hoặc hết hiệu lực |
+| 2 | `docs/BX-01.md` | Sheet thân hộp — chuẩn, dung sai, bản lề, hốc âm, khe luồn ngón, ổ xúc xắc |
+| 3 | `docs/REVIEW-RevB.md` | Review gốc bản vẽ Rev B (hồ sơ, có banner chỉ chỗ đã đổi) |
+| 4 | `docs/NAP-GO-DAC.md` | Nắp khung gỗ đặc ôm tấm Nu thả |
+| 5 | `docs/DONG-HOC-BAN-LE.md` | Động học bản lề — suy trục xoay từ ràng buộc |
+| 6 | `docs/QUAI-XACH.md` | Phương án quai A — **đã loại**, giữ làm hồ sơ |
+
+PDF tương ứng trong `build/`. Hình trong `figs/`.
+
+## Quyết định đã chốt
+
+| | |
 |---|---|
-| `docs/REVIEW-RevB.md` | Báo cáo review đầy đủ |
-| `build/Review-Mahjong-152-RevB.pdf` | Bản PDF A3→A4 để in / gửi xưởng (6 trang, có hình mặt cắt và sơ đồ mộng) |
-| `build/review.html` | Nguồn HTML của bản PDF |
-| `tools/check_dimensions.py` | Kiểm tra lại toàn bộ chuỗi kích thước, chạy độc lập |
-| `docs/QUAI-XACH.md` | Thiết kế quai xách (sống khóa + quai da) |
-| `build/Thiet-ke-quai-xach-Mahjong.pdf` | Bản PDF thiết kế quai, 7 trang, 5 hình |
-| `figs/*.svg` · `figs/*.png` | Hình vẽ thiết kế quai |
-| `tools/handle_calc.py` | Tính khối lượng, tải, kiểm bền quai |
-| `tools/draw_handle.py` · `tools/render_figs.sh` | Sinh và render hình vẽ |
-| `docs/NAP-GO-DAC.md` | Phương án nắp gỗ đặc (khung gỗ đỏ + tấm Nu thả) |
-| `build/Nap-go-dac-Mahjong.pdf` | Bản PDF phương án nắp gỗ đặc |
-| `tools/lid_solid_calc.py` · `tools/draw_lid.py` | Tính và vẽ phương án nắp gỗ đặc |
-| `tools/box_spec.py` | **Đặc tả vật liệu và hình học đã chốt** — nguồn sự thật cho khối lượng và tải |
-| `docs/DONG-HOC-BAN-LE.md` | Động học bản lề — giải điểm treo §2.5 |
-| `build/Dong-hoc-ban-le-Mahjong.pdf` | Bản PDF động học bản lề |
-| `tools/hinge_kinematics.py` · `tools/draw_hinge.py` | Suy trục xoay, quét va chạm, vẽ hình |
-| `tools/drawlib.py` | Helper vẽ SVG dùng chung |
+| Vật liệu | thân, khay, khung nắp: **cocobolo** ρ 1,00 · tấm nắp: **Nu gõ đỏ** thả trong rãnh |
+| Nắp | khung gỗ đặc ôm tấm Nu thả — tấm liền sẽ kẹt bản lề ở ΔMC 4,1 % |
+| Xách | **phương án C** — hai hốc âm 120 × 30 sâu 16, xách hai tay |
+| Bản lề | trục **P = (9 , 56)**, ống gỗ R9 tiếp tuyến hai mặt nắp; mở 180° nằm ngang, vươn 166,25 |
+| Bề rộng | **370** — vách bản lề buộc phải 18 để chứa ống gỗ R9 |
+| Khe ráp giữa | **1,5 ±0,3** |
+| Còn treo | **khóa nắp không kim loại** — chưa có lời giải |
 
-## Kết quả
-
-Số học của Rev B **đúng toàn bộ** — 0 lỗi trên 16 phép kiểm.
-Nhưng có 5 vấn đề hình học/công năng phải giải quyết trước khi lập trình CNC:
-
-1. Chiều cao 80 mm dư 14–24 mm khoảng rỗng, không có chi tiết ép khay → khay xóc khi vận chuyển
-2. Không có sheet nào vẽ thân hộp BX-01; khoang 126/70/330 chưa được dung sai hóa
-3. Không lấy được khay ra (hở 1,0 mm mỗi bên, không luồn được ngón tay)
-4. Chốt gỗ Ø6 × 322 không khoan được và sẽ gãy → tách thành 2 chốt × 160
-5. Chưa giải quyết động học mở 180° — cánh sẽ treo lơ lửng trên một chốt gỗ Ø6
-
-Cộng 2 chi tiết công năng bị bỏ sót so với ảnh mẫu và 1 rủi ro độ ẩm
-(khe ráp giữa 0,6 mm không hấp thụ nổi giãn nở 2,12 mm của nắp gỗ đặc).
-
-## Chạy kiểm tra
+## Chạy
 
 ```
-python3 tools/check_dimensions.py     # chuỗi kích thước hộp
-python3 tools/handle_calc.py          # khối lượng, tải, kiểm bền quai
-python3 tools/box_spec.py             # đặc tả đã chốt: khối lượng, tải, Dalbergia/hộp
-python3 tools/hinge_kinematics.py     # trục xoay, quét va chạm, mặt chặn, chuỗi X
-python3 tools/lid_solid_calc.py       # nắp gỗ đặc: giãn nở, kẹt mộng, khối lượng
-python3 tools/draw_handle.py          # sinh figs/*.svg
-python3 tools/draw_lid.py             # sinh figs/fig6, fig7
-./tools/render_figs.sh                # SVG -> PNG
+python3 tools/box_spec.py          # đặc tả đã chốt: hình học, khối lượng, tải, tự kiểm
+python3 tools/width_options.py     # so sánh ba phương án bề rộng
+python3 tools/handle_option_c.py   # phương án xách C, so với A
+python3 tools/hinge_kinematics.py  # trục xoay, quét va chạm, mặt chặn
+python3 tools/lid_solid_calc.py    # nắp gỗ đặc: giãn nở, kẹt mộng, lip rãnh ôm tấm
+python3 tools/detail_features.py   # nhấc khay, hõm Joker, đỡ mép nắp, nắp che xúc xắc
+python3 tools/cites_check.py       # CITES: điều đã tra được và mức tin cậy từng dòng
+python3 tools/check_dimensions.py  # kiểm bản vẽ Rev B + đối chiếu với đặc tả hiện hành
+python3 tools/handle_calc.py       # phương án quai A (đã loại, giữ làm hồ sơ)
 ```
 
 Không phụ thuộc thư viện ngoài. Thoát mã 0 nếu không có lỗi số học.
 
-## Dựng lại PDF
+`tools/box_spec.py` là **nguồn sự thật duy nhất** cho vật liệu, hình học, khối lượng và tải.
+Mọi script khác import từ đó; không script nào được viết lại một con số hình học.
+Toàn bộ hình học sinh từ chuỗi kích thước qua `derive()`, và `selfcheck()` chặn các tổ hợp không dựng được.
+
+## Dựng lại hình và PDF
 
 ```
-chrome --headless --no-pdf-header-footer \
-  --print-to-pdf=build/Review-Mahjong-152-RevB.pdf build/review.html
+python3 tools/draw_bx01.py     # sinh figs/fig9, fig10
+python3 tools/draw_hinge.py    # sinh figs/fig8
+python3 tools/draw_lid.py      # sinh figs/fig6, fig7
+python3 tools/draw_handle.py   # sinh figs/fig1..fig5
+./tools/render_figs.sh         # SVG -> PNG (cửa sổ chụp cao hơn SVG rồi crop)
+./tools/build_pdf.sh           # docs/*.md -> build/*.html -> build/*.pdf
 ```
+
+`tools/md2html.py` dùng chung CSS với `build/review.html` nên PDF mới và cũ đồng bộ định dạng.
+
+## Rủi ro lớn nhất còn lại
+
+1. **Khóa nắp.** Phương án C bỏ sống khóa, nên trên nắp không còn chi tiết nào để gắn khóa vào. Cánh nắp chỉ
+   được giữ bằng chính trọng lượng nó — chỉ cần 3 N đẩy lên ở mép tự do là mở.
+2. **Mộng khung cocobolo.** 8 mộng, gỗ nhiều dầu. Bắt buộc epoxy + lau acetone trong vòng 15 phút kể từ khi
+   phay xong má mộng + chốt draw-bore Ø5. Phải ép thử một mộng mẫu, để 7 ngày rồi phá huỷ.
+3. **CITES.** Phần pháp lý đã tra lại nhưng cites.org bị chặn trong môi trường chạy, nên toàn bộ là nguồn thứ
+   cấp. Đủ để thiết kế tiếp, không đủ để ký hợp đồng.
+4. **Lô quân cờ.** Phải đo tối thiểu 20 quân thuộc đúng lô mua trước khi chốt lòng khay.

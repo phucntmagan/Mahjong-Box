@@ -301,6 +301,43 @@ def design_load(khay='cocobolo'): return mass(khay)[2]*9.81*DYN
 # Chua xac nhan duoc bang van ban goc (cites.org bi chan o moi truong nay).
 CITES_LIMIT = 10.0   # kg go cua MOT loai duoc chu giai
 
+# ============================================================== CHUAN VA DUNG SAI
+# QA-01 cua Rev B tham chieu "chuan A/B/C" ma khong dinh nghia o dau (review §2.2).
+# Dinh nghia o day, tren THAN HOP, vi than la chi tiet duoc gia cong truoc va moi
+# thu khac lap theo no.
+DATUM = [
+ ("A", "MAT DAY NGOAI cua than (truoc khi dan chan dem). Chuan Z. Moi cao do"
+       " trong ho so deu do tu day, KHONG do tu vanh."),
+ ("B", "MAT NGOAI VACH BAN LE TRAI. Chuan X. Chon mat nay vi truc xoay ban le"
+       " cach no dung mot ban kinh ong go (9 mm) — do la kich thuoc kho tinh nhat"
+       " trong ca hop."),
+ ("C", "MAT NGOAI VACH TRUOC (mat vach goc, KHONG phai mat go noi cua hoc am)."
+       " Chuan Y. Go noi hoc am la chi tiet noi len, khong duoc lam chuan."),
+]
+
+# Dung sai. Nguyen tac: cai gi lap voi chi tiet khac thi dung sai MOT CHIEU va di
+# ve phia LONG HON; cai gi chi de nhin thi dung sai doi xung.
+TOL = [
+ # (kich thuoc, tri so, dung sai, ly do)
+ ("Khoang khay quan (X)",      "BAY",   "+0,40 / 0",   "khay 124 -0,25 -> khe 1,00..1,45 moi ben"),
+ ("Khoang phu kien (X)",       "AC_BAY","+0,40 / 0",   "AC-01 68 -0,25 -> khe 1,00..1,45 moi ben"),
+ ("Long hop (Y)",              "INNER_Y","+0,50 / 0",  "khay 325 -0,30 -> khe 2,50..3,00 moi dau"),
+ ("Be day vach ban le",        "WALL_HINGE","+/-0,15", "quyet dinh vi tri truc xoay X=9"),
+ ("Be day vach ngan",          "DIV",   "+/-0,20",     "khong lap voi gi, chi chia khoang"),
+ ("Be day day hop",            "BOT",   "+/-0,20",     "vao chuoi Z"),
+ ("Cao do vanh tai canh mong", "Z_RIM", "+/-0,30",     "quyet dinh khe 1,0 tren dinh khay"),
+ ("Tam lo chot theo B",        None,    "+/-0,10",     "hai ben phai dong truc: sai lech lam ket ban le"),
+ ("Tam lo chot theo A",        None,    "+/-0,10",     "nt"),
+ ("Buoc mat mong",             "KN_PITCH","+/-0,10",   "cong don 6 buoc -> +/-0,25 o dau chuoi"),
+ ("Lo chot",                   "D_PIN", "+0,05 / 0",   "chot O6,00 -0,05 -> khe 0,20..0,25"),
+ ("Phu bi X, Y",               None,    "+/-0,50",     "KHONG dung doc lap voi nap - xem ghi chu"),
+ ("Dong mep nap - than",       None,    "+/-0,30",     "dung sai QUAN HE. Nap cat theo than THUC TE"),
+]
+TOL_NOTE = ("Phu bi than va phu bi nap KHONG duoc dung sai hoa doc lap: truong hop xau"
+            " cua hai tri +/-0,5 cho lech 1,0 mm, vien nap thut vao 0,5 mm moi ben va"
+            " nhin thay ro. Canh nap phai duoc CAT THEO THAN da hoan thien (match-fit)"
+            " o nguyen cong cuoi, va chi kiem theo dung sai quan he +/-0,30.")
+
 # ============================================================== TU KIEM
 def selfcheck(d=None):
     d = d or _SELF
