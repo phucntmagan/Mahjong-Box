@@ -67,7 +67,11 @@ POST_OUT   =   6.0       # (A) tru nho ra ngoai
 POST_IN    =   4.0       # (A) tru an vao trong
 GRIP_W, GRIP_H, GRIP_D = 120.0, 30.0, 16.0   # (C) hoc am: rong x cao x sau
 GRIP_BACK  =   6.0       # (C) go con lai phia sau hoc
-RIB_W      =  16.0       # (C) song noi giua tren AC-01 do mep tu do cua nap
+# (C) song noi giua tren AC-01: DA BO. tools/detail_features.py muc 3 tinh lai do
+# vong mep tu do cua nap o be day 12 (khong phai 8 nhu Rev B) va cho 0,6 mm duoi
+# 50 N — khong can do. Bo song lai giai luon xung dot song-vs-ranh Joker.
+FELT     = 0.8           # ni lot khay
+FELT_PAD = 0.8           # (C) dem ni duoi nap de ep khay, thay cho song noi
 
 # --- Z (chieu cao), Z=0 la mat ban
 FOOT   =  2.0            # chan dem
@@ -111,6 +115,24 @@ AC_JOKER = (28.0, 152.0, 24.5)    # ranh Joker (rong, dai, sau)
 AC_AUX_L, AC_AUX_D = 80.0, 18.5   # hoc 4 quan du phong (dai, sau)
 AC_DICE_D = 18.5                  # o xuc xac (sau); chieu dai = phan con lai
 AC_CLR   =  2.5                   # khe moi dau khay trong khoang (bang khay quan)
+
+# --- hoc nhac khay (review Rev B §2.3 giai lai — xem tools/detail_features.py)
+WELL_W   = 70.0          # be rong hoc ngon tren vach truoc/sau, do tu trong ra
+WELL_D   =  6.0          # sau vao vach (vach 10 -> con 4 mm da ngoai)
+NOTCH_D  =  5.0          # khoet XUYEN mat dau khay (day vach khay 5)
+NOTCH_H  = 12.0          # cao khoet, tinh tu vanh khay xuong
+WELL_FELT=  1.0          # ni dan vao day hoc: chan quan truot ra va lam dem
+
+# --- hom ngon ranh Joker
+SCAL_D   = 25.0          # duong kinh hom ban nguyet
+SCAL_DEP = 12.0          # sau khoet vao dai go ben ranh
+
+# --- o xuc xac + nap che
+DICE_SOCK  = 18.0        # canh o vuong
+DICE_SOCK_D= 12.0        # sau o
+DICE_RIB   =  5.0        # vach giua cac o
+COVER_T    =  4.0        # day nap che o xuc xac
+COVER_LIP  =  3.0        # bac ha nap che quanh mieng o
 
 # ============================================================== SUY RA
 # Toan bo hinh hoc suy ra tu chuoi X va phuong an xach. Tach thanh ham de so
@@ -175,24 +197,37 @@ def derive(wall_hinge=WALL_HINGE, bay=BAY, div=DIV, ac_bay=AC_BAY, handle=HANDLE
     GRIP_Z0   = Z_FLOOR                                  # day hoc ngang san trong
     GRIP_Z1   = GRIP_Z0 + GRIP_H
     WALL_GRIP = WALL_FB + grip_out                       # be day vach tai hoc
-    LEDGE     = min(z_rim_at(GRIP_X0), z_rim_at(GRIP_X1)) - GRIP_Z1   # dai go tren hoc
-    SKIRT     = GRIP_Z0 - FOOT                           # dai go duoi hoc
+    GRIP_LEDGE = min(z_rim_at(GRIP_X0), z_rim_at(GRIP_X1)) - GRIP_Z1  # dai go tren hoc am
+    GRIP_SKIRT = GRIP_Z0 - FOOT                                       # dai go duoi hoc am
 
     # --- khay phu kien: chuoi dai khep ve AC_Y
     AC_W_OUT  = ac_bay - 2.0                             # khe 1,0 moi ben
     AC_W_IN   = AC_W_OUT - 2*AC_WALL
     AC_DICE_L = AC_L - 4*AC_WALL - AC_JOKER[1] - AC_AUX_L
 
+    # --- hoc nhac khay: khe luon ngon tay va mo moc len
+    LIFT_CHANNEL = WELL_D + AC_CLR + NOTCH_D - WELL_FELT  # be rong khe luon ngon (Y)
+    LIFT_LEDGE   = NOTCH_D                                # be sau mo de moc ngon
+    Z_LIFT_LEDGE = Z_FLOOR + 2*TRAY_H - NOTCH_H           # cao do mo cua khay TREN
+    TILE_TOP  = (TRAY_H - TRAY_IN[2]) + FELT + TILE_MAX[2]  # dinh quan so voi day khay
+    HEADROOM  = TRAY_H - TILE_TOP                        # vanh khay cao hon quan
+    TILE_OPEN = NOTCH_H - HEADROOM                       # quan bi ho ra ben hong khoet
+    LIFT_LIP  = TRAY_H - NOTCH_H                         # chieu cao mo con lai duoi khoet
+    SCAL_LEFT = (AC_W_IN - AC_JOKER[0])/2 - SCAL_DEP     # dai go con lai ben ranh Joker
+
+
     # ---------------------------------------------------- the tich (mm3)
     v = {}
     v['day']            = W*Y_BODY*BOT
-    v['vach truoc/sau'] = 2*(W*WALL_FB*(Z_RIM_AVG - Z_FLOOR))
+    v['vach truoc/sau'] = (2*(W*WALL_FB*(Z_RIM_AVG - Z_FLOOR))
+                           - 4*(WELL_W*WELL_D*(z_rim_at(wall_hinge + bay/2) - Z_FLOOR)))
     v['vach trai/phai'] = 2*(INNER_Y*wall_hinge*(Z_RIM - Z_FLOOR))
     v['mat mong than']  = 2*KN_BODY*KN_LEN*A_KN
     x_div = wall_hinge + bay + div/2                     # vach ngan cao toi vanh tai chinh no
     v['vach ngan']      = 2*(INNER_Y*div*(z_rim_at(x_div) - Z_FLOOR))
     v['khay quan']      = 4*(TRAY[0]*TRAY[1]*TRAY[2]
-                             - TRAY_IN[0]*TRAY_IN[1]*TRAY_IN[2])
+                             - TRAY_IN[0]*TRAY_IN[1]*TRAY_IN[2]
+                             - 2*WELL_W*NOTCH_D*NOTCH_H)
     v['khay phu kien']  = (AC_L*AC_W_OUT*AC_H
                            - AC_JOKER[0]*AC_JOKER[1]*AC_JOKER[2]
                            - AC_W_IN*AC_DICE_L*AC_DICE_D
@@ -220,11 +255,11 @@ def derive(wall_hinge=WALL_HINGE, bay=BAY, div=DIV, ac_bay=AC_BAY, handle=HANDLE
         # go them cua go noi tru di the tich hoc khoet vao
         v['go hoc am']  = 2*(GRIP_W*grip_out*(z_rim_at(X_SEAM) - FOOT)
                              - GRIP_W*GRIP_H*GRIP_D)
-        v['song noi AC-01'] = RIB_W*AC_L*(Z_SEAM - (Z_FLOOR + AC_H))
+        v['nap che o xuc xac'] = (AC_W_IN + 2*COVER_LIP)*(2*DICE_SOCK + 3*DICE_RIB)*COVER_T
         V_THAN = ['day','vach truoc/sau','go hoc am','vach trai/phai',
                   'mat mong than','vach ngan']
         V_NAP  = ['khung nap','mat mong nap']
-    V_KHAY = ['khay quan','khay phu kien'] + (['song noi AC-01'] if handle=='C' else [])
+    V_KHAY = ['khay quan','khay phu kien'] + (['nap che o xuc xac'] if handle=='C' else [])
 
     d.update({k: val for k, val in locals().items()
               if k.isupper() or k in ('t_lid', '_int_t', 'z_rim_at')})
@@ -287,9 +322,17 @@ def selfcheck(d=None):
         e.append(f"lip duoi ranh om tam chi con {lip:.2f} mm - tang PAN_T se lam no am")
     if S_TOP < 2.5:                                e.append("lip tren ranh om tam mong hon 2,5")
     if (WALL_FB - BOT_TON)/2 < 2.5:                e.append("ranh om day lam vach truoc/sau qua mong")
+    if WALL_FB - WELL_D < 3.5:  e.append("da ngoai vach truoc/sau tai hoc ngon mong hon 3,5")
+    if NOTCH_D > (TRAY[0]-TRAY_IN[0])/2 + 0.001:
+        e.append("khoet mat dau khay sau hon be day vach khay")
+    if d['SCAL_LEFT'] < 3.0:    e.append("dai go ben ranh Joker sau khi khoet hom con < 3 mm")
+    if d['LIFT_CHANNEL'] < 11.0: e.append("khe luon ngon tay khi nhac khay hep hon 11 mm")
+    if d['TILE_OPEN'] > TILE_MAX[2] - 2.0:
+        e.append("khoet mat dau khay ho gan het be day quan - quan tuot ra duoc")
+    if d['LIFT_LIP'] < 5.0:     e.append("mo nhac khay thap hon 5 mm")
     if d['HANDLE'] == 'C':
-        if d['LEDGE'] < 8.0:                       e.append("dai go tren hoc am mong hon 8 mm")
-        if d['SKIRT'] < 4.0:                       e.append("dai go duoi hoc am mong hon 4 mm")
+        if d['GRIP_LEDGE'] < 8.0:  e.append("dai go tren hoc am mong hon 8 mm")
+        if d['GRIP_SKIRT'] < 4.0:  e.append("dai go duoi hoc am mong hon 4 mm")
         if d['GRIP_X0'] < d['WALL_HINGE']:         e.append("hoc am cham vach ban le")
     return e
 

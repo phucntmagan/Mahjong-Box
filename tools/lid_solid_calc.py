@@ -173,8 +173,10 @@ for t in ["Ranh am 4 x 21,25 tren do doc canh khe giua cho song khoa",
     print(f"   - {t}")
 print("\n  HE QUA phai xu ly o cho khac:")
 print(f"   ! Khe rap giua {B.SEAM} mm nay LO RA, khong con song khoa che.")
-print(f"   ! Mep tu do cua nap khong con song khoa do -> song noi giua tren AC-01")
-print(f"     (rong {B.RIB_W:.0f}, cao {S['Z_SEAM']-(S['Z_FLOOR']+B.AC_H):.0f} tu dinh khay len mat duoi nap).")
+print(f"   ! Mep tu do cua nap khong con song khoa do. Da kiem lai o")
+print(f"     tools/detail_features.py muc 3: o be day {B.T_SEAM:.0f} mm, mep tu do vong")
+print(f"     0,59 mm duoi 50 N giua nhip {B.INNER_Y:.0f} — KHONG can chi tiet do.")
+print(f"     Chong xoc khay dung dem ni {B.FELT_PAD} mm dan duoi nap.")
 print(f"   ! Khoa nap chua co loi giai. Xem tools/handle_option_c.py muc 5.")
 print(f"\n  Phu bi {S['W']:.0f} x {S['Y_OA']:.0f} x {S['Z_OA']:.0f}")
 

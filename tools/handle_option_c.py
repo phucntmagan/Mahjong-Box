@@ -59,8 +59,8 @@ for a, b in [("Bang X", f"{C['GRIP_X0']:.0f} .. {C['GRIP_X1']:.0f}  (giua hop, d
              ("Be day vach tai hoc", f"{C['WALL_GRIP']:.0f} = {B.WALL_FB:.0f} goc "
                                      f"+ {C['GRIP_OUT']:.0f} noi ra ngoai"),
              ("Thanh sau hoc", f"{B.GRIP_BACK:.0f} mm — ngan cach ngon tay voi long khoang"),
-             ("Dai go TREN hoc", f"{C['LEDGE']:.2f} mm (toi vanh than tai X={C['GRIP_X0']:.0f})"),
-             ("Dai go DUOI hoc", f"{C['SKIRT']:.0f} mm, lai duoc day hop {B.BOT:.0f} do lung"),
+             ("Dai go TREN hoc", f"{C['GRIP_LEDGE']:.2f} mm (toi vanh than tai X={C['GRIP_X0']:.0f})"),
+             ("Dai go DUOI hoc", f"{C['GRIP_SKIRT']:.0f} mm, lai duoc day hop {B.BOT:.0f} do lung"),
              ("Va cham ben trong", "khong — toan bo phan them nam NGOAI mat vach goc")]:
     print(f"   {a:22s}: {b}")
 print(f"\n  Go noi {C['GRIP_OUT']:.0f} mm chay HET chieu cao vach (Z{B.FOOT:.0f}..vanh) chu khong")
@@ -72,7 +72,7 @@ hr("3. KIEM BEN — dai go tren hoc la duong truyen luc duy nhat")
 m_C = B.mass_of(C, 'cocobolo')[2]
 P_des = m_C*9.81*B.DYN
 P_hand = P_des/2
-L, h, b = B.GRIP_W, C['LEDGE'], C['WALL_GRIP']
+L, h, b = B.GRIP_W, C['GRIP_LEDGE'], C['WALL_GRIP']
 print(f"  Khoi luong {m_C:.2f} kg -> tai thiet ke {P_des:.0f} N (he so dong {B.DYN:.0f})"
       f" -> {P_hand:.0f} N moi tay\n")
 print(f"  Dai go tren hoc = dam nhip {L:.0f}, tiet dien {h:.2f} (cao) x {b:.0f} (day),")
@@ -144,15 +144,12 @@ print("  Them vao:")
 for k in only_C:
     print(f"   + {k:18s} {C['V'][k]/1000:7.0f} cm3  "
           f"{C['V'][k]/1e6*B.RHO['cocobolo']:5.2f} kg")
-print(f"\n  'song noi AC-01' la khoan no khong tranh duoc. Song khoa cua phuong an A lam")
-print(f"  BA viec; bo no thi mat ca ba, va viec thu ba — do mep tu do cua nap — la")
-print(f"  loi ket cau da ghi trong review Rev B §3.2: hai canh nap gap nhau tren khoang")
-print(f"  phu kien rong {C['AC_BAY']:.0f} mm hoan toan rong, nhip ho {C['AC_Y']:.0f} mm.")
-rib_h = C['Z_SEAM'] - (C['Z_FLOOR'] + B.AC_H)
-print(f"  Song noi giua tren AC-01: rong {B.RIB_W:.0f} x dai {C['AC_Y']:.0f} x cao {rib_h:.0f}")
-print(f"  (tu dinh AC-01 Z{C['Z_FLOOR']+B.AC_H:.0f} len mat duoi nap tai khe giua "
-      f"Z{C['Z_SEAM']:.0f}), boc ni 0,8.")
-print(f"  No cung ep khay xuong va lam tay nam de rut AC-01 ra. Da tinh vao khoi luong.")
+print(f"\n  Song khoa cua phuong an A lam BA viec: quai, khoa nap, va do mep tu do")
+print(f"  cua nap. Bo no thi mat ca ba. Nhung viec thu ba hoa ra KHONG con la van de:")
+print(f"  review Rev B §3.2 neu no khi mep nap day 8; vat nap da doi thanh 12, va")
+print(f"  tools/detail_features.py muc 3 tinh lai cho vong 0,59 mm duoi 50 N, he so 21x.")
+print(f"  => Khong can song noi tren AC-01. Chi can dem ni duoi nap de ep khay.")
+print(f"     Bo song con giai luon xung dot 'song nam dung tren ranh Joker'.")
 print(f"\n  CON TREO — C khong giai:")
 # canh nap dong duoc giu bang chinh trong luong no de len vanh than.
 # Momen giu = m.g.arm.cos(nghieng) quanh truc chot -> ve 0 khi hop nam nghieng 90 do.
@@ -168,9 +165,9 @@ print(f"     Nghia la: xach ngang thi KHONG bung — dung nhu may noi. Nhung")
 print(f"       a) chi can {F_lift:.0f} N (~{F_lift/9.81*1000:.0f} g) day len o mep tu do la canh mo,")
 print(f"       b) dat hop nam nghieng len canh la canh tren do xuong het hanh trinh.")
 print(f"     Phuong an A giai ca hai bang chinh chi tiet quai.")
-print(f"   ! Rang buoc 'khong kim loai' van con. Bai toan khoa nap phai giai rieng,")
-print(f"     va khong con chi tiet nao san de gan khoa vao: khe rap giua nam tren")
-print(f"     khoang phu kien rong, va song noi AC-01 thi o duoi nap, khong giu duoc nap.")
+print(f"   ! Rang buoc 'khong kim loai' van con, va bo song khoa nghia la tren nap")
+print(f"     KHONG con chi tiet nao de gan khoa vao. Khe rap giua {B.SEAM} mm lai nam")
+print(f"     ngay tren khoang phu kien rong. Bai toan khoa nap phai giai rieng.")
 
 # ============================================================================
 hr("6. NEU MUC TIEU LA DUOI 6 kg")
