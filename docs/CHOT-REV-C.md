@@ -5,17 +5,18 @@ các tài liệu trước đó sai hoặc đã hết hiệu lực**. Đọc nó 
 
 | | Rev B | Chốt hiện tại | Nguồn |
 |---|---|---|---|
-| Phủ bì | 354 × 350 × 80 | **370 × 374 × 65** | `box_spec.py` |
+| Phủ bì | 354 × 350 × 80 | **370 × 350 × 59** | `box_spec.py` |
 | Chuỗi X | 10+126+6+70+6+126+10 | **18+126+6+70+6+126+18** | `width_options.py` |
 | Phương án xách | (chưa có) | **C — hốc âm hai tay** | `handle_option_c.py` |
 | Đáy hộp | 8 | **6** | `detail_features.py` |
 | Tấm nắp Nu | 10 | **8** | `lid_solid_calc.py` |
-| Vát nắp | 18 → 8 | **18 → 12**, góc 2,067° | `hinge_kinematics.py` |
+| Nắp | 18 → 8 (vát) | **đều 12, không vát** | `box_spec.py` |
+| Ống bản lề | không định nghĩa | **Ø12**, chốt brass Ø4 | `hinge_kinematics.py` |
 | Khe ráp giữa | 0,6 | **1,5 ±0,3** | `lid_solid_calc.py` |
-| Trục xoay bản lề | không định nghĩa | **P = (9 , 56)** | `hinge_kinematics.py` |
+| Trục xoay bản lề | không định nghĩa | **P = (6 , 53)** | `hinge_kinematics.py` |
 | Khóa nắp | không có | **8 cặp nam châm nắp↔thân** | `lid_latch.py` |
-| Khối lượng | không tính | **6,25 / 6,86 kg** | `box_spec.py` |
-| Tải thiết kế | — | **184 / 202 N** | `box_spec.py` |
+| Khối lượng | không tính | **5,86 / 6,48 kg** | `box_spec.py` |
+| Tải thiết kế | — | **172 / 191 N** | `box_spec.py` |
 
 ## 1. Bề rộng: 370
 
@@ -44,19 +45,19 @@ Chênh khối lượng 370 ↔ 362 chỉ 0,13 kg. Không đáng đổi.
 
 Bỏ sống khóa và quai da. Hai hốc lòng bàn tay 120 × 30 sâu 16 phay vào vách trước và vách sau.
 
-**Điều phải biết trước khi chốt: C không phải "không đổi phủ bì".** Hốc sâu 16 cần 16 + 6 = 22 mm bề dày
-vách, mà vách chỉ có 10. Không dày vào trong được (lòng hộp 330 đã bị khay 325 chiếm, trường quân cần tối
-thiểu 310,4). Không làm nông hơn được (vách 10 trừ thành sau 6 còn 4 mm, ngón tay không móc nổi 3,1 kg).
-Nên phải nối 12 mm ra ngoài mỗi mặt: **Y đi từ 350 lên 374**.
+Hốc âm nằm ở **vách trái và phải** — tức vách bản lề, dày 18, đủ nuốt hốc sâu 12 + thành sau 6 mà **không
+phải nối gỗ ra ngoài**. Phủ bì không đổi.
 
-Bù lại C bỏ được 16 mm chiều cao (không còn sống khóa nổi trên nắp), nên thể tích bao vẫn nhỏ hơn phương án A.
+*(Bản đầu đặt hốc âm ở vách trước/sau dày 10 và kết luận C phải nới Y 350 → 374. Kết luận đó sai vì chọn
+nhầm vách: vách trước/sau còn phải mang cả ba khe luồn ngón nhấc khay lẫn tám nam châm khóa nắp — ba chi
+tiết tranh nhau một bộ phận dày 10 mm.)*
 
 | | A · sống khóa + quai da | C · hốc âm hai tay |
 |---|---|---|
-| Phủ bì | 370 × 362 × 83 | **370 × 374 × 65** |
-| Thể tích bao | 11,12 L | **9,27 L** |
+| Phủ bì | 370 × 362 × 75 | **370 × 350 × 59** |
+| Thể tích bao | 10,05 L | **7,64 L** |
 | Số tay | một | hai |
-| Tải mỗi tay | 75 N | **31 N** |
+| Tải mỗi tay | 67 N | **32 N** |
 | Chi tiết chuyển động | 2 chốt xoay | **0** |
 | Chi tiết mòn | lỗ chốt + da | **không có** |
 | Vật liệu ngoài gỗ | da bò bridle | **không** |
@@ -144,7 +145,24 @@ xác nhận**.
 2. **Khối lượng ở bề rộng 370.** Đoạn ước lượng bằng tay ở cuối `hinge_kinematics.py` cộng cả phần vách dày
    thêm lẫn phần vách trước/sau dài thêm, đếm trùng. Con số 7,75 kg sai; tính lại bằng `derive()` cho 7,60 kg.
 
-## 7. Còn lại
+## 7. Hai lần sửa sau khi dựng hình 3D
+
+Bản dựng 3D và ảnh mẫu thật buộc phải sửa hai chỗ, và cả hai đều kéo theo hệ quả tốt:
+
+**Hốc âm chuyển từ vách trước/sau sang vách trái/phải.** Lý do gốc là ba chi tiết tranh nhau vách 10 mm.
+Kéo theo: phủ bì Y về lại 350, khoang phụ kiện lấy lại được khe luồn ngón, và cách nhấc AC-01 bằng kẹp hai
+dải gỗ qua hõm ngón rãnh Joker — vốn xấu — bị bỏ.
+
+**Ống bản lề Ø18 → Ø12.** Ống phải tiếp tuyến cả vành thân lẫn mặt trên nắp, nên R = nửa bề dày nắp. Muốn
+ống thanh hơn thì phải làm nắp mỏng hơn: nắp **đều 12** thay cho vát 18 → 12. Ống Ø18 chiếm 27,7 % chiều
+cao hộp, Ø12 chiếm 20,3 %. Chốt đổi từ gỗ Ø6 sang **brass Ø4** vì thành ống chỉ còn 3,9 mm.
+
+Giá phải trả: khay bỏ bài trên mặt dưới nắp từ 7 mm xuống 3,5 mm, và tấm Nu từ 8 xuống 6 mm.
+
+Phần thưởng ngoài dự tính: **5,86 kg** — lần đầu xuống dưới ngưỡng 6 kg. Riêng việc làm nắp mỏng lấy đi
+0,62 kg, và đó là hệ quả phụ của một thay đổi thẩm mỹ.
+
+## 8. Còn lại
 
 | # | Việc | Trạng thái |
 |---|---|---|

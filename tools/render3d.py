@@ -124,35 +124,28 @@ def add_body(sc, show_mag=True):
     C, D = COL['coco'], COL['cut']
     sc.box(0, W, 0, YB, 0, B.FOOT, COL['foot'])                       # chan dem
     sc.box(0, W, 0, YB, B.FOOT, Z_FL, C, D)                           # day
-    sc.box(S['GRIP_X0'], S['GRIP_X1'], -GO, 0, B.FOOT, Z_FL, C, D)    # go noi duoi hoc am
-    # vach trai/phai (dinh phang Z_RIM)
+
+    # vach trai/phai (dinh phang Z_RIM), khoet hoc am hai tay o giua chieu sau
+    gy0, gy1 = S['GRIP_Y0'], S['GRIP_Y1']
     for x0, x1 in [(0, WH), (W-WH, W)]:
-        sc.box(x0, x1, FB, YB-FB, Z_FL, Z_RIM, C, D)
+        for ya, yb_ in [(FB, gy0), (gy1, YB-FB)]:
+            sc.box(x0, x1, ya, yb_, Z_FL, Z_RIM, C, D)          # doan khong co hoc
+        # doan co hoc: chi con thanh sau + dai go tren + dai go duoi
+        xa, xb_ = (x0 + B.GRIP_D, x1) if x0 == 0 else (x0, x1 - B.GRIP_D)
+        sc.box(xa, xb_, gy0, gy1, S['GRIP_Z0'], S['GRIP_Z1'], COL['coco_d'], D)
+        sc.box(x0, x1, gy0, gy1, S['GRIP_Z1'], Z_RIM, C, D)     # dai go tren hoc
     # vach truoc/sau. Chia theo X vi hai le: dinh vach doc (gay tai X=185) va
     # khe luon ngon an 6 mm vao mat trong -> tai bang khe, vach chi con 4 mm.
-    cuts = sorted({0.0, XS, W, S['GRIP_X0'], S['GRIP_X1']}
+    cuts = sorted({0.0, XS, W}
                   | {w + s_*B.WELL_W/2 for w in S['WELL_X'] for s_ in (-1, 1)})
     for y0, y1, front in [(0, FB, True), (YB-FB, YB, False)]:
         for xa, xb in zip(cuts, cuts[1:]):
             xm = (xa + xb)/2
             in_well = any(abs(xm - w) < B.WELL_W/2 for w in S['WELL_X'])
-            in_grip = S['GRIP_X0'] < xm < S['GRIP_X1']
             d_ = (B.WALL_FB - B.WELL_D) if in_well else B.WALL_FB
             ya, yb_ = (y0, y0 + d_) if front else (y1 - d_, y1)
-            # trong bang hoc am, phan vach tu san len den tran hoc da bi khoet mat
-            zb_ = S['GRIP_Z1'] if in_grip else Z_FL
-            sc.prism_y([(xa, zb_), (xb, zb_), (xb, z_rim(xb)), (xa, z_rim(xa))],
+            sc.prism_y([(xa, Z_FL), (xb, Z_FL), (xb, z_rim(xb)), (xa, z_rim(xa))],
                        ya, yb_, C, D)
-    # go noi hoc am: duoi hoc va tren hoc (phan giua la LONG hoc)
-    for y0, y1 in [(-GO, 0), (YB, YB+GO)]:
-        gx0, gx1 = S['GRIP_X0'], S['GRIP_X1']
-        sc.prism_y([(gx0, S['GRIP_Z1']), (gx1, S['GRIP_Z1']),
-                    (gx1, z_rim(gx1)), (gx0, z_rim(gx0))], y0, y1, C, D)
-    # thanh sau hoc am (go con lai giua hoc va long hop). To toi hon: long hoc
-    # khong nhan duoc anh sang truc tiep, khong to toi thi hoc khong "doc" ra.
-    for y0, y1 in [(-GO+B.GRIP_D, FB), (YB-FB, YB+GO-B.GRIP_D)]:
-        sc.box(S['GRIP_X0'], S['GRIP_X1'], y0, y1, S['GRIP_Z0'], S['GRIP_Z1'],
-               COL['coco_d'], D)
     # vach ngan
     for x0, x1 in X_DIV:
         sc.prism_y([(x0, Z_FL), (x1, Z_FL), (x1, z_rim(x1)), (x0, z_rim(x0))],
@@ -333,7 +326,8 @@ def shot(name, title, sub_, build, eye, target=None, w=1000, h=620, focal=1500):
 def v1(sc): add_body(sc, show_mag=False); add_lid(sc, show_mag=False)
 shot('fig12a-tong-the-nap-dong', 'HÌNH 12a — Tổng thể, nắp đóng',
      f'{W:.0f} × {S["Y_OA"]:.0f} × {S["Z_OA"]:.0f} mm · {B.mass_of(S,"loi on dinh")[2]:.2f} kg. '
-     f'Khe ráp giữa {B.SEAM}, hai dải gỗ nối hốc âm nổi {GO:.0f} trên mặt trước và sau.',
+     f'Khe ráp giữa {B.SEAM}. Hốc âm hai tay nằm trong vách trái/phải, không nối gỗ ra ngoài. '
+     f'Ống bản lề Ø{2*B.R_KN:.0f}.',
      v1, eye=(-250, -430, 260), target=(CX, CY, 22), focal=1250)
 
 # 2 — nap mo 180 do
@@ -378,14 +372,14 @@ shot('fig12d-mat-cat', 'HÌNH 12d — Cắt dọc giữa hộp',
 
 # 5 — chi tiet goc: ban le + hoc am
 def v5(sc):
-    sc.clip_y = (-GO-1, 200.0)
+    sc.clip_y = (-1.0, 260.0)
     add_body(sc)
     for k in (0, 1):
         add_tray(sc, X_BAY[0][0]+1, FB+B.AC_CLR, Z_FL + k*B.TRAY_H + 0.02, tiles=(k == 1))
-    add_lid(sc, math.radians(58), leaves=(True, False))
+    add_lid(sc, math.radians(50), leaves=(True, False))
     add_lid(sc, 0.0, leaves=(False, True))
-shot('fig12e-chi-tiet-goc', 'HÌNH 12e — Mặt trước: hốc âm hai tay và bản lề',
-     f'Hốc âm {B.GRIP_W:.0f} × {B.GRIP_H:.0f} sâu {B.GRIP_D:.0f} — vách dày {S["WALL_GRIP"]:.0f} '
-     f'tại đó, dải gỗ trên hốc {S["GRIP_LEDGE"]:.2f} mm là đường truyền lực khi xách. '
-     f'Bản lề: ống gỗ R{B.R_KN:.0f} quanh chốt Ø{B.D_PIN}.',
-     v5, eye=(55, -520, 205), target=(185, 55, 20), focal=1150)
+shot('fig12e-chi-tiet-goc', 'HÌNH 12e — Vách trái: hốc âm hai tay và bản lề',
+     f'Hốc âm {B.GRIP_W:.0f} × {B.GRIP_H:.0f} sâu {B.GRIP_D:.0f} nằm gọn trong vách bản lề dày '
+     f'{S["WALL_GRIP"]:.0f} — không phải nối gỗ ra ngoài. Dải gỗ trên hốc {S["GRIP_LEDGE"]:.0f} mm. '
+     f'Bản lề: ống gỗ Ø{2*B.R_KN:.0f} (từ Ø18), chốt brass Ø{B.D_PIN-0.2:.0f}.',
+     v5, eye=(-560, -315, 250), target=(105, 172, 24), focal=1450)

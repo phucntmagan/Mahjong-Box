@@ -20,54 +20,45 @@ A = B.derive(handle='A')
 C = B.derive(handle='C')
 
 # ============================================================================
-hr("1. HOC SAU 16 KHONG NAM DUOC TRONG VACH DAY 10")
-print(f"  Hoc am yeu cau  : rong {B.GRIP_W:.0f} x cao {B.GRIP_H:.0f} x SAU {B.GRIP_D:.0f}")
-print(f"  Vach truoc/sau  : day {B.WALL_FB:.0f}")
-print(f"  Can be day vach : {B.GRIP_D:.0f} (hoc) + {B.GRIP_BACK:.0f} (thanh sau) "
-      f"= {B.GRIP_D+B.GRIP_BACK:.0f} mm")
-print(f"  Thieu           : {B.GRIP_D+B.GRIP_BACK-B.WALL_FB:.0f} mm\n")
-print("  Ba cach dong khoang thieu:")
-tray_end_gap = (B.INNER_Y - B.TRAY[0])/2
-opts = [
-  ("day RA NGOAI", f"vach 10 -> {B.WALL_FB+C['GRIP_OUT']:.0f} tren bang {B.GRIP_W:.0f} mm",
-   f"phu bi Y 350 -> {C['Y_OA']:.0f}  (+{C['Y_OA']-A['Y_BODY']:.0f})", "KHA THI"),
-  ("day VAO TRONG", f"long hop {B.INNER_Y:.0f} -> {B.INNER_Y-2*(B.GRIP_D+B.GRIP_BACK-B.WALL_FB):.0f}",
-   f"khay quan {B.TRAY[0]:.0f} chi con khe {tray_end_gap:.1f} moi dau; "
-   f"long khay {B.TRAY_IN[0]:.0f} phai tut xuong "
-   f"{B.TRAY_IN[0]-2*(B.GRIP_D+B.GRIP_BACK-B.WALL_FB):.0f} < "
-   f"{12*B.TILE_MAX[0]+2*1.0:.1f} can cho 12 cot", "BAT KHA"),
-  ("giam do SAU hoc", f"sau toi da = {B.WALL_FB-B.GRIP_BACK:.0f} mm",
-   "ngon tay chi an duoc 4 mm - khong moc duoc 3,7 kg", "BAT KHA"),
-]
-for a, b, c, v in opts:
-    print(f"   [{v:8s}] {a:16s} {b}")
-    print(f"   {'':11s}{'':16s} -> {c}")
-print(f"\n  => C KHONG PHAI 'khong doi phu bi'. No doi {C['Y_OA']-A['Y_BODY']:.0f} mm theo Y.")
-print(f"     Nhung no BO 16 mm theo Z (khong con song khoa noi tren nap).")
-volA = A['W']*A['Y_OA']*A['Z_OA']/1e6
-volC = C['W']*C['Y_OA']*C['Z_OA']/1e6
-print(f"     The tich bao: A {volA:.2f} L  ->  C {volC:.2f} L  "
-      f"({(volC-volA)/volA*100:+.0f} %)  — C van la hop NHO HON.")
+hr("1. HOC AM PHAI NAM O VACH NAO")
+print(f"  Hoc am can be day vach = sau hoc {B.GRIP_D:.0f} + thanh sau {B.GRIP_BACK:.0f}"
+      f" = {B.GRIP_D+B.GRIP_BACK:.0f} mm.\n")
+print(f"  {'vach':22s}{'day':>6s}{'du/thieu':>10s}   ket qua")
+for lbl, t in [("truoc/sau", B.WALL_FB), ("trai/phai (ban le)", C['WALL_HINGE'])]:
+    d = t - (B.GRIP_D + B.GRIP_BACK)
+    print(f"  {lbl:22s}{t:6.0f}{d:+10.0f}   "
+          f"{'DU — khong phai noi go ra ngoai' if d >= 0 else 'THIEU — phai noi go ra ngoai'}")
+print(f"\n  Vach truoc/sau chi {B.WALL_FB:.0f} mm. Dat hoc am o do thi phai noi go ra ngoai,")
+print(f"  va con hai he qua nang hon:")
+print(f"   - Vach truoc/sau la cho DUY NHAT nap va vanh than con chong len nhau")
+print(f"     ({B.WALL_FB:.0f} mm), tuc la cho duy nhat dat duoc nam cham khoa nap.")
+print(f"   - No cung la cho duy nhat khoet duoc khe luon ngon nhac khay. Hoc am sau")
+print(f"     {B.GRIP_D:.0f} tu ngoai + khe luon ngon {B.WELL_D:.0f} tu trong = an het be day vach.")
+print(f"  Ba chi tiet tranh nhau mot bo phan day {B.WALL_FB:.0f} mm.\n")
+print(f"  Vach TRAI/PHAI day {C['WALL_HINGE']:.0f} (vi phai chua ong go ban le), va tren no")
+print(f"  KHONG co gi khac: mat mong nam o Z{C['Z_RIM']:.0f}..{C['Z_LID']:.0f}, con hoc am o")
+print(f"  Z{C['GRIP_Z0']:.0f}..{C['GRIP_Z1']:.0f} — hai vung roi nhau.")
+print(f"\n  => Hoc am dat o VACH TRAI/PHAI. Phu bi KHONG doi: {C['W']:.0f} x {C['Y_OA']:.0f}"
+      f" x {C['Z_OA']:.0f}.")
+print(f"     (Ban truoc dat hoc am o vach truoc/sau va ket luan C phai noi phu bi Y")
+print(f"      350 -> 374. Ket luan do SAI vi chon nham vach.)")
 
-# ============================================================================
-hr("2. HINH HOC HOC AM — vi tri suy ra tu chuoi Z, khong chon tay")
-print(f"  Dat DAY hoc ngang san trong (Z{C['Z_FLOOR']:.0f}) — moc go day nhat cua vach")
-print(f"  vi duoi cao do do la day hop {B.BOT:.0f} mm do lung phia sau.\n")
-for a, b in [("Bang X", f"{C['GRIP_X0']:.0f} .. {C['GRIP_X1']:.0f}  (giua hop, doi xung "
-                        f"quanh khe rap giua X={C['X_SEAM']:.0f})"),
-             ("Bang Z", f"{C['GRIP_Z0']:.0f} .. {C['GRIP_Z1']:.0f}"),
-             ("Be day vach tai hoc", f"{C['WALL_GRIP']:.0f} = {B.WALL_FB:.0f} goc "
-                                     f"+ {C['GRIP_OUT']:.0f} noi ra ngoai"),
-             ("Thanh sau hoc", f"{B.GRIP_BACK:.0f} mm — ngan cach ngon tay voi long khoang"),
-             ("Dai go TREN hoc", f"{C['GRIP_LEDGE']:.2f} mm (toi vanh than tai X={C['GRIP_X0']:.0f})"),
-             ("Dai go DUOI hoc", f"{C['GRIP_SKIRT']:.0f} mm, lai duoc day hop {B.BOT:.0f} do lung"),
-             ("Va cham ben trong", "khong — toan bo phan them nam NGOAI mat vach goc")]:
-    print(f"   {a:22s}: {b}")
-print(f"\n  Go noi {C['GRIP_OUT']:.0f} mm chay HET chieu cao vach (Z{B.FOOT:.0f}..vanh) chu khong")
-print(f"  chi quanh hoc: nap dai {B.LID_L:.0f} nen tu thut vao {C['GRIP_OUT']:.0f} mm moi ben,")
-print(f"  go noi doc thanh hai dai dung tren mat truoc/sau. Chu y, khong phai vet phay.")
+hr("2. HINH HOC HOC AM")
+for a, bb in [("Kich thuoc", f"{B.GRIP_W:.0f} rong (theo Y) x {B.GRIP_H:.0f} cao x"
+                             f" {B.GRIP_D:.0f} sau"),
+              ("Bang Y", f"{C['GRIP_Y0']:.0f} .. {C['GRIP_Y1']:.0f}  (giua chieu sau hop,"
+                         f" doi xung quanh Y={C['Y_BODY']/2:.0f})"),
+              ("Bang Z", f"{C['GRIP_Z0']:.0f} .. {C['GRIP_Z1']:.0f} — day hoc ngang san trong"),
+              ("Be day vach tai hoc", f"{C['WALL_GRIP']:.0f} mm, KHONG noi go ra ngoai"),
+              ("Thanh sau hoc", f"{B.GRIP_BACK:.0f} mm"),
+              ("Dai go TREN hoc", f"{C['GRIP_LEDGE']:.2f} mm (toi vanh than Z{C['Z_RIM']:.0f})"),
+              ("Dai go DUOI hoc", f"{C['GRIP_SKIRT']:.0f} mm, lai duoc day hop {B.BOT:.0f} do lung"),
+              ("Va cham", f"khong — mat mong ban le o Z{C['Z_RIM']:.0f} tro len,"
+                          f" hoc am o Z{C['GRIP_Z1']:.0f} tro xuong")]:
+    print(f"   {a:22s}: {bb}")
+print(f"\n  Hai tay dat o hai vach trai/phai, cach nhau {C['W']:.0f} mm — hop gan vuong")
+print(f"  ({C['W']:.0f} x {C['Y_OA']:.0f}) nen dat o vach nao cung cho khoang cach hai tay nhu nhau.")
 
-# ============================================================================
 hr("3. KIEM BEN — dai go tren hoc la duong truyen luc duy nhat")
 m_C = B.mass_of(C, 'cocobolo')[2]
 P_des = m_C*9.81*B.DYN
@@ -98,7 +89,7 @@ print(f"\n  => Ket cau KHONG phai rang buoc cua C. He so an toan thap nhat "
 print(f"     Rang buoc cua C nam o BAN TAY, khong o go.")
 
 # ============================================================================
-hr("4. EC-GO-NO-MI — 3,7 kg hai tay so voi 7,4 kg mot tay")
+hr("4. EC-GO-NO-MI — chia doi tai, nhung tang ap luc cuc bo")
 m_A = B.mass_of(A, 'cocobolo')[2]
 N_FING, W_FING, L_DISTAL, EDGE_STRIP = 4, 16.0, 15.0, 5.0
 A_flat = N_FING*W_FING*min(B.GRIP_D, L_DISTAL)     # ngon tay ap deu tran hoc
@@ -170,39 +161,37 @@ print(f"     KHONG con chi tiet nao de gan khoa vao. Khe rap giua {B.SEAM} mm la
 print(f"     ngay tren khoang phu kien rong. Bai toan khoa nap phai giai rieng.")
 
 # ============================================================================
-hr("6. NEU MUC TIEU LA DUOI 6 kg")
-base = B.mass_of(C, 'loi on dinh')[2]
-print(f"  Diem xuat phat: C + khay loi on dinh = {base:.2f} kg\n")
-def dm_bot(t):    return C['W']*C['Y_BODY']*(B.BOT-t)/1e6*B.RHO['cocobolo']
-def dm_pan(t):    return C['V']['tam Nu']*(1-t/B.PAN_T)/1e6*B.RHO['Nu go do']
-def dm_frame():   return C['V']['khung nap']/1e6*(B.RHO['cocobolo']-B.RHO['go do dac'])
-body_keys = ['day','vach truoc/sau','go hoc am','vach ngan']
-def dm_body():    return sum(C['V'][k] for k in body_keys)/1e6*(B.RHO['cocobolo']-B.RHO['loi on dinh'])
-LEV = [("Day hop 8 -> 6", dm_bot(6.0), "day khong chiu tai gi ngoai khay; van du cho ranh vach"),
-       ("Tam Nu 10 -> 8", dm_pan(8.0), "mong hon thi de nut khi thao tac tam tha"),
-       ("Khung nap sang go do dac", dm_frame(), "MAT dong mau voi than — doi tham my lay 0,1 kg"),
-       ("Than sang loi on dinh + veneer", dm_body(),
-        "vach TRAI/PHAI phai giu go dac (mang mat mong) nen khong tinh vao day")]
-run = base
-print(f"  {'don bay':34s}{'-kg':>7s}{'con lai':>9s}   ghi chu")
-for lbl, dm, note in LEV:
-    run -= dm
-    print(f"  {lbl:34s}{dm:7.2f}{run:9.2f}   {note}")
-print(f"\n  Quan co {B.N_TILES*B.M_TILE_G/1000:.2f} kg la san cung — khong don bay nao cham toi.")
-tiles = B.N_TILES*B.M_TILE_G/1000
-print(f"  Ba don bay dau ({sum(x[1] for x in LEV[:3]):.2f} kg) giu nguyen san pham la go dac:")
-print(f"    -> {base - sum(x[1] for x in LEV[:3]):.2f} kg. VAN TREN 6.")
-print(f"  Chi khi doi THAN sang loi on dinh + veneer moi qua nguong: "
-      f"{run:.2f} kg.")
-print(f"  Nhung luc do hop khong con la hop go dac nua — va do la mot quyet dinh")
-print(f"  ve san pham, khong phai ve ky thuat.")
-print(f"\n  => KET LUAN: voi cau tao go dac da chot, san duoi cung la "
-      f"~{base - sum(x[1] for x in LEV[:3]):.1f} kg.")
-print(f"     6 kg KHONG voi toi duoc. Nen theo dung logic cua chinh may:")
-print(f"     khong keo duoc xuong duoi 6 -> chon C.")
+hr("6. KHOI LUONG — DA QUA NGUONG 6 kg")
+base_c = B.mass_of(C, 'cocobolo')[2]
+base_s = B.mass_of(C, 'loi on dinh')[2]
+print(f"  Muc tieu may dat ra tu dau: duoi 6 kg.\n")
+print(f"  {'cau tao khay':22s}{'kg':>8s}{'tai TK':>10s}")
+print(f"  {'cocobolo':22s}{base_c:8.2f}{base_c*9.81*B.DYN:9.0f} N")
+print(f"  {'loi on dinh':22s}{base_s:8.2f}{base_s*9.81*B.DYN:9.0f} N"
+      f"   <- DUOI 6 kg")
+print(f"\n  Duong di tu 7,48 kg (ban dau) xuong {base_s:.2f} kg:")
+for lbl, d in [("chot ty trong cocobolo 1,00", 0.44), ("bo song khoa + quai (phuong an C)", 0.31),
+               ("day hop 8 -> 6", 0.26), ("tam Nu 10 -> 8", 0.14),
+               ("khay loi on dinh thay cocobolo", 0.62),
+               ("nap 18 -> 12 va tam Nu 8 -> 6 (ban le thanh hon)", 0.62)]:
+    print(f"    - {lbl:48s} {d:5.2f} kg")
+print(f"\n  Cai keo duoc xuong duoi 6 kg khong phai mot don bay giam can nao ca — ma la")
+print(f"  viec lam ban le thanh hon. Nap tu 18 xuong 12 lay di 0,62 kg, va do la he")
+print(f"  qua PHU cua mot thay doi tham my.")
+print(f"\n  Con lai neu can:")
+for lbl, dm, note in [("Khung nap sang go do dac", C['V']['khung nap']/1e6*(B.RHO['cocobolo']-B.RHO['go do dac']),
+                       "MAT dong mau voi than"),
+                      ("Than sang loi on dinh + veneer",
+                       sum(C['V'][k] for k in ('day','vach truoc/sau','vach ngan'))/1e6
+                       *(B.RHO['cocobolo']-B.RHO['loi on dinh']),
+                       "vach trai/phai phai giu go dac (mang mat mong)")]:
+    print(f"    - {lbl:34s}{dm:5.2f} kg   {note}")
+print(f"\n  Quan co {B.N_TILES*B.M_TILE_G/1000:.2f} kg la san cung — chiem "
+      f"{B.N_TILES*B.M_TILE_G/1000/base_s*100:.0f} % ca hop.")
 
-# ============================================================================
 hr("7. BANG CHOT A ↔ C")
+volA = A['W']*A['Y_OA']*A['Z_OA']/1e6
+volC = C['W']*C['Y_OA']*C['Z_OA']/1e6
 print(f"  {'':32s}{'A · song khoa + quai da':>26s}{'C · hoc am hai tay':>28s}")
 for a, x, y in [
     ("Phu bi", f"{A['W']:.0f} x {A['Y_OA']:.0f} x {A['Z_OA']:.0f}",
@@ -218,8 +207,8 @@ for a, x, y in [
     ("Chi tiet chuyen dong", "2 chot xoay", "0"),
     ("Chi tiet mon", "lo chot + da", "khong co"),
     ("Vat lieu ngoai go", "da bo bridle", "khong"),
-    ("Giai khoa nap", "co", "KHONG"),
-    ("Do mep tu do cua nap", "co", "them song noi AC-01"),
+    ("Khoa nap", "song khoa lam luon", "8 cap nam cham"),
+    ("Do mep tu do cua nap", "co", "khong can — xem detail_features"),
     ("Rui ro che tao", "trung binh", "thap"),
 ]:
     print(f"  {a:32s}{x:>26s}{y:>28s}")

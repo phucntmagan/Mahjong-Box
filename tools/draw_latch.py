@@ -104,7 +104,7 @@ b.append(panel(56, 362, 900, 190,
                'B · Bo tri nam cham — nhin tu tren, dai mep truoc.  TL 1,5:1'))
 b.append(p.rect(0, W, 0, 34, '#efe9dd', '#cfccc5', 0.8))
 b.append(p.rect(0, W, -GO, 0, '#e2d7c4', '#cfccc5', 0.8))
-b.append(p.rect(S['GRIP_X0'], S['GRIP_X1'], -GO, 0, '#6b4526', CUT, 1.0))
+
 b.append(p.rect(0, W, 0, B.WALL_FB, WALL, CUT, 1.1))
 b.append(p.path([(XS, -GO-5), (XS, 38)], CUT, 1.0, '7,4'))
 b.append(T(p.X(XS), p.Z(38)-4, 'khe rap giua', font_size=9, fill=DIM, text_anchor='middle'))
@@ -117,7 +117,7 @@ b.append(T(p.X(W)+10, p.Z(B.MAG_Y)-4, f'nam cham {mw:.0f} x {md:.0f} x {B.MAG[2]
            font_size=9, fill=MAGC))
 b.append(T(p.X(W)+10, p.Z(B.MAG_Y)+10,
            f'dai chong nhau nap/vanh {B.WALL_FB:.0f} mm', font_size=9, fill=DIM))
-b.append(T(p.X(S['GRIP_X0']+6), p.Z(-GO/2)+3, 'go noi hoc am', font_size=8.5, fill='#f2ede4'))
+
 b.append(T(p.X(4), p.Z(24)+3, 'long hop', font_size=8.5, fill=DIM))
 
 open('figs/fig11-khoa-nap.svg', 'w').write(svg(980, 572,

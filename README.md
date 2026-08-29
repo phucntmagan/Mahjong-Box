@@ -3,7 +3,7 @@
 Hộp gỗ đựng bộ Mahjong 152 quân (BURLORA), tham chiếu bộ Mahjong của Hermès.
 Khởi đầu là một bản review độc lập cho bản vẽ sản xuất **Rev B**; nay là hồ sơ thiết kế đang tiến hoá.
 
-**Phủ bì đã chốt: 370 × 374 × 65 mm · 6,25 kg** (khay lõi ổn định) hoặc **6,86 kg** (khay cocobolo).
+**Phủ bì đã chốt: 370 × 350 × 59 mm · 5,86 kg** (khay lõi ổn định) hoặc **6,48 kg** (khay cocobolo).
 
 ## Đọc theo thứ tự này
 
@@ -28,9 +28,9 @@ Dựng bằng `tools/render3d.py` (bộ dựng hình riêng, không thư viện 
 | | |
 |---|---|
 | Vật liệu | thân, khay, khung nắp: **cocobolo** ρ 1,00 · tấm nắp: **Nu gõ đỏ** thả trong rãnh |
-| Nắp | khung gỗ đặc ôm tấm Nu thả — tấm liền sẽ kẹt bản lề ở ΔMC 4,1 % |
-| Xách | **phương án C** — hai hốc âm 120 × 30 sâu 16, xách hai tay |
-| Bản lề | trục **P = (9 , 56)**, ống gỗ R9 tiếp tuyến hai mặt nắp; mở 180° nằm ngang, vươn 166,25 |
+| Nắp | khung gỗ đặc **đều 12** ôm tấm Nu thả 6 — tấm liền sẽ kẹt bản lề ở ΔMC 4,1 % |
+| Xách | **phương án C** — hai hốc âm 120 × 28 sâu 12 trong **vách trái/phải**, xách hai tay |
+| Bản lề | trục **P = (6 , 53)**, ống gỗ **Ø12** tiếp tuyến vành thân và mặt trên nắp, chốt brass Ø4; mở 180° nằm ngang, vươn 172,25 |
 | Bề rộng | **370** — vách bản lề buộc phải 18 để chứa ống gỗ R9 |
 | Khe ráp giữa | **1,5 ±0,3** |
 | Khóa nắp | **8 cặp nam châm 25 × 5 × 4** nối nắp với thân, chặn phương Z, tự do theo X |

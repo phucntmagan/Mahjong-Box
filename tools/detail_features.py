@@ -44,11 +44,12 @@ for t in [f"khoet vanh than chi lam lo MAT NGOAI cua khay, van khong co gi de mo
 
 print(f"\n  --- LOI GIAI: KHE LUON NGON + MO MOC, o hai DAU khoang ---")
 print(f"  Nhac hai tay, moi tay mot dau — dung tinh than cua phuong an C.")
-print(f"  CHI lam cho hai khoang KHAY QUAN (X = {' va '.join(f'{w:.0f}' for w in S['WELL_X'])}).")
-print(f"  KHONG lam cho khoang phu kien: hoc am hai tay chiem bang X "
-      f"{S['GRIP_X0']:.0f}..{S['GRIP_X1']:.0f} va an sau {B.GRIP_D:.0f} tu mat ngoai; khe luon")
-print(f"  ngon an {B.WELL_D:.0f} tu mat trong. Cong lai vua het be day vach {B.WALL_FB:.0f} — thung vach.")
-print(f"  AC-01 duoc nhac bang cach kep hai dai go qua hai hom ngon ranh Joker (muc 2).\n")
+print(f"  Lam cho CA BA khoang (X = {' va '.join(f'{w:.0f}' for w in S['WELL_X'])}).")
+print(f"  Ban truoc phai bo khe o khoang phu kien vi hoc am hai tay nam tren cung")
+print(f"  vach truoc; nay hoc am da chuyen sang vach trai/phai nen xung dot bien mat,")
+print(f"  va AC-01 duoc nhac dung nhu khay quan — khong con phai kep hai dai go")
+print(f"  qua hom ngon ranh Joker nua.\n")
+
 for a, b in [
   ("Hoc tren vach truoc/sau",
    f"{B.WELL_W:.0f} rong x sau {B.WELL_D:.0f} vao vach {B.WALL_FB:.0f}, chay tu vanh"
@@ -91,8 +92,6 @@ print(f"  Quan ho ngang chi {lat:.1f} mm, ma ranh sau {B.AC_JOKER[2]:.1f} —"
 print(f"  Dai go moi ben ranh: ({S['AC_W_IN']:.0f} - {B.AC_JOKER[0]:.0f})/2 = {strip:.0f} mm\n")
 print(f"  Hom ban nguyet O{B.SCAL_D:.0f} sau {B.SCAL_DEP:.0f}, khoet vao dai go tu phia ranh,")
 print(f"  o GIUA chieu dai ranh, tren CA HAI dai -> kep duoc hai mat ben cua quan.")
-print(f"  Hai hom doi nhau nay lam LUON viec thu hai: kep hai dai go de RUT AC-01 ra")
-print(f"  khoi khoang — AC-01 khong the co khe luon ngon nhu khay quan (muc 1).")
 print(f"   Dai go con lai : {strip:.0f} - {B.SCAL_DEP:.0f} = {S['SCAL_LEFT']:.0f} mm")
 print(f"   Cong vach AC-01: + {B.AC_WALL:.0f} = {S['SCAL_LEFT']+B.AC_WALL:.0f} mm go tong cong")
 F_side = 20.0
@@ -126,7 +125,7 @@ print(f"\n  Va khe rap giua da tu {0.6} len {B.SEAM}: hai canh vong XUONG cung c
 print(f"  khe lai nam NGANG — vong khong lam hai canh cao vao nhau.")
 print(f"  => Mep tu do KHONG con can chi tiet do. Bo 'song noi giua tren AC-01'.")
 print(f"     Chong xoc khay thay bang dem ni {B.FELT_PAD} mm dan duoi nap tren moi khoang.")
-print(f"     Rut AC-01 ra: xem muc 2 — kep hai dai go qua hai hom ngon ranh Joker.")
+print(f"     Rut AC-01 ra: khe luon ngon nhu khay quan (muc 1).")
 
 # ==========================================================================
 hr("4. NAP CHE O XUC XAC")

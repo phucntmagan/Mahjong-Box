@@ -65,7 +65,11 @@ HANDLE     = 'C'         # CHOT: 'C' hoc am hai tay ('A' song khoa + quai da)
 POST_W     =  44.0       # (A) be rong tru quai, bang be rong song khoa
 POST_OUT   =   6.0       # (A) tru nho ra ngoai
 POST_IN    =   4.0       # (A) tru an vao trong
-GRIP_W, GRIP_H, GRIP_D = 120.0, 30.0, 16.0   # (C) hoc am: rong x cao x sau
+# Hoc am nay o VACH TRAI/PHAI (vach ban le, day 18) chu khong o vach truoc/sau.
+# Ly do: vach truoc/sau chi day 10 nen hoc am 16 sau + khe luon ngon 6 sau an
+# thung vach; va vach truoc/sau con phai mang ca ba khe luon ngon lan nam cham.
+# Vach 18 nuot duoc hoc sau 12 + thanh sau 6 ma KHONG phai noi go ra ngoai.
+GRIP_W, GRIP_H, GRIP_D = 120.0, 28.0, 12.0   # (C) hoc am: rong (Y) x cao x sau
 GRIP_BACK  =   6.0       # (C) go con lai phia sau hoc
 # (C) song noi giua tren AC-01: DA BO. tools/detail_features.py muc 3 tinh lai do
 # vong mep tu do cua nap o be day 12 (khong phai 8 nhu Rev B) va cho 0,6 mm duoi
@@ -80,25 +84,33 @@ BOT_TON=  4.0            # mong day chay vao ranh trong vach
 TRAY_H = 19.0            # chieu cao mot khay quan
 N_STACK = 2              # so khay chong trong mot khoang
 CLR_Z  =  1.0            # khe tren dinh khay
-T_HINGE = 18.0           # day nap tai canh mong
-T_SEAM  = 12.0           # day nap tai khe rap giua
+# Be day nap quyet dinh TRUC TIEP duong kinh ong go ban le: ong phai tiep tuyen
+# ca vanh than (de mat mong ben THAN moc len tu vach) lan mat tren nap (de canh
+# mo 180 do nam phang dung cao do vanh) -> R = nua be day nap. Khong con bac tu
+# do nao khac. Nap 18 cho ong O18 = 28 % chieu cao hop, nhin tho.
+# CHOT 29-08-2026: nap DEU 12 -> ong O12 = 20 % chieu cao hop.
+T_HINGE = 12.0           # day nap tai canh mong (18 -> 12)
+T_SEAM  = 12.0           # day nap tai khe rap giua — nay bang nhau, nap khong vat
 SPINE_T, SPINE_INSET = 20.0, 4.0   # (A) song khoa day 20, am 4 vao nap
 
 # --- nap
 SEAM    = 1.5            # khe rap giua (0,6 -> 1,5 vi gian no khung go dac)
 STILE   = 34.0           # be rong do doc (ca hai canh)
 RAIL    = 30.0           # be rong do ngang
-PAN_T   =  8.0           # day tam Nu (10 -> 8)
+PAN_T   =  6.0           # day tam Nu (8 -> 6, theo be day nap moi)
 GRV     =  9.0           # ranh om tam: sau 9
 TON     =  6.0           # canh tam an vao ranh 6 -> tam THA 3 mm moi phia
 GRV_W   = PAN_T          # ranh rong dung bang day tam: tam KHONG bi phay bac.
                          # Nu tho xoan loan, mot bac 1,5 mm tren canh tam la cho nut.
-S_TOP   =  3.0           # lip khung phia TREN ranh - do la be mat nhin thay
+S_TOP   =  2.5           # lip khung phia TREN ranh - do la be mat nhin thay
 LID_L   = 350.0          # chieu dai canh nap (theo Y, khong ke tru/hoc am)
 
 # --- ban le
 R_KN    = T_HINGE/2      # ban kinh ong go = 9
-D_PIN   = 6.2            # lo chot
+# Chot BRASS thay cho chot go: ong go nay chi con O12 nen thanh ong quanh lo phai
+# mong; brass cho phep chot nho hon nhieu ma van khoe hon go.
+D_PIN   = 4.2            # lo chot (chot brass O4,00 -0,05)
+PIN_MAT = 'brass CuZn39Pb3'
 N_KN, KN_LEN, KN_PITCH = 7, 44.0, 45.0    # 7 mat mong, dai 44, buoc 45
 KN_BODY, KN_LID = 4, 3   # 4 mat thuoc THAN, 3 thuoc NAP
 
@@ -118,7 +130,7 @@ MAG_REC  =  5.2               # sau hoc am nam cham
 # Vi tri X bi ep giua hai chi tiet khac: khe luon ngon nhac khay an het dai vanh
 # than o giua moi khoang, nen nam cham chi con nam duoc trong khoang trong giua
 # hai khe. Xem selfcheck() — day la va cham hinh 3D bat duoc.
-MAG_X    = (130.0, 168.0)     # tam nam cham tren canh TRAI; canh phai doi xung
+MAG_X    = (121.0, 145.0)     # tam nam cham tren canh TRAI; canh phai doi xung
 MAG_Y    =  5.5               # tam theo Y, tinh tu mat ngoai vach truoc
 MAG_EDGE =  2.0               # go toi thieu con lai quanh hoc nam cham
 # Be DAY nam cham la bien tu do duy nhat: dai bi khe luon ngon ep, rong bi vach
@@ -140,7 +152,7 @@ AC_DICE_D = 18.5                  # o xuc xac (sau); chieu dai = phan con lai
 AC_CLR   =  2.5                   # khe moi dau khay trong khoang (bang khay quan)
 
 # --- hoc nhac khay (review Rev B §2.3 giai lai — xem tools/detail_features.py)
-WELL_W   = 70.0          # be rong hoc ngon tren vach truoc/sau, do tu trong ra
+WELL_W   = 50.0          # be rong hoc ngon (chua ca nam cham tren cung vanh)
 WELL_D   =  6.0          # sau vao vach (vach 10 -> con 4 mm da ngoai)
 NOTCH_D  =  5.0          # khoet XUYEN mat dau khay (day vach khay 5)
 NOTCH_H  = 12.0          # cao khoet, tinh tu vanh khay xuong
@@ -152,7 +164,7 @@ SCAL_DEP = 12.0          # sau khoet vao dai go ben ranh
 
 # --- o xuc xac + nap che
 DICE_SOCK  = 18.0        # canh o vuong
-DICE_SOCK_D= 12.0        # sau o
+DICE_SOCK_D= 18.0        # sau o (xuc xac 16 phai chim han: khe duoi nap chi 1 mm)
 DICE_RIB   =  5.0        # vach giua cac o
 COVER_T    =  4.0        # day nap che o xuc xac
 COVER_LIP  =  3.0        # bac ha nap che quanh mieng o
@@ -172,8 +184,10 @@ def derive(wall_hinge=WALL_HINGE, bay=BAY, div=DIV, ac_bay=AC_BAY, handle=HANDLE
         Z_PROUD = SPINE_T - SPINE_INSET                  # song khoa noi tren nap
     else:
         post_out, post_in = 0.0, 0.0
-        # hoc sau GRIP_D can GRIP_D + GRIP_BACK be day vach; vach chi co WALL_FB
-        grip_out = GRIP_D + GRIP_BACK - WALL_FB          # phan phai day ra ngoai
+        # Hoc am o VACH TRAI/PHAI (day wall_hinge). Hoc sau GRIP_D can
+        # GRIP_D + GRIP_BACK be day vach — vach 18 nuot duoc 12 + 6 nen KHONG
+        # phai noi go ra ngoai: phu bi khong doi.
+        grip_out = max(0.0, GRIP_D + GRIP_BACK - wall_hinge)
         Z_PROUD = 0.0
     GRIP_OUT = grip_out
     NHO_RA  = max(post_out, grip_out)
@@ -229,14 +243,14 @@ def derive(wall_hinge=WALL_HINGE, bay=BAY, div=DIV, ac_bay=AC_BAY, handle=HANDLE
     MAG_MAR_OUT = MAG_Y - MAG[1]/2                   # go tu mep nap toi hoc
     MAG_MAR_IN  = WALL_FB - (MAG_Y + MAG[1]/2)       # go tu hoc toi mat trong vach
 
-    # --- hoc am (phuong an C): dat day hoc ngang san trong, dinh cach vanh mot dai go
-    GRIP_X0   = X_SEAM - GRIP_W/2
-    GRIP_X1   = X_SEAM + GRIP_W/2
+    # --- hoc am (phuong an C) tren VACH TRAI/PHAI, giua chieu sau hop
+    GRIP_Y0   = Y_BODY/2 - GRIP_W/2
+    GRIP_Y1   = Y_BODY/2 + GRIP_W/2
     GRIP_Z0   = Z_FLOOR                                  # day hoc ngang san trong
     GRIP_Z1   = GRIP_Z0 + GRIP_H
-    WALL_GRIP = WALL_FB + grip_out                       # be day vach tai hoc
-    GRIP_LEDGE = min(z_rim_at(GRIP_X0), z_rim_at(GRIP_X1)) - GRIP_Z1  # dai go tren hoc am
-    GRIP_SKIRT = GRIP_Z0 - FOOT                                       # dai go duoi hoc am
+    WALL_GRIP = wall_hinge + grip_out                    # be day vach tai hoc
+    GRIP_LEDGE = Z_RIM - GRIP_Z1                         # dai go tren hoc am
+    GRIP_SKIRT = GRIP_Z0 - FOOT                          # dai go duoi hoc am
 
     # --- khay phu kien: chuoi dai khep ve AC_Y
     AC_W_OUT  = ac_bay - 2.0                             # khe 1,0 moi ben
@@ -248,7 +262,10 @@ def derive(wall_hinge=WALL_HINGE, bay=BAY, div=DIV, ac_bay=AC_BAY, handle=HANDLE
     # hai tay chiem bang X {GRIP_X0}..{GRIP_X1} va an sau 16 tu mat ngoai, con khe
     # luon ngon an 6 tu mat trong — cong lai vua dung het be day vach 10, tuc thung
     # vach. AC-01 duoc nhac bang hai hom ngon ranh Joker doi nhau (kep hai dai go).
-    WELL_X = (wall_hinge + bay/2, W - wall_hinge - bay/2)
+    # Ca BA khoang deu co khe luon ngon. Truoc day khoang phu kien khong the co
+    # vi hoc am hai tay nam tren cung vach truoc; nay hoc am da chuyen sang vach
+    # trai/phai nen xung dot do bien mat, va AC-01 duoc nhac dung nhu khay quan.
+    WELL_X = (wall_hinge + bay/2, X_SEAM, W - wall_hinge - bay/2)
     LIFT_CHANNEL = WELL_D + AC_CLR + NOTCH_D - WELL_FELT  # be rong khe luon ngon (Y)
     LIFT_LEDGE   = NOTCH_D                                # be sau mo de moc ngon
     Z_LIFT_LEDGE = Z_FLOOR + 2*TRAY_H - NOTCH_H           # cao do mo cua khay TREN
@@ -295,15 +312,14 @@ def derive(wall_hinge=WALL_HINGE, bay=BAY, div=DIV, ac_bay=AC_BAY, handle=HANDLE
                   'mat mong than','vach ngan']
         V_NAP  = ['khung nap','mat mong nap','song khoa']
     else:
-        # go them cua go noi tru di the tich hoc khoet vao
-        v['go hoc am']  = 2*(GRIP_W*grip_out*(z_rim_at(X_SEAM) - FOOT)
-                             - GRIP_W*GRIP_H*GRIP_D)
+        # hoc am khoet vao vach trai/phai (khong con go noi ra ngoai)
+        v['vach trai/phai'] -= 2*GRIP_W*GRIP_H*GRIP_D
         v['nap che o xuc xac'] = (AC_W_IN + 2*COVER_LIP)*(2*DICE_SOCK + 3*DICE_RIB)*COVER_T
         # hoc am nam cham khoet vao nap va vao vanh than (4 moi canh + 4 doi ung)
         n_mag = 2*MAG_N_LEAF
         v['khung nap'] -= n_mag*MAG[0]*MAG[1]*MAG_REC
         v['vach truoc/sau'] -= n_mag*MAG[0]*MAG[1]*MAG_REC
-        V_THAN = ['day','vach truoc/sau','go hoc am','vach trai/phai',
+        V_THAN = ['day','vach truoc/sau','vach trai/phai',
                   'mat mong than','vach ngan']
         V_NAP  = ['khung nap','mat mong nap']
     V_KHAY = ['khay quan','khay phu kien'] + (['nap che o xuc xac'] if handle=='C' else [])
@@ -414,10 +430,9 @@ def selfcheck(d=None):
         if max(MAG_X) + MAG[0]/2 > d['LW'] - MAG_EDGE:
             e.append("nam cham ngoai cung vuot qua khe rap giua")
         # nam cham va khe luon ngon deu an vao vanh vach truoc/sau -> phai roi nhau
-        for wc in d['WELL_X']:      # khe luon ngon khong duoc cham hoc am hai tay
-            if (wc - WELL_W/2 < d['GRIP_X1'] and wc + WELL_W/2 > d['GRIP_X0']
-                    and WALL_FB - WELL_D - GRIP_D + (GRIP_D + GRIP_BACK - WALL_FB) < 0.5):
-                e.append(f"khe luon ngon X={wc:.0f} cham hoc am hai tay -> thung vach")
+        if d['GRIP_OUT'] > 0:
+            e.append(f"vach ban le {d['WALL_HINGE']:.0f} khong nuot noi hoc am sau "
+                     f"{GRIP_D:.0f} + thanh sau {GRIP_BACK:.0f}")
         for xc in MAG_X:
             for wc in d['WELL_X']:
                 if abs(xc - wc) < (MAG[0] + WELL_W)/2 + MAG_EDGE:
@@ -438,7 +453,7 @@ def selfcheck(d=None):
     if d['HANDLE'] == 'C':
         if d['GRIP_LEDGE'] < 8.0:  e.append("dai go tren hoc am mong hon 8 mm")
         if d['GRIP_SKIRT'] < 4.0:  e.append("dai go duoi hoc am mong hon 4 mm")
-        if d['GRIP_X0'] < d['WALL_HINGE']:         e.append("hoc am cham vach ban le")
+        if d['GRIP_Y0'] < WALL_FB + 10:            e.append("hoc am cham vach truoc/sau")
     return e
 
 if __name__ == '__main__':

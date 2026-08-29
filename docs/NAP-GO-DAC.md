@@ -1,8 +1,8 @@
 # Phương án nắp gỗ đặc — khung gỗ đỏ ôm tấm Nu
 
 > **Trạng thái 29-08-2026.** Lập luận khung + tấm thả vẫn đúng nguyên vẹn. Ba trị số đã đổi: tấm Nu
-> **10 → 8** (không phải để giảm cân — ở tấm 10 thì lip dưới của rãnh ôm tấm chỉ còn 0,23 mm, không phay
-> được), phủ bì **370 × 374 × 65**, và phần "không đổi" ở cuối nói về sống khóa nay không còn áp dụng.
+> **10 → 6** (không phải để giảm cân — ở tấm 10 thì lip dưới của rãnh ôm tấm chỉ còn 0,23 mm, không phay
+> được), phủ bì **370 × 350 × 59**, và phần "không đổi" ở cuối nói về sống khóa nay không còn áp dụng.
 > Bảng "số hộp mỗi lô" cũng đã lỗi thời. Xem **`docs/CHOT-REV-C.md`**.
 
 > Bản đầy đủ có hình: **`build/Nap-go-dac-Mahjong.pdf`**.

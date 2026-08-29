@@ -174,14 +174,13 @@ z_rim_at = S['z_rim_at']
 LX = (100.0, S['W']-100.0)          # mot khoa moi canh, tranh dai hoc am 125..245
 for a, bb in [("Vi tri", f"X = {LX[0]:.0f} (canh trai) va {LX[1]:.0f} (canh phai),"
                          f" tren mat ngoai vach truoc"),
-              ("Vi sao khong o giua", f"khe rap giua X={S['X_SEAM']:.0f} nam giua dai hoc am"
-                                      f" {S['GRIP_X0']:.0f}..{S['GRIP_X1']:.0f};"
-                                      f" luoi gai khi mo se thong xuong hoc, vuong tay"),
+              ("Vi sao khong o giua", f"khe rap giua X={S['X_SEAM']:.0f} nam giua ba khe luon"
+                                      f" ngon nhac khay tren vanh vach truoc; de o do thi luoi"
+                                      f" gai va khe khoet vao nhau"),
               ("Du mot cai moi canh", "giu bat ky mot diem nao cua canh la canh do khong"
                                       " xoay duoc nua — dong hoc chi co mot bac tu do"),
-              ("De ban ma", f"vanh than tai X={LX[0]:.0f} o Z{z_rim_at(LX[0]):.1f};"
-                            f" dinh hoc am o Z{S['GRIP_Z1']:.0f} -> dai go"
-                            f" {z_rim_at(LX[0])-S['GRIP_Z1']:.1f} mm de bat de"),
+              ("De ban ma", f"vach truoc day {B.WALL_FB:.0f}, vanh o Z{z_rim_at(LX[0]):.0f};"
+                            f" hoc am nay o vach trai/phai nen mat truoc con trong"),
               ("De", f"brass 40 x 12 x 3, ha bac 3 mm vao mat vach"),
               ("Truc xoay", f"chot brass O3, truc chay theo X, o Z{S['GRIP_Z1']+4:.0f}"),
               ("Luoi gai", f"brass 3 mm day, voi ra {B.WALL_FB+10:.0f}, dau luoi de len"

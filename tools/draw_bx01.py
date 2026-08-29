@@ -20,7 +20,7 @@ os.makedirs('figs', exist_ok=True)
 x_bay = [(WH, WH+BAY), (W-WH-BAY, W-WH)]
 x_div = [(WH+BAY, WH+BAY+DIV), (W-WH-BAY-DIV, W-WH-BAY)]
 x_ac  = (WH+BAY+DIV, WH+BAY+DIV+ACB)
-GX0, GX1 = S['GRIP_X0'], S['GRIP_X1']
+GY0, GY1 = S['GRIP_Y0'], S['GRIP_Y1']
 wells = [WH+BAY/2, XS, W-WH-BAY/2]
 kn = [((n-1)*B.KN_PITCH, n % 2 == 1) for n in range(1, B.N_KN+1)]
 kn_y0 = (IY - S['KN_RUN'])/2 + FB
@@ -40,8 +40,8 @@ def tag(v, fx, fy, bx, by, n):
 v = V(126, 528, 1.0)
 BL, BR, BT, BB = 96, 512, 116, 604
 b = [panel(56, 92, 500, 520, 'MAT BANG — nhin tu tren, nap thao ra.  TL 1:1')]
-for y0, y1 in [(-GO, 0), (YB, YB+GO)]:
-    b.append(v.rect(GX0, GX1, y0, y1, '#6b4526', CUT, 1.0))
+for x0, x1 in [(0, WH), (W-WH, W)]:          # hoc am hai tay tren vach trai/phai
+    b.append(v.rect(x0, x1, GY0, GY1, '#6b4526', CUT, 1.0))
 b.append(v.rect(0, W, 0, YB, BODY, CUT, 1.3))
 b.append(v.rect(WH, W-WH, FB, YB-FB, VOID, CUT, 1.0))
 for a0, a1 in x_div:
@@ -90,10 +90,9 @@ for x0 in (0, W-WH):                                     # mat mong
 # chuoi kich thuoc
 xs_ = [0, WH, WH+BAY, x_ac[0], x_ac[1], W-WH-BAY, W-WH, W]
 for i in range(len(xs_)-1):
-    b.append(v.dim(xs_[i], xs_[i+1], -GO, f'{xs_[i+1]-xs_[i]:.0f}', dy=30))
-b.append(v.dim(0, W, -GO, f'{W:.0f}  PHU BI X', dy=54))
-for y0, y1, lbl, dx in [(FB, YB-FB, f'{IY:.0f}', 20), (0, YB, f'{YB:.0f}', 48),
-                        (-GO, YB+GO, f'{YO:.0f}  PHU BI Y', 70)]:
+    b.append(v.dim(xs_[i], xs_[i+1], 0, f'{xs_[i+1]-xs_[i]:.0f}', dy=30))
+b.append(v.dim(0, W, 0, f'{W:.0f}  PHU BI X', dy=54))
+for y0, y1, lbl, dx in [(FB, YB-FB, f'{IY:.0f}', 20), (0, YB, f'{YO:.0f}  PHU BI Y', 48)]:
     xx = v.X(W)+dx
     b.append(f'<line x1="{xx:.1f}" y1="{v.Z(y0):.1f}" x2="{xx:.1f}" y2="{v.Z(y1):.1f}" '
              f'stroke="{DIM}" stroke-width="0.8"/>'
@@ -110,8 +109,8 @@ for lbl, px, py, lx, ly in [("B", v.X(-30), v.Z(YB*0.30), v.X(0), v.Z(YB*0.30)),
 # duong cat
 b.append(v.path([(-52, YB/2), (W+6, YB/2)], HID, 1.1, '12,4,3,4'))
 b.append(T(v.X(-58), v.Z(YB/2)+4, 'A', font_size=11, font_weight='bold', fill=HID))
-b.append(v.path([(XS-20, -GO-8), (XS-20, YB+GO+8)], HID, 1.1, '12,4,3,4'))
-b.append(T(v.X(XS-20), v.Z(YB+GO+14), 'B', font_size=11, font_weight='bold', fill=HID,
+b.append(v.path([(XS-20, -8), (XS-20, YB+8)], HID, 1.1, '12,4,3,4'))
+b.append(T(v.X(XS-20), v.Z(YB+14), 'B', font_size=11, font_weight='bold', fill=HID,
            text_anchor='middle'))
 # bong so
 ITEMS = [
@@ -120,9 +119,9 @@ ITEMS = [
  (2, (W-B.R_KN, kn_y0+2*B.KN_PITCH+B.KN_LEN/2), 'R',
   f'{B.N_KN} mat mong dai {B.KN_LEN:.0f}, buoc {B.KN_PITCH:.0f}, chuoi {S["KN_RUN"]:.0f}. '
   f'Mat sam thuoc THAN, mat sang thuoc NAP.'),
- (3, (GX1-14, YB+GO/2), 'T',
-  f'Go noi hoc am {B.GRIP_W:.0f} rong x {GO:.0f} nho ra, X {GX0:.0f}..{GX1:.0f}, '
-  f'chay het chieu cao vach.'),
+ (3, (WH/2, GY1-14), 'L',
+  f'Hoc am hai tay {B.GRIP_W:.0f} x {B.GRIP_H:.0f} sau {B.GRIP_D:.0f}, Y {GY0:.0f}..{GY1:.0f}, '
+  f'nam gon trong vach ban le {WH:.0f} — khong noi go ra ngoai.'),
  (4, (wells[0], FB-B.WELL_D/2), 'B',
   f'Khe luon ngon nhac khay: hoc {B.WELL_W:.0f} x sau {B.WELL_D:.0f} vao vach truoc/sau.'),
  (5, (wells[2], YB-FB-ACL-B.NOTCH_D/2), 'R',
