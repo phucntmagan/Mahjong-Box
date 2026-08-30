@@ -17,6 +17,7 @@ Khởi đầu là một bản review độc lập cho bản vẽ sản xuất **
 | 5 | `docs/NAP-GO-DAC.md` | Nắp khung gỗ đặc ôm tấm Nu thả |
 | 6 | `docs/DONG-HOC-BAN-LE.md` | Bản lề mắt mộng gỗ — **chỗ đặt trục quyết định đường kính ống** |
 | 7 | `docs/QUAI-XACH.md` | Phương án quai A — **đã loại**, giữ làm hồ sơ |
+| 8 | `docs/PROMPT-RENDER.md` | Prompt dựng ảnh 3D vật liệu thật — sinh từ đặc tả, không gõ tay |
 
 PDF tương ứng trong `build/`. Hình trong `figs/`.
 
@@ -43,6 +44,7 @@ Dựng bằng `tools/render3d.py` (bộ dựng hình riêng, không thư viện 
 ```
 python3 tools/box_spec.py          # đặc tả đã chốt: hình học, khối lượng, tải, tự kiểm
 python3 tools/break_selfcheck.py   # PHÁ THỬ lưới tự kiểm: mỗi điều kiện phải nổ được
+python3 tools/render_prompt.py > docs/PROMPT-RENDER.md   # prompt dựng ảnh vật liệu thật
 python3 tools/width_options.py     # so sánh ba phương án bề rộng
 python3 tools/handle_option_c.py   # phương án xách C, so với A
 python3 tools/hinge_kinematics.py  # trục xoay ở đâu, quét va chạm, mặt chặn 180°
