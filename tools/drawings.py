@@ -29,7 +29,7 @@ X_AC  = (WH+BAY+DIV, WH+BAY+DIV+ACB)
 KN = [(S['KN_Y0'] + i*S['KN_PITCH'], i % 2 == 0) for i in range(B.N_KN)]
 HID = '#8a857c'            # net khuat
 CEN = '#3a5f8a'            # duong tam
-N_SH = 7
+N_SH = 8
 SHEETS = []
 
 def hidden(v, pts):  return v.path(pts, HID, THIN, '7,4')
@@ -52,6 +52,7 @@ def sheet00():
             ['HD-01', 'Cánh nắp — khung + tấm Nu nâng', '1:2 / 4:1'],
             ['TR-01', 'Khay quân (4 chiếc)', '1:2 / 2:1'],
             ['AC-01', 'Khay phụ kiện', '1:2 / 2:1'],
+            ['AC-02', 'Ổ xúc xắc và nắp che — ba cao độ', '2:1 / 1:1 / 3:1'],
             ['QA-01', 'Dung sai, kiểm, đặc tính bắt buộc', '—']]
     t, yy = table(x0, y0 + 14, ['TỜ', 'NỘI DUNG', 'TỈ LỆ'], rows, 700, rh=21, fs=11,
                   colw=[90, 500, 110])
@@ -89,8 +90,8 @@ def sheet00():
     P.append(['Khay phụ kiện AC-01', '1', f'{S["AC_L"]:.0f} × {S["AC_W_OUT"]:.0f} × {B.AC_H:.0f}',
               'cocobolo', 'khối đặc, phay lòng'])
     P.append(['Nắp che ổ xúc xắc', '1',
-              f'{2*B.DICE_SOCK + 3*B.DICE_RIB:.0f} × {S["AC_W_IN"] + 2*B.COVER_LIP:.0f} × {B.COVER_T:.0f}',
-              'cocobolo', 'nắp thả'])
+              f'{S["COVER_L"]:.1f} × {S["COVER_W"]:.1f} × {B.COVER_T:.0f}',
+              'cocobolo', f'nắp thả; thớ theo cạnh {S["COVER_L"]:.1f}; xem AC-02'])
     P.append(['Chốt bản lề', '4', f'Ø{B.KN_PIN:.2f} −0,05 × {B.KN_PIN_L:.0f}',
               'cocobolo', 'thẳng thớ, không mắt'])
     P.append(['Chốt draw-bore góc thân', f'{4*B.JOINT_NP}', f'Ø{B.JOINT_PIN:.0f} × {WH:.0f}',
@@ -568,7 +569,6 @@ def sheetAC01():
     Wi = S['AC_W_IN']
     aw = B.AC_WALL
     jl = B.AC_JOKER[1]
-    dl = 2*B.DICE_SOCK + 3*B.DICE_RIB
     xs = [aw, aw+jl, aw+jl+aw, aw+jl+aw+S['AC_DICE_L'], aw+jl+aw+S['AC_DICE_L']+aw]
     SC = MM/2
     v = V(200, 300, SC)
@@ -578,14 +578,16 @@ def sheetAC01():
     o.append(v.rect(aw, aw+jl, aw, Wo-aw, '#f6efe2', INK, MED))                 # long khoang Joker
     o.append(v.rect(aw, aw+jl, jy0, jy1, '#fbfaf8', INK, MED))                  # ranh Joker
     o.append(v.rect(xs[2], xs[2]+S['AC_DICE_L'], aw, Wo-aw, '#f6efe2', INK, MED))
-    ox = xs[2] + (S['AC_DICE_L'] - dl)/2
-    for a in range(2):
-        for b_ in range(2):
-            o.append(v.rect(ox + B.DICE_RIB + a*(B.DICE_SOCK+B.DICE_RIB),
-                            ox + B.DICE_RIB + a*(B.DICE_SOCK+B.DICE_RIB) + B.DICE_SOCK,
-                            aw + 4 + b_*(B.DICE_SOCK+B.DICE_RIB),
-                            aw + 4 + b_*(B.DICE_SOCK+B.DICE_RIB) + B.DICE_SOCK,
-                            '#fbfaf8', INK, MED))
+    DL = B.dice_layout(S)                    # u theo chiều dài AC-01, w ngang
+    for u0, u1, w0, w1 in DL['slots']:
+        o.append(v.rect(xs[2]+u0, xs[2]+u1, aw+w0, aw+w1, '#e3dbcb', INK, THIN))
+    for u0, u1, w0, w1 in DL['socks']:
+        o.append(v.rect(xs[2]+u0, xs[2]+u1, aw+w0, aw+w1, '#cdc2ac', INK, MED))
+    o.append(hidden(v, [(xs[2]+cx, aw+cy) for cx, cy in
+                        [(0, 0), (S['AC_DICE_L'], 0), (S['AC_DICE_L'], S['AC_W_IN']),
+                         (0, S['AC_W_IN']), (0, 0)]]))
+    o.append(lead(*v.P((xs[2]+S['AC_DICE_L']/2, aw+S['AC_W_IN']/2)), 826, 96,
+                  f'ổ xúc xắc — chi tiết ở AC-02', anchor='end'))
     o.append(v.rect(xs[4], L-aw, aw, Wo-aw, '#fbfaf8', INK, MED))               # hoc du phong
     for yc in (jy0, jy1):
         for xc in (aw+jl/2 - 40, aw+jl/2 + 40):
@@ -609,7 +611,13 @@ def sheetAC01():
     o.append(vc.poly(prof, '#e6d9c4', INK, MED))
     o.append(vc.rect(aw, aw+jl, H-B.AC_JOKER[2], H, '#fbfaf8', INK, MED))
     o.append(vc.rect(0, L, 0, H, 'none', INK, MED))
-    o.append(vc.rect(xs[2], xs[2]+S['AC_DICE_L'], H-B.DICE_SOCK_D, H, '#f6efe2', INK, MED))
+    o.append(vc.rect(xs[2], xs[2]+S['AC_DICE_L'], H-B.COVER_T, H, '#f6efe2', INK, MED))
+    for u0, u1, w0, w1 in DL['slots']:
+        if abs(w0 - S['DICE_W'][0]) > 1e-9: continue
+        o.append(vc.rect(xs[2]+u0, xs[2]+u1, H-DL['slot_d'], H-B.COVER_T, '#e3dbcb', INK, THIN))
+    for u0, u1, w0, w1 in DL['socks']:
+        if abs(w0 - S['DICE_W'][0]) > 1e-9: continue
+        o.append(vc.rect(xs[2]+u0, xs[2]+u1, H-DL['sock_d'], H-B.COVER_T, '#cdc2ac', INK, MED))
     o.append(vc.rect(xs[4], L-aw, H-B.AC_AUX_D, H, '#fbfaf8', INK, MED))
     o.append(dim_v(vc, 0, H, 0, f'{H:.0f}', off=-26))
     o.append(dim_v(vc, H-B.AC_JOKER[2], H, aw+jl/2, f'{B.AC_JOKER[2]:.1f}', off=26))
@@ -617,8 +625,9 @@ def sheetAC01():
     o.append(lead(*vc.P((aw+jl*0.35, H-B.AC_JOKER[2]/2)), 250, 470,
                   f'rãnh Joker {B.AC_JOKER[0]:.0f} × {jl:.0f} × sâu {B.AC_JOKER[2]:.1f}',
                   anchor='start'))
-    o.append(lead(*vc.P((xs[2]+S['AC_DICE_L']/2, H-B.DICE_SOCK_D/2)), 700, 690,
-                  f'4 ổ xúc xắc {B.DICE_SOCK:.0f} × {B.DICE_SOCK:.0f} × sâu {B.DICE_SOCK_D:.0f}, vách {B.DICE_RIB:.0f}'))
+    o.append(lead(*vc.P((xs[2]+S['DICE_U'][0]+B.DICE_SOCK/2, H-DL['sock_d']/2)), 700, 690,
+                  f'4 ổ {B.DICE_SOCK:.0f} × {B.DICE_SOCK:.0f} sâu {DL["sock_d"]:.0f} + khe luồn '
+                  f'ngón {B.DICE_SLOT:.0f} sâu {DL["slot_d"]:.0f} — AC-02'))
     o.append(lead(*vc.P(((xs[4]+L-aw)/2, H-B.AC_AUX_D/2)), 700, 712,
                   f'hốc {B.AC_AUX_L:.0f} — 4 quân dự phòng nằm 2 × 2'))
     rows = [['Phủ bì', f'{L:.0f} × {Wo:.0f} × {H:.0f}', f'khe {B.AC_CLR:.1f} mỗi đầu trong khoang {ACB:.0f}'],
@@ -629,9 +638,9 @@ def sheetAC01():
             ['Hõm ngón rãnh Joker', f'Ø{B.SCAL_D:.0f} sâu {B.SCAL_DEP:.0f}',
              f'2 cặp đối nhau; dải gỗ còn {S["SCAL_LEFT"]:.1f}'],
             ['Ổ xúc xắc', f'4 × {B.DICE_SOCK:.0f} × {B.DICE_SOCK:.0f} × {B.DICE_SOCK_D:.0f}',
-             'xúc xắc 16 chìm hẳn'],
-            ['Nắp che ổ xúc xắc', f'{dl:.0f} × {Wi+2*B.COVER_LIP:.0f} × {B.COVER_T:.0f}',
-             f'nắp thả, hạ bậc {B.COVER_LIP:.0f} quanh miệng'],
+             f'sâu đo từ SÀN đặt nắp che — xem AC-02'],
+            ['Nắp che ổ xúc xắc', f'{S["COVER_L"]:.1f} × {S["COVER_W"]:.1f} × {B.COVER_T:.0f}',
+             f'nắp thả kín miệng hốc, sàn sâu {B.COVER_T:.0f}'],
             ['Hốc dự phòng', f'{B.AC_AUX_L:.0f} × sâu {B.AC_AUX_D:.1f}', '4 quân 2 × 2']]
     o.append(T(880, 92, 'CHI TIẾT AC-01', font_size=11, font_weight='bold', fill=INK))
     t, _ = table(880, 102, ['MỤC', 'TRỊ SỐ', 'GHI CHÚ'], rows, 660, rh=22, fs=10,
@@ -644,6 +653,200 @@ def sheetAC01():
                  f'{S["V"]["khay phu kien"]/1e6*B.RHO["cocobolo"]:.2f} kg',
                  6, N_SH, ''.join(o), notes=notes)
 SHEETS.append(('AC-01-khay-phu-kien', sheetAC01))
+
+# ==========================================================================
+# TO AC-02 — O XUC XAC VA NAP CHE
+# ==========================================================================
+def rr(v, x0, x1, z0, z1, r, fill, st=INK, sw=MED, n=6):
+    """Chu nhat bo goc ban kinh r — goc bo LA VET DAO PHAY, khong phai trang tri."""
+    pts = []
+    for cx, cz, a0 in [(x1-r, z0+r, -90.0), (x1-r, z1-r, 0.0),
+                       (x0+r, z1-r, 90.0), (x0+r, z0+r, 180.0)]:
+        for i in range(n+1):
+            a = math.radians(a0 + 90.0*i/n)
+            pts.append((cx + r*math.cos(a), cz + r*math.sin(a)))
+    return v.poly(pts, fill, st, sw)
+
+def cover_outline(u0, w0):
+    """Duong bao nap che dat tai (u0,w0), hai hom ngon o canh u nho."""
+    L, Wc = S['COVER_L'], S['COVER_W']
+    c = B.COVER_CLR/2
+    pts, r = [], B.COVER_NOTCH/2
+    pts.append((u0, w0))
+    for wc in S['COVER_NOTCH_W']:                 # tam hom, do trong he cua HOC
+        wl = wc - c                               # doi ve he cua NAP
+        pts.append((u0, w0 + wl - r))
+        for i in range(13):
+            a = math.radians(-90.0 + 180.0*i/12)
+            pts.append((u0 + r*math.cos(a), w0 + wl + r*math.sin(a)))
+        pts.append((u0, w0 + wl + r))
+    pts += [(u0, w0 + Wc), (u0 + L, w0 + Wc), (u0 + L, w0), (u0, w0)]
+    return pts
+
+def sheetAC02():
+    o = []
+    DL = B.dice_layout(S)
+    ZL, ZW = S['AC_DICE_L'], S['AC_W_IN']
+    ml, mw = S['DICE_MARG_L'], S['DICE_MARG_W']
+    sk, rb, sl = B.DICE_SOCK, B.DICE_RIB, B.DICE_SLOT
+    aw, H = B.AC_WALL, B.AC_H
+    R = S['DICE_R']
+    col0, col1 = S['DICE_W']
+    SEC_W = col0 + sk/2                       # mat cat A-A di qua tam cot o thu nhat
+    z_rec, z_slt, z_sok = H - B.COVER_T, H - DL['slot_d'], H - DL['sock_d']
+    zb = S['Z_RIM'] - S['Z_FLOOR']            # vanh than, trong he toa do AC-01
+    SC1, SC2, SC3 = MM, MM*2, MM*3
+
+    # ================================================ V1  MAT BANG 2:1
+    v = V(108, 586, SC2)
+    o.append(viewbox(46, 74, 660, 620, 'MẶT BẰNG Ổ XÚC XẮC — nắp che tháo ra',
+                     'ba cao độ phay từ vành AC-01: sàn đặt nắp · khe luồn ngón · ổ',
+                     'TL 2:1'))
+    o.append(v.rect(-aw, ZL+aw, -aw, ZW+aw, '#e6d9c4', INK, MED))     # vach AC-01
+    o.append(v.rect(0, ZL, 0, ZW, '#f2ece1', INK, THICK))             # san dat nap che
+    for u0, u1, w0, _ in DL['slots']:
+        comb = (u0, u0 + sl + sk) if u0 < ZL/2 else (u1 - sl - sk, u1)
+        o.append(rr(v, comb[0], comb[1], w0, w0 + sk, R, '#e3dbcb', INK, THIN))
+    for u0, u1, w0, w1 in DL['socks']:
+        o.append(rr(v, u0, u1, w0, w1, R, '#cdc2ac', INK, MED))
+    o.append(v.path(cover_outline(B.COVER_CLR/2, B.COVER_CLR/2), ACC, MED, '8,4'))
+    ch = [(0, ml), (ml, ml+sl), (ml+sl, ml+sl+sk), (ml+sl+sk, ml+sl+sk+rb),
+          (ZL-ml-sl-sk, ZL-ml-sl), (ZL-ml-sl, ZL-ml), (ZL-ml, ZL)]
+    for a, b in ch:
+        o.append(dim_h(v, a, b, -aw, f'{b-a:.0f}', off=26))
+    o.append(dim_h(v, 0, ZL, -aw, f'{ZL:.0f}  miệng hốc', off=54))
+    for a, b in [(0, mw), (mw, mw+sk), (mw+sk, mw+sk+rb), (ZW-mw-sk, ZW-mw), (ZW-mw, ZW)]:
+        o.append(dim_v(v, a, b, 0, f'{b-a:.1f}' if (b-a) % 1 else f'{b-a:.0f}', off=-26))
+    o.append(dim_v(v, 0, ZW, ZL+aw, f'{ZW:.0f}', off=30))
+    ya = v.Z(SEC_W)
+    o.append(f'<path d="M {v.X(-aw)-26:.1f},{ya:.1f} L {v.X(ZL+aw)+26:.1f},{ya:.1f}" '
+             f'stroke="{CEN}" stroke-width="{MED}" stroke-dasharray="14,4,3,4"/>')
+    for xx, an in ((v.X(-aw)-30, 'end'), (v.X(ZL+aw)+30, 'start')):
+        o.append(T(xx, ya + 4, 'A', text_anchor=an, font_size=12,
+                   font_weight='bold', fill=CEN))
+    for u0, u1, w0, w1 in DL['socks']:
+        cx_, cy_ = v.X((u0+u1)/2), v.Z((w0+w1)/2)
+        o.append(T(cx_, cy_ - 3, f'Ổ {sk:.0f} × {sk:.0f}', text_anchor='middle',
+                   font_size=9.5, font_weight='bold', fill=INK))
+        o.append(T(cx_, cy_ + 11, f'sâu {B.DICE_SOCK_D:.0f}  R{R:.0f}',
+                   text_anchor='middle', font_size=9, fill=DIM))
+    for u0, u1, w0, w1 in DL['slots']:
+        o.append(f'<g transform="translate({v.X((u0+u1)/2):.1f},'
+                 f'{v.Z(w0+sk/2):.1f}) rotate(-90)">'
+                 + T(0, 4, 'khe luồn ngón', text_anchor='middle', font_size=9, fill=DIM)
+                 + '</g>')
+
+    # ================================================ V2  MAT CAT A-A 1:1
+    vc = V(101, 985, SC1)
+    o.append(viewbox(46, 714, 390, 350, 'MẶT CẮT A-A', 'qua tâm một cột ổ', 'TL 1:1'))
+    seg, u = [], 0.0
+    marks = sorted([(a, b, z_slt) for a, b, w0, _ in DL['slots'] if abs(w0-col0) < 1e-9]
+                   + [(a, b, z_sok) for a, b, w0, _ in DL['socks'] if abs(w0-col0) < 1e-9])
+    for a, b, z in marks:
+        if a > u: seg.append((u, a, z_rec))
+        seg.append((a, b, z)); u = b
+    if u < ZL: seg.append((u, ZL, z_rec))
+    prof = [(-aw, 0.0), (ZL+aw, 0.0), (ZL+aw, H), (ZL, H)]
+    for a, b, z in reversed(seg):
+        prof += [(b, z), (a, z)]
+    prof += [(0.0, H), (-aw, H)]
+    o.append(vc.poly(prof, '#e6d9c4', INK, MED))
+    o.append(vc.rect(B.COVER_CLR/2, ZL - B.COVER_CLR/2, z_rec, H, '#f2ece1', INK, THICK))
+    for u0, u1, w0, _ in DL['socks']:
+        if abs(w0 - col0) > 1e-9: continue
+        c = (u0 + u1)/2
+        o.append(vc.rect(c - B.DIE/2, c + B.DIE/2, z_sok, z_sok + B.DIE,
+                         '#cbd6e4', CEN, MED))
+    o.append(vc.rect(-aw, ZL+aw, zb - B.FELT_PAD, zb, '#dcdcd2', HID, THIN))
+    o.append(vc.path([(-aw-8, zb), (ZL+aw+8, zb)], HID, MED, '7,4'))
+    o.append(dim_v(vc, 0, H, -aw, f'{H:.0f}', off=-30))
+    o.append(dim_v(vc, 0, z_sok, ZL+aw, f'{S["AC_DICE_FLR"]:.0f}', off=26))
+    o.append(dim_v(vc, z_sok, H, ZL, f'{DL["sock_d"]:.0f}', off=52))
+    o.append(T(vc.X(ZL/2), vc.Z(zb) - 8, f'nắp hộp Z{S["Z_RIM"]:.0f} · nỉ đệm '
+               f'{B.FELT_PAD:.1f}', text_anchor='middle', font_size=9, fill=HID))
+
+    # ================================================ V3  NAP CHE 2:1
+    o.append(viewbox(726, 74, 660, 560, 'NẮP CHE Ổ XÚC XẮC — 1 chiếc',
+                     'cocobolo, thớ chạy theo cạnh dài', 'TL 2:1'))
+    vl = V(806, 550, SC2)
+    o.append(vl.poly(cover_outline(0.0, 0.0), '#e6d9c4', INK, THICK))
+    o.append(dim_h(vl, 0, S['COVER_L'], 0, f'{S["COVER_L"]:.1f}', off=26))
+    o.append(dim_v(vl, 0, S['COVER_W'], S['COVER_L'], f'{S["COVER_W"]:.1f}', off=28))
+    nl = [wc - B.COVER_CLR/2 for wc in S['COVER_NOTCH_W']]
+    for wl_ in nl:
+        o.append(vl.cross((0, wl_), 4.0, ACC))
+        o.append(dim_v(vl, wl_ - B.COVER_NOTCH/2, wl_ + B.COVER_NOTCH/2, 0,
+                       f'Ø{B.COVER_NOTCH:.0f}', off=-26))
+    o.append(dim_v(vl, nl[0] + B.COVER_NOTCH/2, nl[1] - B.COVER_NOTCH/2, 0,
+                   f'{S["COVER_LIG_MID"]:.0f}', off=-26))
+    o.append(dim_v(vl, nl[1] + B.COVER_NOTCH/2, S['COVER_W'], 0,
+                   f'{S["COVER_LIG_END"]:.2f}', off=-26))
+    o.append(dim_h(vl, 0, B.COVER_NOTCH/2, S['COVER_W'], f'{B.COVER_NOTCH/2:.0f}', off=-24))
+    ax, ay2 = vl.X(S['COVER_L']*0.55), vl.Z(S['COVER_W']*0.5)
+    o.append(f'<path d="M {ax:.0f},{ay2:.0f} L {ax+70:.0f},{ay2:.0f}" stroke="{DIM}" '
+             f'stroke-width="{THIN}"/>' + T(ax + 76, ay2 + 4, 'chiều thớ',
+                                            font_size=9.5, fill=DIM))
+    ve = V(806, 612, SC2)
+    o.append(ve.rect(0, S['COVER_L'], 0, B.COVER_T, '#e6d9c4', INK, MED))
+    o.append(dim_v(ve, 0, B.COVER_T, S['COVER_L'], f'{B.COVER_T:.0f}', off=30))
+    o.append(T(806, 628, f'CẠNH — bề dày {B.COVER_T:.0f} (0 / −0,10)',
+               font_size=9.5, fill=DIM))
+
+    # ================================================ V4  CHI TIET BAC 3:1
+    u_lo, u_hi = 8.0, 26.0
+    vd = V(486 - u_lo*SC3, 1210.8, SC3)
+    o.append(viewbox(446, 714, 260, 350, 'CHI TIẾT — bậc khe', '', 'TL 3:1'))
+    segd = [(u_lo, ml + sl, z_slt), (ml + sl, u_hi, z_sok)]
+    pf = [(u_lo, 14.0), (u_hi, 14.0)]
+    for a, b, z in reversed(segd):
+        pf += [(b, z), (a, z)]
+    o.append(vd.poly(pf, '#e6d9c4', INK, MED))
+    o.append(vd.rect(u_lo, u_hi, z_rec, H, '#f2ece1', INK, THICK))
+    cdie = S['DICE_U'][0] + sk/2
+    o.append(vd.rect(cdie - B.DIE/2, u_hi, z_sok, z_sok + B.DIE, '#cbd6e4', CEN, MED))
+    o.append(dim_v(vd, z_sok, z_slt, u_lo, f'{B.DICE_STEP:.0f}', off=-26))
+    o.append(dim_v(vd, z_sok + B.DIE, z_rec, u_lo, f'{S["DIE_HEAD"]:.0f}', off=-26))
+    o.append(T(vd.X((u_lo + ml + sl)/2), vd.Z(z_slt) - 8, 'sàn khe',
+               text_anchor='middle', font_size=9, fill=DIM))
+    o.append(T(vd.X(u_hi) - 4, vd.Z(z_sok + B.DIE/2), 'quân', text_anchor='end',
+               font_size=9, fill=CEN))
+    o.append(T(vd.X(u_lo), vd.Z(H) - 8, 'nắp che', font_size=9, fill=DIM))
+
+    # ================================================ bang kich thuoc
+    rows = [['Miệng hốc trên khối AC-01', f'{ZL:.0f} × {ZW:.0f}', 'suy từ chuỗi dài AC-01'],
+            ['Sàn đặt nắp che', f'sâu {B.COVER_T:.0f} +0,15 / 0',
+             f'phủ HẾT miệng hốc; vành đỡ {ml:.0f} hai đầu / {mw:.1f} hai bên'],
+            ['Ổ xúc xắc', f'4 × {sk:.0f} × {sk:.0f} × sâu {B.DICE_SOCK_D:.0f}, góc R{R:.0f}',
+             f'sâu kể từ sàn nắp; từ vành là {DL["sock_d"]:.0f}'],
+            ['Khe luồn đầu ngón', f'4 × {sl:.0f} × {sk:.0f} × sâu {DL["slot_d"]:.0f}',
+             f'sâu kể từ vành; bậc {B.DICE_STEP:.0f} so với sàn ổ'],
+            ['Dao phay ổ', f'Ø{B.DICE_MILL:.0f} → R{R:.0f}',
+             f'trần trên R{S["DICE_R_MAX"]:.2f}; dao Ø8 làm quân kênh góc'],
+            ['Nắp che', f'{S["COVER_L"]:.1f} × {S["COVER_W"]:.1f} × {B.COVER_T:.0f} (0 / −0,10)',
+             f'khe lắp {B.COVER_CLR:.1f} tổng; thớ theo cạnh dài'],
+            ['Hõm ngón trên nắp che', f'2 × nửa tròn Ø{B.COVER_NOTCH:.0f}, khoét suốt bề dày',
+             f'gỗ còn {S["COVER_LIG_MID"]:.0f} giữa, {S["COVER_LIG_END"]:.2f} hai góc'],
+            ['Đáy AC-01 dưới ổ', f'{S["AC_DICE_FLR"]:.0f}',
+             f'quân xúc xắc {B.DIE:.0f} — PHẢI đo lại trên lô mua (P3)']]
+    o.append(T(726, 648, 'BẢNG KÍCH THƯỚC AC-02', font_size=12,
+               font_weight='bold', fill=INK))
+    t, _ = table(726, 656, ['MỤC', 'TRỊ SỐ (mm)', 'GHI CHÚ'], rows, 660, rh=14, fs=9,
+                 colw=[170, 235, 255])
+    o.append(t)
+    notes = [f'Tô đậm dần theo chiều sâu: sàn đặt nắp · khe luồn ngón · ổ. Đứt đỏ = bao nắp che.',
+             f'Ba cao độ phay từ MỘT lần gá; chuẩn là vành AC-01 đã bào phẳng, không phải đáy khay.',
+             f'Nắp che tựa bốn cạnh vào sàn — KHÔNG hạ bậc vào thành vách nào, nên không có gờ mỏng.',
+             f'Vành AC-01 Z{S["Z_FLOOR"]+H:.0f}, nắp hộp Z{S["Z_RIM"]:.0f}, nỉ đệm {B.FELT_PAD:.1f} '
+             f'→ nắp che chỉ được nhô {S["COVER_PROUD"]:.1f} mm.',
+             f'Nên dung sai một chiều: sàn {B.COVER_T:.0f} +0,15/0 và nắp che {B.COVER_T:.0f} 0/−0,10 '
+             f'→ nắp luôn thấp hơn vành 0..0,25.',
+             f'Đầu ngón {B.FING_T_TIP:.0f} lọt khe {sl:.0f}, bám {S["DIE_GRIP"]:.0f} mm sườn quân. '
+             f'Quân hở trên đầu {S["DIE_HEAD"]:.0f} nên không leo nổi bậc {B.DICE_STEP:.0f}.',
+             f'Thớ nắp che cùng chiều thớ AC-01. Đáy ổ và đáy khe dán nỉ {B.FELT:.1f}.']
+    return sheet('AC-02', 'Ổ XÚC XẮC · NẮP CHE', '2:1 / 1:1 / 3:1', 'cocobolo',
+                 f'{S["V"]["nap che o xuc xac"]/1e3*B.RHO["cocobolo"]:.0f} g (nắp che)',
+                 7, N_SH, ''.join(o), notes=notes)
+SHEETS.append(('AC-02-o-xuc-xac', sheetAC02))
 
 # ==========================================================================
 # TO QA-01 — DUNG SAI, KIEM, DAC TINH BAT BUOC
@@ -666,7 +869,11 @@ def sheetQA01():
             f'≥ {B.MAG_PULL*(1-B.MAG_DERATE):.0f} N mỗi cặp',
             'catalogue ghi 30 N khi tiếp xúc trực tiếp'],
            ['P5', 'Ổn định tấm Nu và mọi phôi về 11 % MC', '11 % ±1',
-            f'lắp ở 9 % thì cả {B.DMC_DRY:.0f} % dồn về một phía']]
+            f'lắp ở 9 % thì cả {B.DMC_DRY:.0f} % dồn về một phía'],
+           ['P6', 'Đo cạnh quân xúc xắc thuộc ĐÚNG lô mua (tối thiểu 4 quân)',
+            f'≤ {B.DIE:.1f} mm mỗi cạnh',
+            f'ổ {B.DICE_SOCK:.0f} chỉ chừa {(B.DICE_SOCK-B.DIE)/2:.1f} mm mỗi bên; '
+            f'quân lớn hơn là làm lại cả ổ lẫn nắp che — xem AC-02']]
     t, yy = table(x0, y0, ['#', 'PHÉP THỬ', 'TIÊU CHÍ ĐẠT', 'VÌ SAO'], pre, 1480, rh=26,
                   fs=10.5, colw=[50, 560, 350, 520])
     o.append(T(x0, yy + 34, 'DUNG SAI CHUNG', font_size=15, font_weight='bold', fill=INK))
@@ -712,6 +919,8 @@ def sheetQA01():
            ['AC-01 nhấc ra được bằng 2 hõm ngón', 'đạt'],
            ['Đủ 152 quân', f'{4*36} trong khay + 8 rãnh Joker = 152'],
            ['Hốc dự phòng còn trống', 'chứa được 4 quân thừa'],
+           ['Nắp che ổ xúc xắc so với vành AC-01', 'thấp hơn 0..0,25 — KHÔNG nhô'],
+           ['Lấy được xúc xắc bằng khe luồn ngón', 'cả 4 ổ'],
            ['Không chi tiết kim loại nào ở bản lề', 'đạt']]
     rows_q = [[c[0], c[1], '☐  đạt', '', ''] for c in chk]
     tq, _ = table(x0, yq, ['MỤC KIỂM', 'TIÊU CHÍ', 'KẾT QUẢ', 'TRỊ SỐ ĐO', 'NGƯỜI KIỂM'],
@@ -720,7 +929,7 @@ def sheetQA01():
     notes = ['Mọi trị số trong bộ bản vẽ này sinh từ tools/box_spec.py. Sửa số bằng tay là sai quy trình.',
              'Bước 6 — khoan lỗ chốt bản lề khi thân và nắp đã kẹp với nhau — là điều kiện để hai cánh đồng phẳng.',
              'Không phép thử nào ở bảng trên được bỏ qua để kịp tiến độ.']
-    return sheet('QA-01', 'DUNG SAI · KIỂM · LẮP', '—', '—', '—', 7, N_SH,
+    return sheet('QA-01', 'DUNG SAI · KIỂM · LẮP', '—', '—', '—', 8, N_SH,
                  ''.join(o), notes=notes)
 SHEETS.append(('QA-01-dung-sai-kiem', sheetQA01))
 

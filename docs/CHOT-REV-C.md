@@ -17,7 +17,9 @@ các tài liệu trước đó sai hoặc đã hết hiệu lực**. Đọc nó 
 | Hốc âm hai tay | (chưa có) | **sâu 16** → vách 22; khe hở vào tay **22.6**, trần bo **R8** + dốc 10° | `grip_hook.py` |
 | Khe ráp giữa | 0,6 | **1,5 ±0,3** | `lid_solid_calc.py` |
 | Khóa nắp | không có | **8 cặp nam châm nắp↔thân** | `lid_latch.py` |
-| Khối lượng | không tính | **6.50 / 7.12 kg** | `box_spec.py` |
+| Ổ xúc xắc | 4 ổ 18 sâu 18 **đo từ vành** | **4 ổ 18 sâu 18 đo từ SÀN đặt nắp** + khe luồn ngón 12 | `dice_layout()` |
+| Nắp che ổ xúc xắc | 51 × 64 (= trường ổ) | **72.5 × 57.5 × 4** (= miệng hốc) | `drawings.py` AC-02 |
+| Khối lượng | không tính | **6.52 / 7.15 kg** | `box_spec.py` |
 | Tải thiết kế | — | **64 / 70 N** | `box_spec.py` |
 
 ## 1. Bề rộng: 370
@@ -108,7 +110,7 @@ Xem `docs/BX-01.md` để có kích thước đầy đủ. Tóm tắt cái gì �
 | Nhấc khay §2.3 | hốc lõm 70 × 10 trên vành khoang, "mở được ~17 mm để kẹp" | **không đóng được** — không có chỗ nào quanh khay lọt ngón tay, và cả hai bên đối diện đều bị chắn. Thay bằng khe luồn ngón 12,5 mm + mỏ móc sâu 5 ở hai đầu khoang |
 | Hõm ngón Joker §2.3 | Ø25 sâu 12 vào dải 15 mm | **đúng**, giữ nguyên. Còn 3 mm gỗ + 5 mm vách, hệ số 65× |
 | Đỡ mép nắp §3.2 | cần sống nổi giữa trên AC-01 | **không còn cần**. Nêu ra khi mép dày 8 (võng 1,98 mm); ở 12 thì võng 0,59 mm, hệ số 22× |
-| Nắp trượt ổ xúc xắc | "phải có nắp trượt" | **trượt không làm được** — cần 51 mm hành trình, chỗ trống 22 mm. Thay bằng nắp thả 64 × 51 × 4 |
+| Nắp trượt ổ xúc xắc | "phải có nắp trượt" | **trượt không làm được** — cần 65 mm hành trình, chỗ trống 8 mm. Thay bằng nắp thả **72.5 × 57.5 × 4** — kích thước ghi ở vòng đó (64 × 51) **sai**, xem mục "ổ xúc xắc" dưới đây |
 
 Việc bỏ sống nổi còn giải luôn một xung đột chưa ai để ý: sống nổi phải nằm ở khe ráp giữa X = 185 và rộng
 16, còn rãnh Joker cũng nằm giữa AC-01 và rộng 28. Lòng AC-01 chỉ có 58, nên không thể vừa chừa 16 mm giữa
@@ -310,13 +312,69 @@ Giá phải trả: tấm Nu dày thêm 3 mm → cả hộp nặng thêm ~0,2 kg.
 
 ![Nắp mở 180°: hai cánh nằm ngang, mặt trên phẳng đúng cao độ vành thân Z47.](figs/fig12b-nap-mo-180.png)
 
+### Rev C3 — ổ xúc xắc: ba lỗi bắt được khi ngồi vẽ AC-02
+
+Ổ xúc xắc là thứ duy nhất trong hồ sơ **chưa từng được vẽ ra**. Nó chỉ tồn tại dưới dạng bốn hằng số
+trong `box_spec.py` và một đoạn văn trong `docs/BX-01.md`. Ngồi vẽ tờ AC-02 thì cả ba điều dưới đây
+hiện ra trong vòng mười phút — và không cái nào cần phép tính khó.
+
+**(1) Nắp che dài bằng TRƯỜNG Ổ, không phải bằng MIỆNG HỐC.** Bảng kê phôi ghi nắp che
+`51 × 64`, mà 51 = 2×18 + 3×5 là bề dài trường bốn ổ. Miệng hốc thì dài **73** (suy từ chuỗi
+AC-01). Nắp 51 đặt vào hốc 73: **hai đầu nắp cách thành hốc 11 mm, tựa vào không khí.** Nó rơi tọt
+xuống ngay lần đầu đậy.
+
+**(2) Ổ sâu 18 "đo từ vành", mà nắp che ăn mất 4 từ trên xuống.** Chỗ còn lại dưới mặt trong nắp
+che là **14 mm** — trong khi quân xúc xắc cạnh **16**. Đậy nắp là ép lên xúc xắc.
+Sửa: chiều sâu ổ **đo từ SÀN đặt nắp che**, và tổng chiều sâu tính từ vành thành
+22 = 4 + 18, tự suy trong `derive()` chứ không gõ tay nữa.
+
+**(3) Không có chi tiết nào lấy xúc xắc ra.** Ổ 18 × 18 sâu
+18, quân 16, khe 1.0 mm mỗi bên. Ngón tay không
+luồn vào, không có gì để bấu. Đây là lỗi loại "không ai thử dùng nó" — nó không vi phạm kích thước
+nào cả, nên không tự kiểm nào bắt được cho tới khi có người hỏi *lấy xúc xắc ra bằng cách nào*.
+
+**Giải lại — ba cao độ phay từ một mặt chuẩn là vành AC-01:**
+
+| | trị số | vì sao |
+|---|---:|---|
+| Sàn đặt nắp che | sâu 4, phủ **hết** miệng hốc 73 × 58 | nắp tựa bốn cạnh vào sàn, không hạ bậc vào thành vách nào |
+| Khe luồn đầu ngón | 12 × 18, sâu 14 từ vành | đầu ngón dày 11 mm lọt được, bám 8 mm sườn quân mà nhấc |
+| Ổ xúc xắc | 4 × 18 × 18, sâu 18 từ sàn nắp | quân 16 + hở 2 dưới nắp che |
+| Bậc giữa khe và ổ | 8 | quân chỉ hở trên đầu 2 mm nên không leo nổi bậc để tụt sang khe |
+| Nắp che | 72.5 × 57.5 × 4, hai hõm Ø18 | = miệng hốc trừ khe lắp 0.5; hõm nằm **đúng trên** hai khe luồn ngón |
+
+Chuỗi khép: 4 + 12 + 18 + 5 +
+18 + 12 + 4 = 73 theo chiều dài;
+8.5 + 18 + 5 + 18 +
+8.5 = 58 theo chiều ngang.
+
+**Một ràng buộc nữa, từ cái dao phay.** Ổ vuông 18 phay bằng dao trụ thì bốn góc bo
+đúng bán kính dao. Quân xúc xắc vuông cạnh 16 có góc cách vách ổ 1.0 mm,
+nên bán kính bo lớn nhất mà góc quân còn lọt là **R3.41**. Dao Ø6
+(R3) được; **dao Ø8 (R4) thì quân kênh góc, không nằm phẳng**. Đây là loại số chỉ hiện
+ra khi vẽ hình chứ không hiện ra khi cộng chuỗi.
+
+**Và một ràng buộc chiều cao.** Vành AC-01 ở Z46, nắp hộp ở
+Z47, nỉ đệm dưới nắp dày 0.8 → nắp che chỉ được nhô tối đa
+**0.2 mm**. Nên dung sai phải **một chiều**: sàn phay sâu 4 +0,15/0 và
+nắp che dày 4 0/−0,10, để nắp **luôn** nằm thấp hơn vành 0…0,25 mm.
+
+Khối lượng đổi: 6.52 / 7.15 kg (trước là 6,50 / 7,12) — vì hốc xúc xắc cũ được tính như một
+khối chữ nhật sâu 18,5 suốt 73 × 58, mà thực tế chỉ khoét ba cao độ.
+
+**Lưới tự kiểm.** Thêm 16 điều kiện cho riêng khu này, và thêm `tools/break_selfcheck.py` —
+script *phá thử*: nó đổi từng hằng số cho hỏng đúng chỗ rồi **đòi hỏi** lỗi tương ứng phải nổ.
+Đây là câu trả lời trực tiếp cho bài học Rev C2: từ nay một điều kiện tự kiểm không được coi là có
+thật cho tới khi có người bắt nó nổ.
+
 ## 8. Còn lại
 
 | # | Việc | Trạng thái |
 |---|---|---|
 | 1 | Khóa nắp | **đã giải** — `docs/KHOA-NAP.md`. Còn lại: đo lực tách trên mẫu thật |
 | 2 | Ec-gô-nô-mi trần hốc âm | **đã giải (Rev C2)** — dốc 10°, bo R4, vào `box_spec` và HÌNH 14. R8 ghi ở bản trước là chép sai chỗ |
-| 3 | Sheet nắp và sheet khay theo số mới | chưa vẽ |
+| 3 | Sheet nắp và sheet khay theo số mới | **đã vẽ** — `build/BAN-VE-SAN-XUAT.pdf`, 8 tờ A3 |
+| 3b | Ổ xúc xắc và nắp che | **đã giải và đã vẽ (AC-02)** — ba lỗi hình học ở trên |
 | 4 | Xác minh CITES bằng văn bản gốc | việc của bên mua |
 | 5 | Đo tối thiểu 20 quân thuộc đúng lô mua | chưa làm — chặn mọi thứ về khay |
 | 6 | Ép thử 1 mộng khung cocobolo, để 7 ngày rồi phá huỷ | chưa làm |

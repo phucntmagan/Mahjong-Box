@@ -243,7 +243,8 @@ AC_H = 38.0                       # chieu cao khay phu kien
 AC_WALL = 5.0
 AC_JOKER = (28.0, 152.0, 24.5)    # ranh Joker (rong, dai, sau)
 AC_AUX_L, AC_AUX_D = 80.0, 18.5   # hoc 4 quan du phong (dai, sau)
-AC_DICE_D = 18.5                  # o xuc xac (sau); chieu dai = phan con lai
+# AC_DICE_D (chieu sau toan bo o xuc xac) KHONG con la hang so: no bang
+# COVER_T + DICE_SOCK_D, suy trong derive().
 AC_CLR   =  2.5                   # khe moi dau khay trong khoang (bang khay quan)
 
 # --- hoc nhac khay (review Rev B §2.3 giai lai — xem tools/detail_features.py)
@@ -257,12 +258,36 @@ WELL_FELT=  1.0          # ni dan vao day hoc: chan quan truot ra va lam dem
 SCAL_D   = 25.0          # duong kinh hom ban nguyet
 SCAL_DEP = 12.0          # sau khoet vao dai go ben ranh
 
-# --- o xuc xac + nap che
+# --- o xuc xac + nap che  (giai lai Rev C3 khi ve to AC-02 — xem CHOT-REV-C.md)
+# Cau truc: AC-01 la khoi dac. Trong o CHIEU DAI danh cho xuc xac (AC_DICE_L,
+# suy tu chuoi) phay BA cao do:
+#   1. San dat nap che : sau COVER_T, phu HET be ngang va be dai o -> nap che
+#      tha vao, mat tren ngang bang vanh AC-01. Khong ha bac vao thanh vach nao.
+#   2. Khe luon dau ngon: sau DICE_SLOT_D ke tu san (1), dai DICE_SLOT.
+#   3. O xuc xac      : sau DICE_SOCK_D ke tu san (1).
+# Ba cao do nay la ly do ba loi cua Rev C3 bi bat khi ve AC-02:
+#   - nap che cu dai bang TRUONG O (51) chu khong bang MIENG HOC (73): hai dau
+#     nap khong tua vao gi, no roi tot xuong hoc;
+#   - o sau 18 do TU VANH, ma nap che an mat 4 -> duoi nap chi con 14 < xuc xac
+#     16: nap che khong dong duoc;
+#   - khong co chi tiet nao lay xuc xac ra: o 18 x 18 x 18, quan xuc xac 16,
+#     khe 1 mm moi ben, ngon tay khong luon vao duoc.
+DIE        = 16.0        # canh quan xuc xac (PHAI do lai tren lo mua — P3)
 DICE_SOCK  = 18.0        # canh o vuong
-DICE_SOCK_D= 18.0        # sau o (xuc xac 16 phai chim han: khe duoi nap chi 1 mm)
-DICE_RIB   =  5.0        # vach giua cac o
+DICE_SOCK_D= 18.0        # sau o, do TU SAN DAT NAP CHE (khong phai tu vanh AC-01)
+DICE_RIB   =  5.0        # vach giua hai o
+# Khe luon dau ngon nam CANH moi o, phia dau hop. San khe cao hon san o dung
+# DICE_STEP nen xuc xac khong truot sang duoc (no chi co DIE_HEAD mm dau khong).
+DICE_SLOT  = 12.0        # chieu dai khe luon dau ngon (theo chieu dai AC-01)
+DICE_STEP  =  8.0        # san khe cao hon san o
+DICE_MILL  =  6.0        # duong kinh dao phay o vuong -> goc bo R3. Dao to hon
+                         # lam goc bo lon hon, quan xuc xac kenh goc — xem selfcheck
 COVER_T    =  4.0        # day nap che o xuc xac
-COVER_LIP  =  3.0        # bac ha nap che quanh mieng o
+COVER_CLR  =  0.5        # khe lap nap che, TONG theo moi phuong (0,25 moi ben)
+COVER_NOTCH= 18.0        # duong kinh hom ngon tren canh nap che; 2 cai, dat dung
+                         # tren hai khe luon ngon o mot dau
+COVER_LIG  =  4.0        # be rong toi thieu con lai cua canh nap che giua/canh hom
+DIE_HEAD_MIN = 1.0       # khe toi thieu tren dau xuc xac, duoi mat trong nap che
 
 # ============================================================== SUY RA
 # Toan bo hinh hoc suy ra tu chuoi X va phuong an xach. Tach thanh ham de so
@@ -484,6 +509,45 @@ def derive(wall_hinge=WALL_HINGE, bay=BAY, div=DIV, ac_bay=AC_BAY, handle=HANDLE
     AC_W_IN   = AC_W_OUT - 2*AC_WALL
     AC_DICE_L = AC_L - 4*AC_WALL - AC_JOKER[1] - AC_AUX_L
 
+    # --- o xuc xac + nap che (to AC-02). Goc toa do cua o: u chay theo chieu dai
+    #     AC-01 tu mat trong vach dau o, w chay ngang tu mat trong vach dai.
+    AC_DICE_D    = COVER_T + DICE_SOCK_D                 # sau toan bo o, tu vanh
+    AC_DICE_FLR  = AC_H - AC_DICE_D                      # day AC-01 con lai duoi o
+    DICE_SLOT_D  = DICE_SOCK_D - DICE_STEP               # sau khe luon ngon, tu san nap
+    DIE_HEAD     = DICE_SOCK_D - DIE                     # khe tren dau xuc xac
+    DIE_GRIP     = DIE - DICE_STEP                       # chieu cao suon xuc xac ngon cham duoc
+    # ban kinh goc bo LON NHAT ma quan xuc xac vuong canh DIE con tha lot o vuong
+    # canh DICE_SOCK: goc quan o (a,a) voi a = (SOCK-DIE)/2 tinh tu vach o; cung bo
+    # tam (r,r) ban kinh r phai bao duoc diem do -> sqrt2*(r-a) <= r.
+    _a           = (DICE_SOCK - DIE)/2
+    DICE_R_MAX   = math.sqrt(2)*_a/(math.sqrt(2) - 1.0)
+    DICE_R       = DICE_MILL/2
+    # chuoi theo chieu dai o: [le][khe][o][vach][o][khe][le]
+    DICE_FIELD_L = 2*DICE_SOCK + DICE_RIB + 2*DICE_SLOT
+    DICE_FIELD_W = 2*DICE_SOCK + DICE_RIB
+    DICE_MARG_L  = (AC_DICE_L - DICE_FIELD_L)/2          # vanh do nap che, hai dau
+    DICE_MARG_W  = (AC_W_IN  - DICE_FIELD_W)/2           # vanh do nap che, hai ben
+    COVER_LEDGE  = min(DICE_MARG_L, DICE_MARG_W)         # vanh do hep nhat
+    DICE_U       = (DICE_MARG_L + DICE_SLOT,
+                    DICE_MARG_L + DICE_SLOT + DICE_SOCK + DICE_RIB)   # u dau moi o
+    DICE_W       = (DICE_MARG_W, DICE_MARG_W + DICE_SOCK + DICE_RIB)  # w dau moi o
+    DICE_SLOT_U  = (DICE_MARG_L, AC_DICE_L - DICE_MARG_L - DICE_SLOT) # u dau moi khe
+    # nap che: tha kin mieng o, khong ha bac vao thanh vach nao
+    COVER_L, COVER_W = AC_DICE_L - COVER_CLR, AC_W_IN - COVER_CLR
+    COVER_NOTCH_W = tuple(w + DICE_SOCK/2 for w in DICE_W)   # tam hom ngon theo w
+    COVER_REACH  = COVER_NOTCH/2 - DICE_MARG_L           # hom ngon voi qua vanh do
+    COVER_LIG_MID = (DICE_SOCK + DICE_RIB) - COVER_NOTCH # go giua hai hom
+    COVER_LIG_END = COVER_W/2 - (DICE_SOCK + DICE_RIB)/2 - COVER_NOTCH/2
+    COVER_LIG_MIN = min(COVER_LIG_MID, COVER_LIG_END)
+    # go no: nap che va AC-01 CUNG chieu tho (tho chay theo chieu dai AC-01), nen
+    # o trang thai can bang hai ben no bang nhau va khe khong doi. Cai phai chiu la
+    # QUA DO: mieng go 4 mm can bang truoc khoi 38 mm. Lay ca bien thien do am.
+    COVER_MOVE     = COVER_W*K['cocobolo ngang tho']*DMC_DES
+    COVER_MOVE_DRY = COVER_W*K['cocobolo ngang tho']*DMC_DRY
+    # nap che phang vanh AC-01, ma vanh AC-01 chi cach ni dem duoi nap hop chung nay:
+    AC_GAP       = Z_RIM - (Z_FLOOR + AC_H)              # khe tren vanh AC-01
+    COVER_PROUD  = AC_GAP - FELT_PAD                     # nap che duoc phep nho toi da
+
     # --- hoc nhac khay: khe luon ngon tay va mo moc len
     # Khe luon ngon CHI o hai khoang khay. Khoang phu kien KHONG co khe: hoc am
     # hai tay chiem bang X {GRIP_X0}..{GRIP_X1} va an sau 16 tu mat ngoai, con khe
@@ -544,9 +608,13 @@ def derive(wall_hinge=WALL_HINGE, bay=BAY, div=DIV, ac_bay=AC_BAY, handle=HANDLE
     v['khay quan']      = 4*(TRAY[0]*TRAY[1]*TRAY[2]
                              - TRAY_IN[0]*TRAY_IN[1]*TRAY_IN[2]
                              - 2*WELL_W*NOTCH_D*NOTCH_H)
+    # o xuc xac khoet BA cao do, khong phai mot hoc chu nhat sau AC_DICE_D
+    V_DICE = (AC_DICE_L*AC_W_IN*COVER_T
+              + 4*DICE_SOCK*DICE_SOCK*DICE_SOCK_D
+              + 4*DICE_SOCK*DICE_SLOT*DICE_SLOT_D)
     v['khay phu kien']  = (AC_L*AC_W_OUT*AC_H
                            - AC_JOKER[0]*AC_JOKER[1]*AC_JOKER[2]
-                           - AC_W_IN*AC_DICE_L*AC_DICE_D
+                           - V_DICE
                            - AC_W_IN*AC_AUX_L*AC_AUX_D)
     # khung nap: do doc canh mong (phan dac x 18..34) + do doc canh khe giua
     # + 2 do ngang ; tru ranh am song khoa va ranh om tam Nu
@@ -568,7 +636,8 @@ def derive(wall_hinge=WALL_HINGE, bay=BAY, div=DIV, ac_bay=AC_BAY, handle=HANDLE
     else:
         # hoc am khoet vao vach trai/phai (khong con go noi ra ngoai)
         v['vach trai/phai'] -= 2*GRIP_W*GRIP_A
-        v['nap che o xuc xac'] = (AC_W_IN + 2*COVER_LIP)*(2*DICE_SOCK + 3*DICE_RIB)*COVER_T
+        v['nap che o xuc xac'] = (COVER_L*COVER_W
+                                  - 2*math.pi*(COVER_NOTCH/2)**2/2)*COVER_T
         # hoc am nam cham khoet vao nap va vao vanh than (4 moi canh + 4 doi ung)
         n_mag = 2*MAG_N_LEAF
         v['khung nap'] -= n_mag*MAG[0]*MAG[1]*MAG_REC
@@ -588,6 +657,32 @@ def derive(wall_hinge=WALL_HINGE, bay=BAY, div=DIV, ac_bay=AC_BAY, handle=HANDLE
 
 globals().update(derive())
 MAT = {'tam Nu': 'Nu go do'}
+
+# ============================================================== O XUC XAC (AC-02)
+def dice_layout(d=None):
+    """Hinh hoc o xuc xac trong he toa do RIENG cua o, dung chung boi drawings.py,
+    render3d.py va draw_bx01.py de ba hinh khong bao gio lech nhau.
+
+      u : chay theo CHIEU DAI AC-01, 0 tai mat trong vach dau o
+      w : chay NGANG AC-01, 0 tai mat trong vach dai
+      z : do XUONG tu vanh AC-01 (so duong = sau)
+
+    Tra ve: recess (san dat nap che), socks (4 o), slots (4 khe luon ngon),
+    notch (2 hom ngon tren canh nap che, o dau u = 0).
+    """
+    d = d or _SELF
+    socks, slots = [], []
+    for iw, w0 in enumerate(d['DICE_W']):
+        for iu, u0 in enumerate(d['DICE_U']):
+            socks.append((u0, u0 + DICE_SOCK, w0, w0 + DICE_SOCK))
+        for su in d['DICE_SLOT_U']:
+            slots.append((su, su + DICE_SLOT, w0, w0 + DICE_SOCK))
+    return dict(
+        recess=(0.0, d['AC_DICE_L'], 0.0, d['AC_W_IN'], COVER_T),
+        socks=socks, sock_d=COVER_T + DICE_SOCK_D,
+        slots=slots, slot_d=COVER_T + d['DICE_SLOT_D'],
+        notch=[(wc, COVER_NOTCH/2) for wc in d['COVER_NOTCH_W']],
+        die=DIE, die_z=COVER_T + DICE_SOCK_D - DIE)      # cao do mat tren xuc xac
 
 # ============================================================== KHOI LUONG
 def mass_of(d, khay='cocobolo'):
@@ -705,7 +800,53 @@ def selfcheck(d=None):
     if HG_MODE == 'B' and d['STOP_H'] <= 0:       e.append("ong go an het be day nap, mat chan 180 do bien mat")
     if TRAY[1] + 2 > d['BAY']:                     e.append("khay quan khong lot khoang")
     if d['AC_W_IN'] < 2*TILE_MAX[0]:               e.append("long AC-01 khong du 4 quan du phong 2x2")
-    if d['AC_DICE_L'] < 2*TILE_MAX[0]:             e.append("o xuc xac ngan hon 2 hang o 18x18")
+    # ---------------------------------------------------------- o xuc xac + nap che
+    # Kiem THEO VI TRI, khong cong be day: san nap, khe luon ngon va o xuc xac la
+    # BA cao do khac nhau tren cung mot o, moi cai co rang buoc rieng.
+    if d['DICE_MARG_L'] < 0 or d['DICE_MARG_W'] < 0:
+        e.append(f"truong o xuc xac {d['DICE_FIELD_L']:.0f} x {d['DICE_FIELD_W']:.0f} "
+                 f"khong lot mieng hoc {d['AC_DICE_L']:.0f} x {d['AC_W_IN']:.0f}")
+    elif d['COVER_LEDGE'] < 3.0:
+        e.append(f"vanh do nap che chi con {d['COVER_LEDGE']:.1f} mm (< 3,0) — "
+                 f"nap tha khong co cho tua")
+    if DIE_HEAD_MIN > d['DIE_HEAD']:
+        e.append(f"o sau {DICE_SOCK_D:.1f} chi ho tren dau xuc xac {d['DIE_HEAD']:.1f} mm "
+                 f"(< {DIE_HEAD_MIN:.1f} toi thieu) — nap che dong khong duoc")
+    if d['DICE_R'] > d['DICE_R_MAX']:
+        e.append(f"dao phay O{DICE_MILL:.0f} cho goc bo R{d['DICE_R']:.1f} > "
+                 f"R{d['DICE_R_MAX']:.2f} — quan xuc xac kenh goc o")
+    if DICE_SLOT < FING_T_TIP + 0.5:
+        e.append(f"khe luon ngon canh o rong {DICE_SLOT:.0f} < dau ngon "
+                 f"{FING_T_TIP:.0f} + 0,5")
+    if DICE_SLOT >= DIE:
+        e.append(f"khe luon ngon {DICE_SLOT:.0f} >= canh xuc xac {DIE:.0f} — "
+                 f"xuc xac tut sang khe")
+    if DICE_STEP <= d['DIE_HEAD']:
+        e.append(f"bac khe luon ngon cao {DICE_STEP:.0f} <= khe tren dau xuc xac "
+                 f"{d['DIE_HEAD']:.1f} — xuc xac truot len bac vao khe")
+    if d['DIE_GRIP'] < 5.0:
+        e.append(f"ngon tay chi cham duoc {d['DIE_GRIP']:.1f} mm suon xuc xac (< 5,0)")
+    if d['AC_DICE_FLR'] < 6.0:
+        e.append(f"day AC-01 duoi o xuc xac con {d['AC_DICE_FLR']:.1f} mm (< 6,0)")
+    if d['COVER_L'] >= d['AC_DICE_L'] or d['COVER_W'] >= d['AC_W_IN']:
+        e.append("nap che khong nho hon mieng hoc — khong tha vao duoc")
+    if COVER_CLR < d['COVER_MOVE_DRY']:
+        e.append(f"khe lap nap che {COVER_CLR:.2f} < go no qua do "
+                 f"{d['COVER_MOVE_DRY']:.2f} mm o bien thien {DMC_DRY:.0f} %")
+    if d['COVER_PROUD'] <= 0.0:
+        e.append(f"vanh AC-01 da cham ni dem duoi nap hop ({d['AC_GAP']:.1f} - "
+                 f"{FELT_PAD:.1f}) — nap che khong con cho de phang")
+    if d['COVER_REACH'] < 3.0:
+        e.append(f"hom ngon nap che voi qua vanh do {d['COVER_REACH']:.1f} mm (< 3,0) — "
+                 f"khong luon duoc dau ngon xuong khe")
+    if COVER_NOTCH/2 > d['DICE_MARG_L'] + DICE_SLOT:
+        e.append("hom ngon nap che thoc qua khe luon ngon, vao den o xuc xac")
+    if COVER_NOTCH > DICE_SOCK:
+        e.append(f"hom ngon nap che O{COVER_NOTCH:.0f} rong hon khe luon ngon "
+                 f"{DICE_SOCK:.0f} — mep hom khong tua vao dau")
+    if d['COVER_LIG_MIN'] < COVER_LIG:
+        e.append(f"canh nap che canh hom ngon chi con {d['COVER_LIG_MIN']:.1f} mm "
+                 f"(< {COVER_LIG:.1f} toi thieu)")
     if SPINE_W/2 + d['X_SEAM'] > d['W']:           e.append("song khoa vuot ra ngoai hop")
     # ranh om tam nam o mep trong do doc; cho mong nhat la mep trong do doc
     # canh khe giua, vi nap vat mong dan ve phia do.

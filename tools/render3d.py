@@ -246,23 +246,38 @@ def add_ac(sc, tiles=True):
                 sc.box(XS-tw_/2, XS+tw_/2, Y, Y+tl_,
                        zt-B.AC_JOKER[2]+B.FELT+lay*(th_+0.4),
                        zt-B.AC_JOKER[2]+B.FELT+lay*(th_+0.4)+th_, COL['tile'], COL['tile_e'])
-    # o xuc xac
+    # --- o xuc xac (to AC-02). Ba cao do: san dat nap che, khe luon ngon, o.
+    # Dung box_spec.dice_layout() de hinh 3D, to AC-01/AC-02 va hinh BX-01 khong
+    # bao gio lech nhau. He (u,w) cua o: u chay theo Y, w chay theo X.
     dy0 = jy1 + B.AC_WALL; dy1 = dy0 + S['AC_DICE_L']
-    sc.box(xi0, xi1, dy0, dy1, zt-B.AC_DICE_D, zt-B.AC_DICE_D+2, C, COL['cut'])
-    f = 2*B.DICE_SOCK + 3*B.DICE_RIB
-    for i in range(2):
-        for j in range(2):
-            sx = XS - f/2 + B.DICE_RIB + i*(B.DICE_SOCK+B.DICE_RIB)
-            sy = (dy0+dy1)/2 - f/2 + B.DICE_RIB + j*(B.DICE_SOCK+B.DICE_RIB)
-            sc.box(sx+3, sx+B.DICE_SOCK-3, sy+3, sy+B.DICE_SOCK-3,
-                   zt-B.DICE_SOCK_D, zt-B.DICE_SOCK_D+16, COL['tile'], COL['tile_e'])
-    # vach giua cac o xuc xac
-    for i in range(3):
-        sx = XS - f/2 + i*(B.DICE_SOCK+B.DICE_RIB)
-        sc.box(sx, sx+B.DICE_RIB, dy0, dy1, zt-B.DICE_SOCK_D, zt, C, COL['cut'])
-    for j in range(3):
-        sy = (dy0+dy1)/2 - f/2 + j*(B.DICE_SOCK+B.DICE_RIB)
-        sc.box(xi0, xi1, sy, sy+B.DICE_RIB, zt-B.DICE_SOCK_D, zt, C, COL['cut'])
+    DL = B.dice_layout(S)
+    U = lambda u: dy0 + u
+    Wx = lambda w: xi0 + w
+    z_flr = zt - DL['sock_d']                 # san o (cao do thap nhat)
+    z_rec = zt - B.COVER_T                    # san dat nap che
+    z_slt = zt - DL['slot_d']                 # san khe luon ngon
+    # tam go duoi day o
+    sc.box(xi0, xi1, dy0, dy1, zt - B.AC_JOKER[2], z_flr, C, COL['cut'])
+    mw, ml = S['DICE_MARG_W'], S['DICE_MARG_L']
+    # hai dai go doc hai ben (w) — nguyen khoi tu san o len san dat nap
+    sc.box(xi0, Wx(mw), dy0, dy1, z_flr, z_rec, C, COL['cut'])
+    sc.box(Wx(S['AC_W_IN'] - mw), xi1, dy0, dy1, z_flr, z_rec, C, COL['cut'])
+    # vach giua hai cot o
+    w_mid0 = S['DICE_W'][0] + B.DICE_SOCK
+    sc.box(Wx(w_mid0), Wx(w_mid0 + B.DICE_RIB), dy0, dy1, z_flr, z_rec, C, COL['cut'])
+    for w0 in S['DICE_W']:                    # trong moi cot o
+        a, b = Wx(w0), Wx(w0 + B.DICE_SOCK)
+        sc.box(a, b, dy0, U(ml), z_flr, z_rec, C, COL['cut'])                 # vanh dau
+        sc.box(a, b, U(S['AC_DICE_L'] - ml), dy1, z_flr, z_rec, C, COL['cut'])# vanh cuoi
+        u_mid = S['DICE_U'][0] + B.DICE_SOCK
+        sc.box(a, b, U(u_mid), U(u_mid + B.DICE_RIB), z_flr, z_rec, C, COL['cut'])
+        for su, su1, _, _ in [x for x in DL['slots'] if abs(x[2] - w0) < 1e-9]:
+            sc.box(a, b, U(su), U(su1), z_flr, z_slt, C, COL['cut'])          # bac khe
+    if tiles:                                  # 4 quan xuc xac nam trong o
+        for u0, u1, w0, w1 in DL['socks']:
+            c_u, c_w = (u0+u1)/2, (w0+w1)/2
+            sc.box(Wx(c_w - B.DIE/2), Wx(c_w + B.DIE/2), U(c_u - B.DIE/2), U(c_u + B.DIE/2),
+                   z_flr, z_flr + B.DIE, COL['tile'], COL['tile_e'])
     # hoc 4 quan du phong
     ay0 = dy1 + B.AC_WALL; ay1 = ay0 + B.AC_AUX_L
     sc.box(xi0, xi1, ay0, ay1, zt-B.AC_AUX_D, zt-B.AC_AUX_D+B.FELT, COL['felt'])
@@ -274,7 +289,8 @@ def add_ac(sc, tiles=True):
                        ay0+3+j*(tl_+1), ay0+3+j*(tl_+1)+tl_,
                        zt-B.AC_AUX_D+B.FELT, zt-B.AC_AUX_D+B.FELT+th_,
                        COL['tile'], COL['tile_e'])
-    # nap che o xuc xac (dat canh, de nhin thay)
+    # nap che o xuc xac KHONG ve o hinh noi that: no che het bon o. Kich thuoc
+    # va hom ngon xem to AC-02.
     return (xi0, xi1, dy0, dy1)
 
 def leaf_polys(th, right):
@@ -402,7 +418,8 @@ def v3(sc):
     add_ac(sc)
 shot('fig12c-noi-that', 'HÌNH 12c — Lòng hộp, tháo nắp',
      f'4 khay quân 3 × 12 (2 chồng mỗi khoang) + AC-01: rãnh Joker 8 quân, '
-     f'4 ổ xúc xắc {B.DICE_SOCK:.0f} × {B.DICE_SOCK:.0f}, hốc 4 quân dự phòng.',
+     f'4 ổ xúc xắc {B.DICE_SOCK:.0f} × {B.DICE_SOCK:.0f} (nắp che tháo ra), '
+     f'hốc 4 quân dự phòng.',
      v3, eye=(-70, -360, 520), target=(CX, CY, 20), focal=1250)
 
 # 4 — mat cat doc

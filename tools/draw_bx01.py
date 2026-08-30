@@ -57,13 +57,11 @@ dy0 = jy0+B.AC_JOKER[1]+B.AC_WALL
 b.append(v.rect(acx0, acx1, dy0, dy0+S['AC_DICE_L'], '#9c8055', CUT, 0.8))
 ay0 = dy0+S['AC_DICE_L']+B.AC_WALL
 b.append(v.rect(acx0, acx1, ay0, ay0+B.AC_AUX_L, '#9c8055', CUT, 0.8))
-f = 2*B.DICE_SOCK+3*B.DICE_RIB
-cy = dy0+S['AC_DICE_L']/2
-for i in (0, 1):
-    for j in (0, 1):
-        sx = XS - f/2 + B.DICE_RIB + i*(B.DICE_SOCK+B.DICE_RIB)
-        sy = cy - f/2 + B.DICE_RIB + j*(B.DICE_SOCK+B.DICE_RIB)
-        b.append(v.rect(sx, sx+B.DICE_SOCK, sy, sy+B.DICE_SOCK, '#6b5638', CUT, 0.7))
+DL = B.dice_layout(S)                       # u theo Y, w theo X — xem to AC-02
+for u0, u1, w0, w1 in DL['socks']:
+    b.append(v.rect(acx0+w0, acx0+w1, dy0+u0, dy0+u1, '#6b5638', CUT, 0.7))
+for u0, u1, w0, w1 in DL['slots']:          # khe luon dau ngon canh moi o
+    b.append(v.rect(acx0+w0, acx0+w1, dy0+u0, dy0+u1, '#87703f', CUT, 0.7))
 jmid = jy0+B.AC_JOKER[1]/2
 for sgn in (-1, 1):
     xc = XS + sgn*B.AC_JOKER[0]/2
@@ -136,8 +134,9 @@ ITEMS = [
   f'Khoet xuyen mat dau khay {B.WELL_W:.0f} x cao {B.NOTCH_H:.0f} — mo moc ngon.'),
  (6, (XS+B.AC_JOKER[0]/2-6, jmid), 'T',
   f'Hom ngon O{B.SCAL_D:.0f} sau {B.SCAL_DEP:.0f}, hai ben ranh Joker, khoet suot chieu sau.'),
- (7, (XS+f/2, cy), 'B',
-  f'4 o xuc xac {B.DICE_SOCK:.0f} x {B.DICE_SOCK:.0f} sau {B.DICE_SOCK_D:.0f}, vach {B.DICE_RIB:.0f}.'),
+ (7, (acx0 + S['DICE_W'][1] + B.DICE_SOCK, dy0 + S['AC_DICE_L']/2), 'B',
+  f'4 o xuc xac {B.DICE_SOCK:.0f} x {B.DICE_SOCK:.0f} sau {B.DICE_SOCK_D:.0f} + khe luon '
+  f'ngon {B.DICE_SLOT:.0f}; nap che tha {S["COVER_L"]:.1f} x {S["COVER_W"]:.1f}.'),
  (8, (x_div[0][1], YB*0.78), 'T',
   f'Vach ngan {DIV:.0f}, cao toi vanh tai chinh vi tri no.'),
  (9, (WH/2, kn[-1][0]+30), 'L',

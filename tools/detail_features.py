@@ -128,39 +128,99 @@ print(f"     Chong xoc khay thay bang dem ni {B.FELT_PAD} mm dan duoi nap tren m
 print(f"     Rut AC-01 ra: khe luon ngon nhu khay quan (muc 1).")
 
 # ==========================================================================
-hr("4. NAP CHE O XUC XAC")
-n, sock, rib = 2, B.DICE_SOCK, B.DICE_RIB
-field = n*sock + (n+1)*rib
-print(f"  O xuc xac: {n}x{n} o vuong {sock:.0f} x {sock:.0f} sau {B.DICE_SOCK_D:.0f},"
-      f" vach {rib:.0f}")
-print(f"  Truong o: {field:.0f} x {field:.0f}  trong hoc {S['AC_DICE_L']:.0f} (dai)"
-      f" x {S['AC_W_IN']:.0f} (rong)")
-slide_room = S['AC_DICE_L'] - field
-print(f"  Cho trong con lai theo chieu dai hoc: {slide_room:.0f} mm\n")
-print(f"  'Nap TRUOT' khong lam duoc, va day la ly do bang so:")
-print(f"   - Nap phai truot di it nhat {field:.0f} mm de lo het hai hang o.")
-print(f"   - Cho de nap truot vao chi co {slide_room:.0f} mm.")
-print(f"   - Muon du cho thi hoc xuc xac phai dai {field*2:.0f}, tuc chuoi AC-01 phai")
-print(f"     dai them {field*2-S['AC_DICE_L']:.0f} mm — khong con cho, chuoi da khep"
-      f" ve {S['AC_L']:.0f}.")
-print(f"   - Truot ngang cung khong duoc: cung can {field:.0f} mm hanh trinh, ma theo")
-print(f"     phuong ngang chi con {S['AC_W_IN']-field:.0f} mm cho trong.")
-cov_w, cov_l = S['AC_W_IN'] + 2*B.COVER_LIP, field
-print(f"\n  => NAP THA (drop-in), khong truot:")
-for a, b in [("Kich thuoc", f"{cov_w:.0f} x {cov_l:.0f} x {B.COVER_T:.0f} cocobolo"),
-             ("Ha bac", f"{B.COVER_LIP:.0f} mm quanh mieng hoc, sau {B.COVER_T:.0f}"
-                        f" -> mat nap PHANG voi vanh AC-01"),
-             ("Nhac nap", f"hom ban nguyet O20 o mot dau, khoet suot be day"),
-             ("Chong xe dich", f"nap tua bon canh vao bac; dem ni {B.FELT_PAD} duoi nap hop"
-                               f" ep xuong"),
-             ("Tho go", f"chay theo canh {cov_l:.0f} — mieng go {cov_w:.0f} x {cov_l:.0f}"
-                        f" x {B.COVER_T:.0f} la mieng nho, phai xe theo tho dai")]:
-    print(f"   {a:16s}: {b}")
-print(f"\n  Voi phuong an C hop luon duoc be NGANG, nen nap tha la du:")
-print(f"  xuc xac chi roi khoi o khi hop bi lat nghieng — luc do ca hai canh nap")
-print(f"  cung bung ra (xem tools/handle_option_c.py muc 5), nen nap che khong phai")
-print(f"  la tuyen phong thu cuoi cung. No la de xuc xac khong nhay lach cach khi di.")
-d_die = 16.0
-print(f"\n  Kiem o: xuc xac canh {d_die:.0f} trong o {sock:.0f} sau {B.DICE_SOCK_D:.0f}")
-print(f"   khe {sock-d_die:.0f} mm moi chieu; xuc xac nho len {d_die-B.DICE_SOCK_D:.0f} mm")
-print(f"   -> nap tha o tren giu lai. Moi o co hom ngon O10 sau 3 de lay xuc xac.")
+hr("4. O XUC XAC VA NAP CHE  (to AC-02)")
+DL = B.dice_layout(S)
+sock, rib = B.DICE_SOCK, B.DICE_RIB
+field_l, field_w = S['DICE_FIELD_L'], S['DICE_FIELD_W']
+print(f"  Mieng hoc: {S['AC_DICE_L']:.0f} (dai) x {S['AC_W_IN']:.0f} (rong), tren khoi dac AC-01.\n")
+
+print("  4.1  BA LOI CUA HINH HOC CU — bat duoc khi ngoi ve to AC-02")
+old_cov_l = 2*sock + 3*rib
+print(f"   (1) Nap che cu dai {old_cov_l:.0f} = TRUONG O, khong phai MIENG HOC "
+      f"{S['AC_DICE_L']:.0f}.")
+print(f"       Hai dau nap cach thanh hoc {(S['AC_DICE_L']-old_cov_l)/2:.0f} mm — "
+      f"khong tua vao gi, nap roi tot xuong.")
+print(f"   (2) O cu sau {B.DICE_SOCK_D:.0f} do TU VANH AC-01, ma nap che an mat "
+      f"{B.COVER_T:.0f} tu tren:")
+print(f"       cho con lai duoi nap = {B.DICE_SOCK_D - B.COVER_T:.0f} < xuc xac "
+      f"{B.DIE:.0f}. Dong nap la ep len xuc xac.")
+print(f"   (3) Khong co chi tiet nao lay xuc xac ra. O {sock:.0f} x {sock:.0f} sau "
+      f"{B.DICE_SOCK_D:.0f}, quan {B.DIE:.0f},")
+print(f"       khe {(sock-B.DIE)/2:.1f} mm moi ben — ngon tay khong luon vao duoc, "
+      f"khong co gi de bau.\n")
+
+print("  4.2  GIAI LAI: BA CAO DO PHAY TU MOT MAT CHUAN LA VANH AC-01")
+for a, b_ in [("San dat nap che",
+               f"sau {B.COVER_T:.0f}, phu HET {S['AC_DICE_L']:.0f} x {S['AC_W_IN']:.0f}"
+               f" — khong ha bac vao thanh vach nao"),
+              ("Khe luon dau ngon",
+               f"sau {DL['slot_d']:.0f} tu vanh, {B.DICE_SLOT:.0f} x {sock:.0f}, "
+               f"mot khe canh moi o"),
+              ("O xuc xac",
+               f"sau {DL['sock_d']:.0f} tu vanh (= {B.DICE_SOCK_D:.0f} ke tu san nap), "
+               f"4 o {sock:.0f} x {sock:.0f}")]:
+    print(f"   {a:20s}: {b_}")
+print(f"   Chuoi dai : {S['DICE_MARG_L']:.0f} + {B.DICE_SLOT:.0f} + {sock:.0f} + {rib:.0f}"
+      f" + {sock:.0f} + {B.DICE_SLOT:.0f} + {S['DICE_MARG_L']:.0f} = {S['AC_DICE_L']:.0f}")
+print(f"   Chuoi ngang: {S['DICE_MARG_W']:.1f} + {sock:.0f} + {rib:.0f} + {sock:.0f}"
+      f" + {S['DICE_MARG_W']:.1f} = {S['AC_W_IN']:.0f}")
+print(f"   Vanh do nap che hep nhat: {S['COVER_LEDGE']:.1f} mm (bon canh deu co cho tua)\n")
+
+print("  4.3  VI SAO CO KHE LUON NGON — va vi sao xuc xac khong tut sang do")
+print(f"   Dau ngon tay day {B.FING_T_TIP:.0f} mm (cung tri so dung cho hoc am hai tay).")
+print(f"   Khe {B.DICE_SLOT:.0f} mm nuot duoc dau ngon; ngon ap vao suon quan roi "
+      f"nhac len.")
+print(f"   San khe cao hon san o {B.DICE_STEP:.0f} mm. Quan {B.DIE:.0f} chi ho tren dau "
+      f"{S['DIE_HEAD']:.0f} mm duoi nap che,")
+print(f"   nen no khong the leo qua bac {B.DICE_STEP:.0f} de tut sang khe. Va khe "
+      f"{B.DICE_SLOT:.0f} < canh quan {B.DIE:.0f}:")
+print(f"   du co bo nap ra lac manh, quan cung khong nam gon trong khe duoc.")
+print(f"   Ngon tay cham duoc {S['DIE_GRIP']:.0f} mm chieu cao suon quan.\n")
+
+print("  4.4  'NAP TRUOT' VAN KHONG LAM DUOC — ly do bang so, giu nguyen")
+slide_room = S['AC_DICE_L'] - field_l
+print(f"   Nap phai truot {field_l:.0f} mm moi lo het hai hang o; cho de nap truot "
+      f"vao chi {slide_room:.0f} mm.")
+print(f"   Truot ngang can {field_w:.0f} mm ma chi con {S['AC_W_IN']-field_w:.0f} mm.")
+print(f"   => NAP THA, {S['COVER_L']:.1f} x {S['COVER_W']:.1f} x {B.COVER_T:.0f} cocobolo.\n")
+
+print("  4.5  NAP THA — kich thuoc, khe lap, hom ngon")
+for a, b_ in [("Kich thuoc",
+               f"{S['COVER_L']:.1f} x {S['COVER_W']:.1f} x {B.COVER_T:.0f}"
+               f"  (mieng hoc tru khe lap {B.COVER_CLR:.1f})"),
+              ("Mat tren", "ngang bang vanh AC-01; san phay sau dung be day nap"),
+              ("Hom ngon", f"2 hom nua tron O{B.COVER_NOTCH:.0f} tren MOT canh ngan, "
+                           f"dat dung tren hai khe luon ngon"),
+              ("  voi qua vanh", f"{S['COVER_REACH']:.0f} mm — dau ngon xuong toi khe roi "
+                                 f"moc nguoc len mep nap"),
+              ("  go con lai", f"giua hai hom {S['COVER_LIG_MID']:.0f}, hai goc "
+                               f"{S['COVER_LIG_END']:.2f}"),
+              ("Tho go", f"chay theo canh {S['COVER_L']:.1f} — CUNG chieu tho AC-01")]:
+    print(f"   {a:16s}: {b_}")
+print()
+print(f"   Khe lap {B.COVER_CLR:.1f} mm khong phai de gian no o trang thai can bang:")
+print(f"   nap che va AC-01 cung loai go, cung chieu tho, nen o can bang hai ben no")
+print(f"   bang nhau va khe khong doi. Khe la de chiu QUA DO — mieng go day "
+      f"{B.COVER_T:.0f} mm can bang")
+print(f"   truoc khoi {B.AC_H:.0f} mm. Bien do qua do: {S['COVER_MOVE']:.2f} mm o "
+      f"{B.DMC_DES:.0f} %, {S['COVER_MOVE_DRY']:.2f} mm o {B.DMC_DRY:.0f} %.")
+print(f"   Neu xe nap NGANG THO (tho chay theo canh {S['COVER_W']:.1f}) thi bien do "
+      f"thanh {S['COVER_L']*B.K['cocobolo ngang tho']*B.DMC_DRY:.2f} mm > khe.\n")
+
+print("  4.6  DAO PHAY — rang buoc it ai nghi toi")
+print(f"   O vuong {sock:.0f} phay bang dao tru thi bon goc bo ban kinh = ban kinh dao.")
+print(f"   Quan xuc xac canh {B.DIE:.0f} tha vao o {sock:.0f}: goc quan cach vach o "
+      f"{(sock-B.DIE)/2:.1f} mm.")
+print(f"   Ban kinh bo LON NHAT ma goc quan van lot: R{S['DICE_R_MAX']:.2f}.")
+print(f"   => dao O{B.DICE_MILL:.0f} (bo R{S['DICE_R']:.1f}) DUOC; dao O8 (bo R4) thi "
+      f"quan kenh goc, khong nam phang.\n")
+
+print("  4.7  KIEM CHIEU CAO — nap che khong duoc nho len")
+print(f"   Vanh AC-01 o Z{S['Z_FLOOR']+B.AC_H:.0f}; vanh than o Z{S['Z_RIM']:.0f}; "
+      f"khe {S['AC_GAP']:.0f} mm.")
+print(f"   Ni dem duoi nap hop day {B.FELT_PAD:.1f} -> nap che duoc phep nho toi da "
+      f"{S['COVER_PROUD']:.1f} mm.")
+print(f"   Vay dung sai phai MOT CHIEU: san phay sau {B.COVER_T:.0f} +0,15/0 va nap che "
+      f"day {B.COVER_T:.0f} 0/-0,10")
+print(f"   -> nap luon nam THAP hon vanh 0..0,25 mm, khong bao gio nho len.")
+print(f"   Day AC-01 con lai duoi o: {S['AC_DICE_FLR']:.0f} mm.")

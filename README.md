@@ -3,7 +3,7 @@
 Hộp gỗ đựng bộ Mahjong 152 quân (BURLORA), tham chiếu bộ Mahjong của Hermès.
 Khởi đầu là một bản review độc lập cho bản vẽ sản xuất **Rev B**; nay là hồ sơ thiết kế đang tiến hoá.
 
-**Phủ bì đã chốt: 388.2 × 350 × 62 mm · 6.50 kg** (khay lõi ổn định) hoặc **7.12 kg** (khay cocobolo).
+**Phủ bì đã chốt: 388.2 × 350 × 62 mm · 6.52 kg** (khay lõi ổn định) hoặc **7.15 kg** (khay cocobolo).
 Ống gỗ bản lề Ø10.2 nằm **đúng trên arris**, nhô ra 5.1 mm mỗi bên — **không hạ bậc**.
 
 ## Đọc theo thứ tự này
@@ -41,12 +41,13 @@ Dựng bằng `tools/render3d.py` (bộ dựng hình riêng, không thư viện 
 
 ```
 python3 tools/box_spec.py          # đặc tả đã chốt: hình học, khối lượng, tải, tự kiểm
+python3 tools/break_selfcheck.py   # PHÁ THỬ lưới tự kiểm: mỗi điều kiện phải nổ được
 python3 tools/width_options.py     # so sánh ba phương án bề rộng
 python3 tools/handle_option_c.py   # phương án xách C, so với A
 python3 tools/hinge_kinematics.py  # trục xoay ở đâu, quét va chạm, mặt chặn 180°
 python3 tools/hinge_concealed.py   # bản lề chìm hẳn có được không (không) và vì sao
 python3 tools/lid_solid_calc.py    # nắp gỗ đặc: giãn nở, khe ráp giữa, lip rãnh ôm tấm
-python3 tools/detail_features.py   # nhấc khay, hõm Joker, đỡ mép nắp, nắp che xúc xắc
+python3 tools/detail_features.py   # nhấc khay, hõm Joker, đỡ mép nắp, ổ xúc xắc + nắp che
 python3 tools/lid_latch.py         # khóa nắp: động học, độ ẩm, tải, nam châm vs brass
 python3 tools/cites_check.py       # CITES: điều đã tra được và mức tin cậy từng dòng
 python3 tools/check_dimensions.py  # kiểm bản vẽ Rev B + đối chiếu với đặc tả hiện hành
@@ -72,12 +73,12 @@ python3 tools/draw_lid.py      # sinh figs/fig6, fig7
 python3 tools/draw_handle.py   # sinh figs/fig1..fig5
 ./tools/render_figs.sh         # SVG -> PNG (cửa sổ chụp cao hơn SVG rồi crop)
 ./tools/build_pdf.sh           # docs/*.md -> build/*.html -> build/*.pdf
-./tools/build_drawings.sh      # BỘ BẢN VẼ SẢN XUẤT -> build/BAN-VE-SAN-XUAT.pdf (7 tờ A3)
+./tools/build_drawings.sh      # BỘ BẢN VẼ SẢN XUẤT -> build/BAN-VE-SAN-XUAT.pdf (8 tờ A3)
 ```
 
 ## Bộ bản vẽ sản xuất
 
-`build/BAN-VE-SAN-XUAT.pdf` — 7 tờ A3 ngang, có khung tên, sinh từ `tools/drawings.py`.
+`build/BAN-VE-SAN-XUAT.pdf` — 8 tờ A3 ngang, có khung tên, sinh từ `tools/drawings.py`.
 
 | Tờ | Nội dung | Tỉ lệ |
 |---|---|---|
@@ -87,6 +88,7 @@ python3 tools/draw_handle.py   # sinh figs/fig1..fig5
 | HD-01 | Cánh nắp — khung + tấm Nu nâng | 1:2 / 1:1 / 4:1 |
 | TR-01 | Khay quân (4 chiếc) | 1:2 / 1:1 |
 | AC-01 | Khay phụ kiện | 1:2 |
+| AC-02 | Ổ xúc xắc và nắp che — **ba cao độ**, khe luồn ngón, dao phay | 2:1 / 1:1 / 3:1 |
 | QA-01 | Dung sai, đặc tính kiểm bắt buộc, thứ tự lắp, bảng kiểm xuất xưởng | — |
 
 Mối ghép góc thân được chốt trong vòng này (trước đó **không tài liệu nào định nghĩa**):
