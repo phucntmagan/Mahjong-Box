@@ -44,6 +44,7 @@ python3 tools/box_spec.py          # đặc tả đã chốt: hình học, khố
 python3 tools/width_options.py     # so sánh ba phương án bề rộng
 python3 tools/handle_option_c.py   # phương án xách C, so với A
 python3 tools/hinge_kinematics.py  # trục xoay ở đâu, quét va chạm, mặt chặn 180°
+python3 tools/hinge_concealed.py   # bản lề chìm hẳn có được không (không) và vì sao
 python3 tools/lid_solid_calc.py    # nắp gỗ đặc: giãn nở, khe ráp giữa, lip rãnh ôm tấm
 python3 tools/detail_features.py   # nhấc khay, hõm Joker, đỡ mép nắp, nắp che xúc xắc
 python3 tools/lid_latch.py         # khóa nắp: động học, độ ẩm, tải, nam châm vs brass
@@ -65,6 +66,7 @@ python3 tools/draw_bx01.py     # sinh figs/fig9, fig10
 python3 tools/draw_latch.py    # sinh figs/fig11
 python3 tools/render3d.py      # sinh figs/fig12a..e (hình 3D)
 python3 tools/draw_hinge.py    # sinh figs/fig8
+python3 tools/draw_concealed.py # sinh figs/fig13 (bản lề chìm)
 python3 tools/draw_lid.py      # sinh figs/fig6, fig7
 python3 tools/draw_handle.py   # sinh figs/fig1..fig5
 ./tools/render_figs.sh         # SVG -> PNG (cửa sổ chụp cao hơn SVG rồi crop)

@@ -93,6 +93,74 @@ hệ số an toàn khi xách vẫn **23×**.
 
 ![Hành trình 0→180° và hai họ nghiệm: trục trong vật liệu ép ống Ø15, trục trên mặt phẳng ngoài cho ống Ø12,2.](figs/fig8-dong-hoc-ban-le.png)
 
+## Bản lề chìm hẳn trong gỗ — đã nghiên cứu, KHÔNG được
+
+Đề xuất: đẩy trục sâu vào trong vách, để lại một lớp **da gỗ** phủ ngoài, thì nhìn từ ngoài sẽ không
+thấy bản lề. Tính toán: `tools/hinge_concealed.py`.
+
+**Kết quả: không quay được.** Va chạm ở **0,25°** — cánh gần như không nhúc nhích.
+
+| trục lùi vào | sâu dưới vành | da gỗ còn | chạm ở góc |
+|---:|---:|---:|---:|
+| 8,1 | 6,1 | 2,0 | **0,25°** |
+| 11,0 | 9,0 | 4,9 | **0,25°** |
+| 13,0 | 11,0 | 6,9 | **0,25°** |
+
+Điểm phạm lỗi luôn là một điểm trên **mặt dưới của nắp**, nằm phía ngoài trục.
+
+**Lý do gốc.** Cánh nắp là vật rắn quay quanh **một** trục. Vận tốc của một điểm cách trục (dx, dz) là
+(−dz, dx); điểm nằm **phía ngoài** trục (dx < 0) có vận tốc z âm, tức **đi xuống**. Cả dải mặt dưới nắp
+từ x = 0 đến x = trục đều nằm ngoài trục, nên cả dải đó **cày xuống dưới vành ngay từ độ đầu tiên**:
+
+| điểm mặt dưới | thụt sâu nhất tới |
+|---:|---:|
+| x = 0,0 | Z23,8 |
+| x = 5,0 | Z27,2 |
+| x = 10,9 | Z29,0 |
+
+Vách phải được khoét rỗng toàn bộ dải đó — mà dải đó **bắt đầu từ x = 0**, tức nó mở thẳng ra mặt ngoài.
+Lớp da gỗ bị cày thủng ngay.
+
+### Định luật
+
+> **Bề rộng khe hở bắt buộc trên mặt ngoài = độ lùi vào của trục.**
+> **Phần ống nhô ra ngoài = max(0 , R − độ lùi vào).**
+
+Đây không phải hai bài toán mà là **một**: đẩy trục vào trong bao nhiêu thì ống bớt nhô ra bấy nhiêu
+**và** khe hở rộng ra đúng bấy nhiêu.
+
+| trục lùi vào | ống nhô ra | khe hở mặt ngoài | tổng nhìn thấy | |
+|---:|---:|---:|---:|---|
+| 0,0 | 6,1 | 0,0 | **6,1** | họ B — vách và nắp phẳng liệt |
+| 2,0 | 4,1 | 2,0 | **6,1** | |
+| 4,0 | 2,1 | 4,0 | **6,1** | |
+| **6,1** | **0,0** | **6,1** | **6,1** | **họ C — đang dùng** |
+| 8,0 | 0,0 | 8,0 | 8,0 | khe rộng hơn cả ống — tệ hơn |
+| 11,0 | 0,0 | 11,0 | 11,0 | tệ hơn nữa |
+
+Cột "tổng nhìn thấy" **không bao giờ nhỏ hơn bán kính ống**. Đẩy trục vào chỉ **đổi chỗ** cái nhìn thấy
+từ "nhô ra" sang "khe hở". Cấu hình đang chốt (trục lùi vào đúng R) **đã là tối ưu** của vế "không nhô ra".
+
+![Vùng gỗ phải bốc đi khi trục chìm, và bảng đánh đổi: tổng nhìn thấy luôn bằng bán kính ống.](figs/fig13-ban-le-chim.png)
+
+### Đòn bẩy thật sự còn lại
+
+Vì tổng nhìn thấy = R, muốn thấy ít hơn thì **chỉ còn cách làm ống nhỏ lại**. R = (chốt + khe)/2 + thành gỗ.
+
+| chốt | thành gỗ | ống gỗ | cắt chốt | xé dọc | rủi ro khoan lỗ sâu 160 |
+|---:|---:|---:|---:|---:|---|
+| Ø6 | 3,0 | **Ø12,2** | 344× | 864× | an toàn |
+| Ø5 | 3,0 | Ø11,2 | 239× | 864× | an toàn |
+| Ø5 | 2,5 | **Ø10,2** | 239× | 720× | chấp nhận được |
+| Ø4 | 2,5 | Ø9,2 | 153× | 720× | chấp nhận được |
+| Ø4 | 2,0 | Ø8,2 | 153× | 576× | **NGUY** — mũi khoan trôi sẽ nứt ra ngoài |
+
+Độ bền **không** phải ràng buộc ở bất kỳ dòng nào — hệ số hàng trăm lần. Ràng buộc là **khoan**: lỗ sâu
+160 mm xuyên 7 mắt mộng xen kẽ trên cocobolo nhiều dầu, mũi khoan trôi 0,1–0,2 mm là bình thường.
+
+**Đặc tính kiểm phải làm TRƯỚC khi chốt:** khoan thử và đo độ trôi. Nếu ≤ 0,10 mm thì hạ được xuống chốt
+Ø5 + thành 2,5 → ống **Ø10,2**, dải nhìn thấy bớt 2,0 mm.
+
 ## Cánh mở ra nằm ở đâu
 
 | Điểm | Đóng X | Đóng Z | Mở 180° X | Mở 180° Z |
