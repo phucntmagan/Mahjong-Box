@@ -380,12 +380,18 @@ def add_lid(sc, th=0.0, leaves=(True, True), show_mag=True, felt=False):
             if is_body: continue
             sc.prism_y(circle_xz(c[0], c[1], RK), y0, y0 + B.KN_LEN,
                        COL['coco'], COL['cut'])
-        # dem ni duoi nap, tren moi khoang — chi ve khi nap dong
+        # dem ni duoi nap: MIENG ROI, khong phai tam trai kin. Trai kin thi luc nen
+        # ni vuot luc hut nam cham va nap khong dong duoc — xem box_spec muc DEM NI.
         if abs(th) < 1e-9 and felt:
-            for xa, xb in [X_BAY[0], X_BAY[1], X_AC]:
-                a, b = max(xa, 0 if not right else XS), min(xb, XS if not right else W)
-                if b - a < 1e-6: continue
-                sc.box(a, b, FB, YB-FB, Z_RIM - B.FELT_PAD, Z_RIM, COL['felt'])
+            pw, pl = B.FELT_PAD_SZ
+            for xc in B.FELT_PAD_X:
+                if (xc < XS) != (not right): continue
+                for yc in B.FELT_PAD_Y:
+                    # ve o trang thai DA NEN: ni day B.FELT_PAD tu do, lap vao thi
+                    # bi ep xuong dung khe B.CLR_Z. Ve be day tu do se dam vao vanh
+                    # khay va hinh thanh vo nghia.
+                    sc.box(xc - pw/2, xc + pw/2, yc - pl/2, yc + pl/2,
+                           Z_RIM - B.CLR_Z, Z_RIM, COL['felt'])
         # nam cham duoi nap
         if abs(th) < 1e-9 and show_mag:
             for xc in (B.MAG_X if not right else [W-x for x in B.MAG_X]):
@@ -596,6 +602,8 @@ shot('fig12g-nap-che-xuc-xac', 'HÌNH 12g — Nắp che ổ xúc xắc đậy v�
      f'mặt trên NGANG BẰNG vành AC-01 (Z{Z_FL+B.AC_H:.0f}). Dưới nắp: xúc xắc {B.DIE:.0f} hở '
      f'{S["DIE_HEAD"]:.0f} mm; ổ sâu {B.DICE_SOCK_D:.0f} kể từ sàn nắp = {Z_FL+B.AC_H-B.dice_layout(S)["sock_d"]:.0f} '
      f'tính từ đáy. Trên nắp che: khe {S["AC_GAP"]:.0f} mm tới vành thân Z{Z_RIM:.0f}, '
-     f'trong đó nỉ đệm dưới nắp hộp chiếm {B.FELT_PAD:.1f} — còn hở {S["COVER_PROUD"]:.1f} mm.',
+     f'trong đó nỉ đệm dày {B.FELT_PAD:.1f} tự do, lắp vào bị NÉN xuống {B.CLR_Z:.1f} — '
+     f'{S["FELT_PRELOAD"]:.1f} mm nén đó là thứ ép khay và nắp che xuống. Nỉ là {S["FELT_PAD_N"]:.0f} miếng rời '
+     f'{B.FELT_PAD_SZ[0]:.0f} × {B.FELT_PAD_SZ[1]:.0f}, KHÔNG trải kín: trải kín thì lực nén vượt lực hút nam châm.',
      v7, eye=(XS - 210, Y_CUT - 330, 122), target=(XS, Y_CUT + 20, 30), w=1000, h=620,
      fit=(X_AC[0] - 34, X_AC[1] + 34, Y_CUT, Y_CUT + 62, 0.0, Z_LID), zoom=0.93)

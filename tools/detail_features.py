@@ -124,7 +124,15 @@ for t in (8.0, B.T_SEAM):
 print(f"\n  Va khe rap giua da tu {0.6} len {B.SEAM}: hai canh vong XUONG cung chieu,")
 print(f"  khe lai nam NGANG — vong khong lam hai canh cao vao nhau.")
 print(f"  => Mep tu do KHONG con can chi tiet do. Bo 'song noi giua tren AC-01'.")
-print(f"     Chong xoc khay thay bang dem ni {B.FELT_PAD} mm dan duoi nap tren moi khoang.")
+print(f"     Chong xoc khay thay bang dem ni {B.FELT_PAD:.1f} mm dan duoi nap.")
+print(f"     KHONG trai kin: {S['FELT_PAD_N']:.0f} mieng roi {B.FELT_PAD_SZ[0]:.0f} x {B.FELT_PAD_SZ[1]:.0f}.")
+print(f"     Khe tren vanh khay {B.CLR_Z:.1f} < ni {B.FELT_PAD:.1f} nen ni bi NEN "
+      f"{S['FELT_PRELOAD']:.1f} mm ({S['FELT_STRAIN']*100:.0f} %) va that su ep xuong.")
+print(f"     Luc day nguoc len nap: {S['FELT_FORCE']:.0f} N tren {S['FELT_PAD_N']:.0f} mieng, "
+      f"= {S['FELT_FORCE']/S['MAG_TOTAL']*100:.0f} % luc hut {S['MAG_TOTAL']:.0f} N cua 8 cap nam cham.")
+print(f"     Neu trai ni KIN ca ba khoang ({(2*S['BAY']+S['AC_BAY'])*B.INNER_Y/1e2:.0f} cm2) thi luc do")
+print(f"     thanh {(2*S['BAY']+S['AC_BAY'])*B.INNER_Y*B.FELT_SIGMA:.0f} N — nap khong the dong. "
+      f"Do la ly do ni phai la mieng roi.")
 print(f"     Rut AC-01 ra: khe luon ngon nhu khay quan (muc 1).")
 
 # ==========================================================================

@@ -120,7 +120,30 @@ P_TARGET   =   0.20      # MUC TIEU thiet ke: xach lau khong kho chiu (MPa)
 # vong mep tu do cua nap o be day 12 (khong phai 8 nhu Rev B) va cho 0,6 mm duoi
 # 50 N — khong can do. Bo song lai giai luon xung dot song-vs-ranh Joker.
 FELT     = 0.8           # ni lot khay
-FELT_PAD = 0.8           # (C) dem ni duoi nap de ep khay, thay cho song noi
+# --- DEM NI DUOI NAP  (chot 30-08-2026: 0,8 -> 1,2)
+# 0,8 KHONG cham gi ca: vanh khay va vanh AC-01 deu o Z46, vanh than Z47, khe 1,0.
+# Ni 0,8 con ho 0,2 — tai lieu noi no "ep khay xuong" ma no khong cham. 1,2 thi no
+# bi nen 0,2 va moi that su ep.
+# Nhung khi no ep, no DAY NAP LEN, va thu giu nap la 8 cap nam cham. Nen be day ni
+# khong con la bien tu do: DIEN TICH dem moi la bien. Trai ni suot ca khoang la
+# 0,1 m2 — o bien dang 17 % thi luc day vuot xa luc hut nam cham va nap khong dong
+# duoc. Vi vay ni phai la MIENG ROI, khong phai tam trai kin.
+FELT_PAD    = 1.2        # be day ni dem duoi nap
+FELT_PAD_SZ = (20.0, 12.0)   # kich thuoc mot mieng (X x Y)
+# Vi tri X: moi mieng phai nam TRON tren MOT canh nap — mot mieng vat qua khe rap
+# giua thi khi mo nap no bi xe doi. Khoang phu kien vat qua khe nen no can HAI
+# mieng, moi ben mot cai.
+FELT_PAD_X  = (85.0, 177.0, 201.0, 293.0)
+# Vi tri Y: doi xung quanh tam khay (175). Mieng thu hai co CHU DINH nam tron tren
+# nap che o xuc xac — no la thu duy nhat giu nap che khoi nhay khi mang di.
+FELT_PAD_Y  = (115.0, 235.0)
+# Ung suat nen cua ni o bien dang thiet ke. TRA BANG (ni len kim mem ~0,02 MPa o
+# 17 %). CHUA DO — QA-01 P8 doi do tren chinh loai ni se dung, vi ca bai toan dong
+# nap treo vao tri so nay.
+FELT_SIGMA  = 0.020      # MPa
+FELT_STRAIN_MAX = 0.30   # nen qua muc nay thi ni chai, mat tinh dan hoi
+FELT_F_FRAC = 0.25       # phan luc hut nam cham duoc phep tieu vao viec nen ni
+FELT_HOLD_SF = 2.0       # luc ep moi khoang phai >= bao nhieu lan trong luong khay
 
 # --- Z (chieu cao), Z=0 la mat ban
 FOOT   =  2.0            # chan dem
@@ -317,6 +340,10 @@ DICE_MILL  =  6.0        # duong kinh dao phay o vuong -> goc bo R3. Dao to hon
                          # lam goc bo lon hon, quan xuc xac kenh goc — xem selfcheck
 COVER_T    =  4.0        # day nap che o xuc xac
 COVER_CLR  =  0.5        # khe lap nap che, TONG theo moi phuong (0,25 moi ben)
+# Dung sai MOT CHIEU cua cap nap che / san dat nap. San chi duoc SAU hon danh
+# nghia, nap che chi duoc MONG hon — nen nap khong bao gio nho len tren vanh.
+COVER_REC_TOL_LO = 0.0   # san dat nap: sai lech AM cho phep (0 -> khong duoc nong hon)
+COVER_T_TOL_HI   = 0.0   # nap che: sai lech DUONG cho phep (0 -> khong duoc day hon)
 COVER_NOTCH= 18.0        # duong kinh hom ngon tren canh nap che; 2 cai, dat dung
                          # tren hai khe luon ngon o mot dau
 COVER_LIG  =  4.0        # be rong toi thieu con lai cua canh nap che giua/canh hom
@@ -583,7 +610,31 @@ def derive(wall_hinge=WALL_HINGE, bay=BAY, div=DIV, ac_bay=AC_BAY, handle=HANDLE
     COVER_MOVE_DRY = COVER_W*K['cocobolo ngang tho']*DMC_DRY
     # nap che phang vanh AC-01, ma vanh AC-01 chi cach ni dem duoi nap hop chung nay:
     AC_GAP       = Z_RIM - (Z_FLOOR + AC_H)              # khe tren vanh AC-01
-    COVER_PROUD  = AC_GAP - FELT_PAD                     # nap che duoc phep nho toi da
+    # --- dem ni: nen bao nhieu, day len bao nhieu
+    FELT_PRELOAD = FELT_PAD - CLR_Z                      # ni bi nen bao nhieu
+    FELT_STRAIN  = FELT_PRELOAD/FELT_PAD if FELT_PAD > 0 else 0.0
+    FELT_PAD_N   = len(FELT_PAD_X)*len(FELT_PAD_Y)
+    FELT_A       = FELT_PAD_N*FELT_PAD_SZ[0]*FELT_PAD_SZ[1]
+    FELT_F_PAD   = FELT_PAD_SZ[0]*FELT_PAD_SZ[1]*FELT_SIGMA
+    FELT_FORCE   = FELT_A*FELT_SIGMA                     # N, tong luc day nap len
+    # luc ep MOI KHOANG KHAY QUAN — dem so mieng that su roi vao khoang do
+    _bays = [(wall_hinge, wall_hinge + bay), (W - wall_hinge - bay, W - wall_hinge)]
+    FELT_N_BAY   = min(sum(1 for x in FELT_PAD_X if b0 <= x <= b1)*len(FELT_PAD_Y)
+                       for b0, b1 in _bays)
+    FELT_F_BAY   = FELT_N_BAY*FELT_F_PAD
+    FELT_ASTRIDE = [x for x in FELT_PAD_X
+                    if abs(x - X_SEAM) < FELT_PAD_SZ[0]/2 + SEAM/2]   # mieng vat khe
+    MAG_TOTAL    = 2*MAG_N_LEAF*MAG_PULL*(1 - MAG_DERATE)
+    M_TRAY       = (TRAY[0]*TRAY[1]*TRAY[2] - TRAY_IN[0]*TRAY_IN[1]*TRAY_IN[2]
+                    - 2*WELL_W*NOTCH_D*NOTCH_H)/1e6*RHO['cocobolo']
+    AC_DY0       = WALL_FB + AC_CLR + AC_WALL + AC_JOKER[1] + AC_WALL   # dau o xuc xac
+    FELT_ON_COVER = any(y - FELT_PAD_SZ[1]/2 >= AC_DY0 + COVER_CLR/2 and
+                        y + FELT_PAD_SZ[1]/2 <= AC_DY0 + AC_DICE_L - COVER_CLR/2
+                        for y in FELT_PAD_Y)
+    # --- nap che o xuc xac: no KHONG duoc nho len tren vanh AC-01. Truoc day dieu
+    # do duoc bao dam bang khe con lai duoi ni; nay ni da cham nen no phai duoc bao
+    # dam bang DUNG SAI MOT CHIEU va khong con cach nao khac.
+    COVER_PROUD  = COVER_REC_TOL_LO - COVER_T_TOL_HI     # nho len toi da theo dung sai
 
     # --- hoc nhac khay: khe luon ngon tay va mo moc len
     # Khe luon ngon CHI o hai khoang khay. Khoang phu kien KHONG co khe: hoc am
@@ -874,9 +925,28 @@ def selfcheck(d=None):
     if COVER_CLR < d['COVER_MOVE_DRY']:
         e.append(f"khe lap nap che {COVER_CLR:.2f} < go no qua do "
                  f"{d['COVER_MOVE_DRY']:.2f} mm o bien thien {DMC_DRY:.0f} %")
-    if d['COVER_PROUD'] <= 0.0:
-        e.append(f"vanh AC-01 da cham ni dem duoi nap hop ({d['AC_GAP']:.1f} - "
-                 f"{FELT_PAD:.1f}) — nap che khong con cho de phang")
+    if d['COVER_PROUD'] < 0.0:
+        e.append(f"dung sai cap nap che / san dat nap cho nap NHO LEN "
+                 f"{-d['COVER_PROUD']:.2f} mm tren vanh AC-01")
+    # --- dem ni duoi nap
+    if d['FELT_PRELOAD'] <= 0.0:
+        e.append(f"ni dem {FELT_PAD:.1f} khong cham khay: khe tren vanh khay "
+                 f"{CLR_Z:.1f} — no khong ep duoc gi")
+    if d['FELT_STRAIN'] > FELT_STRAIN_MAX:
+        e.append(f"ni bi nen {d['FELT_STRAIN']*100:.0f} % (> {FELT_STRAIN_MAX*100:.0f} %) "
+                 f"— chai va mat tinh dan hoi")
+    if d['FELT_FORCE'] > d['MAG_TOTAL']*FELT_F_FRAC:
+        e.append(f"luc nen ni {d['FELT_FORCE']:.0f} N > {FELT_F_FRAC*100:.0f} % luc hut "
+                 f"nam cham ({d['MAG_TOTAL']:.0f} N) — nap khong dong duoc")
+    if d['FELT_ASTRIDE']:
+        e.append(f"mieng ni o X={d['FELT_ASTRIDE'][0]:.0f} vat qua khe rap giua — "
+                 f"mo nap la xe doi no")
+    if not d['FELT_ON_COVER']:
+        e.append("khong mieng ni nao nam tron tren nap che o xuc xac — "
+                 "nap che khong co gi giu")
+    if d['FELT_F_BAY'] < FELT_HOLD_SF*d['M_TRAY']*9.81:
+        e.append(f"luc ep moi khoang {d['FELT_F_BAY']:.1f} N < {FELT_HOLD_SF:.0f} x trong "
+                 f"luong khay {d['M_TRAY']*9.81:.1f} N — khay van xoc duoc")
     if d['COVER_REACH'] < 3.0:
         e.append(f"hom ngon nap che voi qua vanh do {d['COVER_REACH']:.1f} mm (< 3,0) — "
                  f"khong luon duoc dau ngon xuong khe")

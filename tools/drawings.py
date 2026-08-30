@@ -885,11 +885,15 @@ def sheetQA01():
             f'≤ {B.DIE:.1f} mm mỗi cạnh',
             f'ổ {B.DICE_SOCK:.0f} chỉ chừa {(B.DICE_SOCK-B.DIE)/2:.1f} mm mỗi bên; '
             f'quân lớn hơn là làm lại cả ổ lẫn nắp che — xem AC-02'],
-           ['P7', 'Kiểm góc vòng năm của 4 đố dọc cánh nắp — phải XẺ XUYÊN TÂM',
+           ['P7', 'Kiểm góc vòng năm 4 đố dọc cánh nắp — phải XẺ XUYÊN TÂM',
             '≥ 60° so với mặt đố',
-            f'khe ráp giữa {B.SEAM:.1f} tính theo hệ số xuyên tâm {B.RAD_TAN:.2f} '
-            f'(tra bảng). Xẻ tiếp tuyến thì khe đóng hẳn ở ΔMC '
-            f'{B.SEAM/(2*2*B.STILE*B.K["cocobolo ngang tho"]):.1f} %']]
+            f'khe {B.SEAM:.1f} tính theo hệ số {B.RAD_TAN:.2f} (tra bảng); xẻ tiếp tuyến '
+            f'thì khe đóng ở ΔMC {B.SEAM/(2*2*B.STILE*B.K["cocobolo ngang tho"]):.1f} %'],
+           ['P8', f'Đo lực nén 1 miếng nỉ {B.FELT_PAD_SZ[0]:.0f}×{B.FELT_PAD_SZ[1]:.0f}×'
+                  f'{B.FELT_PAD:.1f} ép xuống {B.CLR_Z:.1f} mm',
+            f'≤ {S["FELT_F_PAD"]:.1f} N mỗi miếng',
+            f'nỉ đẩy nắp lên, nam châm giữ xuống; {S["FELT_PAD_N"]:.0f} miếng = '
+            f'{S["FELT_FORCE"]:.0f} N trên {S["MAG_TOTAL"]:.0f} N lực hút']]
     t, yy = table(x0, y0, ['#', 'PHÉP THỬ', 'TIÊU CHÍ ĐẠT', 'VÌ SAO'], pre, 1480, rh=26,
                   fs=10.5, colw=[50, 560, 350, 520])
     o.append(T(x0, yy + 34, 'DUNG SAI CHUNG', font_size=15, font_weight='bold', fill=INK))
@@ -918,7 +922,8 @@ def sheetQA01():
            ['7b', f'Bào CHUNG hai mép giáp nhau của hai cánh xuống khe {B.SEAM:.1f} — '
                   f'khe do một lượt bào tạo ra, không do hai bề rộng cộng lại'],
            ['8', 'Phay hốc nam châm bằng dưỡng, dán nam châm, kiểm lực tách'],
-           ['9', 'Hoàn thiện; dán nỉ; lắp khay']]
+           ['9', f'Hoàn thiện; dán {S["FELT_PAD_N"]:.0f} miếng nỉ {B.FELT_PAD:.1f} dưới nắp '
+                  f'(RỜI, không trải kín); lắp khay']]
     t3, yy3 = table(x0 + 760, yy + 44, ['#', 'BƯỚC'], seq, 720, rh=22, fs=10, colw=[46, 674])
     o.append(t3)
     o.append(t)
@@ -933,13 +938,17 @@ def sheetQA01():
            ['Đồng phẳng tấm Nu ↔ khung', '≤ 0,15'],
            ['Góc mở nắp', '180° +0 / −1°'],
            ['Cánh mở nằm ngang, mặt trên bằng vành', f'Z{Z_RIM:.0f} ±0,3'],
-           ['Lực tách nắp (tổng 8 cặp)', f'≥ {2*S["MAG_N_LEAF"]*B.MAG_PULL*(1-B.MAG_DERATE):.0f} N'],
+           ['Lực tách nắp (tổng 8 cặp)',
+            f'≥ {S["MAG_TOTAL"]:.0f} N (nỉ đã tiêu {S["FELT_FORCE"]:.0f} N)'],
            ['Khe hở vào tay hốc âm', f'{S["GRIP_APER"]:.2f} +0,5 / 0 (đo 2 bên)'],
            ['Khay quân vào/ra không kẹt', 'đủ 4 khay'],
            ['AC-01 nhấc ra được bằng 2 hõm ngón', 'đạt'],
            ['Đủ 152 quân', f'{4*36} trong khay + 8 rãnh Joker = 152'],
            ['Hốc dự phòng còn trống', 'chứa được 4 quân thừa'],
            ['Nắp che ổ xúc xắc so với vành AC-01', 'thấp hơn 0..0,25 — KHÔNG nhô'],
+           ['Nắp đóng kín, không kênh (nỉ đã nén)', f'khe ráp giữa đều {B.SEAM:.1f} suốt 350'],
+           [f'Đủ {S["FELT_PAD_N"]:.0f} miếng nỉ {B.FELT_PAD_SZ[0]:.0f}×{B.FELT_PAD_SZ[1]:.0f}, '
+            f'1 miếng trên nắp che', 'đạt'],
            ['Lấy được xúc xắc bằng khe luồn ngón', 'cả 4 ổ'],
            ['Không chi tiết kim loại nào ở bản lề', 'đạt']]
     rows_q = [[c[0], c[1], '☐  đạt', '', ''] for c in chk]

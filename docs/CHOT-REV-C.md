@@ -18,6 +18,7 @@ các tài liệu trước đó sai hoặc đã hết hiệu lực**. Đọc nó 
 | Khe ráp giữa | 0,6 | **0.7 ±0.10** — đố dọc 24 xẻ xuyên tâm | `gap_options.py` |
 | Khe quanh lòng tấm | (chưa có) | **0.9 ±0.10** — P5 thành điều kiện chặn | `gap_options.py` |
 | Đố dọc cánh nắp | 34, thẳng thớ | **24, XẺ XUYÊN TÂM** (P7) | `gap_options.py` |
+| Nỉ đệm dưới nắp | 0,8, trải kín | **1.2, 8 miếng rời** | `box_spec.py` |
 | Khóa nắp | không có | **8 cặp nam châm nắp↔thân** | `lid_latch.py` |
 | Ổ xúc xắc | 4 ổ 18 sâu 18 **đo từ vành** | **4 ổ 18 sâu 18 đo từ SÀN đặt nắp** + khe luồn ngón 12 | `dice_layout()` |
 | Nắp che ổ xúc xắc | 51 × 64 (= trường ổ) | **72.5 × 57.5 × 4** (= miệng hốc) | `drawings.py` AC-02 |
@@ -424,6 +425,36 @@ nu rộng ra nhưng nhẹ hơn. Gỗ Dalbergia mỗi hộp xuống 2.35 kg với
 lõi ổn định, tức **4 hộp mỗi lô** dưới ngưỡng miễn trừ thay vì 3.
 
 Suy: `tools/gap_options.py`. Lưới tự kiểm thêm 8 điều kiện, phá thử 28/28.
+
+### Rev C3b — nỉ đệm 0,8 → 1.2, và nó phải là miếng rời
+
+Nỉ 0,8 **không chạm gì cả**. Vành khay quân và vành AC-01 đều ở Z46, vành thân Z47, khe **1.0**.
+Nỉ 0,8 còn hở 0,2 mm. Mà chính chi tiết này được nêu làm lý do **bỏ sống nổi giữa trên AC-01** (mục 4)
+— tức một chi tiết không làm việc đang đứng thay cho một chi tiết đã bị bỏ.
+
+1.2 thì nỉ bị **nén 0.2 mm** (17 %) và mới thật sự ép.
+
+Nhưng nỉ bị nén thì **đẩy nắp lên**, mà thứ giữ nắp là 8 cặp nam châm — 180 N sau khi trừ
+lớp hoàn thiện. Nên bề dày nỉ không còn là biến tự do: **diện tích mới là biến**.
+
+| | |
+|---|---:|
+| Trải kín cả ba khoang | ≈ 2125 N — **nắp không thể đóng** |
+| 8 miếng rời 20 × 12 | 38 N = 21 % lực hút |
+| Lực ép mỗi khoang khay | 9.6 N so với trọng lượng khay 2.2 N |
+
+Hai ràng buộc vị trí, cả hai đều có tự kiểm: không miếng nào được **vắt qua khe ráp giữa** (mở nắp là
+xé đôi nó), và **một miếng phải nằm trọn trên nắp che ổ xúc xắc** — đó là thứ duy nhất giữ nắp che khỏi
+nhảy khi mang đi.
+
+**P8 là phép thử mới:** đo lực nén một miếng nỉ ép xuống 1.0 mm, phải ≤ 4.8 N.
+Ứng suất 20 kPa dùng ở đây là **tra bảng, chưa đo** — và cả bài toán đóng nắp treo
+vào nó.
+
+Điều kiện tự kiểm cũ *"vành AC-01 đã chạm nỉ đệm"* biến mất là **đúng**, không phải bị nới: nay nỉ chạm
+là **có chủ đích**. Chỗ nó bảo vệ — nắp che không được nhô lên — chuyển sang một điều kiện khác, dựa
+trên **dung sai một chiều** của cặp nắp che / sàn đặt nắp, và điều kiện đó vẫn nổ được (phá thử bằng
+cách cho nắp che dung sai dương).
 
 ## 8. Còn lại
 
