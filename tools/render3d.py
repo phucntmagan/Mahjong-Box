@@ -21,7 +21,7 @@ WH, BAY, DIV, ACB = S['WALL_HINGE'], S['BAY'], S['DIV'], S['AC_BAY']
 FB, IY = B.WALL_FB, B.INNER_Y
 Z_FL, Z_RIM, Z_SEAM, Z_LID = S['Z_FLOOR'], S['Z_RIM'], S['Z_SEAM'], S['Z_LID']
 XS, LW = S['X_SEAM'], S['LW']
-PIN = (S['PIN_X'], S['PIN_Z'])          # truc xoay nam DUNG tren arris
+PIN = (S['PIN_X'], S['PIN_Z'])          # truc xoay ban le
 
 # --------------------------------------------------------------- mau sac
 COL = dict(
@@ -121,6 +121,8 @@ def rot_xz(p, c, th):
     return (c[0] + x*cs - z*sn, c[1] + x*sn + z*cs)
 
 RK, KH = S['R_KN'], S['KN_HOLE']
+PXX, RB_D, RB_H = S['PIN_X'], S['REBATE_D'], S['REBATE_H']
+LX0 = S['LEAF_X0']
 KN = [(FB + S['KN_Y0'] + i*S['KN_PITCH'], i % 2 == 0)   # (y bat dau, la mong THAN?)
       for i in range(B.N_KN)]
 X_BAY = [(WH, WH+BAY), (W-WH-BAY, W-WH)]
@@ -137,11 +139,17 @@ def add_body(sc, show_mag=True):
     gy0, gy1 = S['GRIP_Y0'], S['GRIP_Y1']
     for x0, x1 in [(0, WH), (W-WH, W)]:
         for ya, yb_ in [(FB, gy0), (gy1, YB-FB)]:
-            sc.box(x0, x1, ya, yb_, Z_FL, Z_RIM, C, D)          # doan khong co hoc
+            sc.box(x0, x1, ya, yb_, Z_FL, Z_RIM - RB_H, C, D)   # duoi ha bac: day du
+            xa1 = (x0 + RB_D) if x0 == 0 else x0                # tren: da ha bac
+            xb1 = x1 if x0 == 0 else (x1 - RB_D)
+            sc.box(xa1, xb1, ya, yb_, Z_RIM - RB_H, Z_RIM, C, D)
         # doan co hoc: chi con thanh sau + dai go tren + dai go duoi
         xa, xb_ = (x0 + B.GRIP_D, x1) if x0 == 0 else (x0, x1 - B.GRIP_D)
         sc.box(xa, xb_, gy0, gy1, S['GRIP_Z0'], S['GRIP_Z1'], COL['coco_d'], D)
-        sc.box(x0, x1, gy0, gy1, S['GRIP_Z1'], Z_RIM, C, D)     # dai go tren hoc
+        # dai go tren hoc — da tru ha bac ban le o mat ngoai
+        xa2 = (x0 + RB_D) if x0 == 0 else x0
+        xb2 = x1 if x0 == 0 else (x1 - RB_D)
+        sc.box(xa2, xb2, gy0, gy1, S['GRIP_Z1'], Z_RIM, C, D)
     # vach truoc/sau. Chia theo X vi hai le: dinh vach doc (gay tai X=185) va
     # khe luon ngon an 6 mm vao mat trong -> tai bang khe, vach chi con 4 mm.
     cuts = sorted({0.0, XS, W}
@@ -158,8 +166,8 @@ def add_body(sc, show_mag=True):
     for x0, x1 in X_DIV:
         sc.prism_y([(x0, Z_FL), (x1, Z_FL), (x1, z_rim(x1)), (x0, z_rim(x0))],
                    FB, YB-FB, C, D)
-    # mat mong go ben THAN: ong go O2R o arris, chi o cac mat mong LE
-    for xk in (0.0, W):
+    # mat mong go ben THAN: ong go O2R, tam LUI VAO PXX -> chim han
+    for xk in (PXX, W - PXX):
         for y0, is_body in KN:
             if not is_body: continue
             sc.prism_y(circle_xz(xk, Z_RIM, RK), y0, y0 + B.KN_LEN, C, D)
@@ -254,21 +262,23 @@ def leaf_polys(th, right):
         c = (W - PIN[0], PIN[1]) if right else PIN
         return rot_xz(m(p), c, -th if right else th)
     st, RR = B.STILE, RK
-    def arc(a0, a1, n=8):        # bo luon arris ngoai duoi cua nap, tam tai truc
-        return [(RR*math.cos(math.radians(a0 + (a1-a0)*i/n)),
+    x0 = LX0                      # mep ngoai canh nap — lui vao PIN_X o ho C
+    x1 = LX0 + LW                 # mep khe rap giua
+    def arc(a0, a1, n=8):        # goc ngoai duoi cua nap, ong go chiem cho, tam tai truc
+        return [(PXX + RR*math.cos(math.radians(a0 + (a1-a0)*i/n)),
                  Z_RIM + RR*math.sin(math.radians(a0 + (a1-a0)*i/n))) for i in range(n+1)]
     out = []
-    # do doc ban le: co bo luon R o goc ngoai duoi
-    out.append(([r(p) for p in [(0, Z_RIM+RR)] + arc(90, 0)
-                 + [(st, Z_RIM), (st, Z_LID), (0, Z_LID)]], 0.0, B.LID_L, 'coco'))
+    # do doc ban le
+    out.append(([r(p) for p in [(x0, Z_RIM+RR)] + arc(90, 0)
+                 + [(x0+st, Z_RIM), (x0+st, Z_LID), (x0, Z_LID)]], 0.0, B.LID_L, 'coco'))
     # do doc khe giua
-    out.append(([r((LW-st, Z_RIM)), r((LW, Z_RIM)), r((LW, Z_LID)), r((LW-st, Z_LID))],
+    out.append(([r((x1-st, Z_RIM)), r((x1, Z_RIM)), r((x1, Z_LID)), r((x1-st, Z_LID))],
                 0.0, B.LID_L, 'coco'))
     for y0, y1 in [(0.0, B.RAIL), (B.LID_L-B.RAIL, B.LID_L)]:
-        out.append(([r((st, Z_RIM)), r((LW-st, Z_RIM)), r((LW-st, Z_LID)), r((st, Z_LID))],
+        out.append(([r((x0+st, Z_RIM)), r((x1-st, Z_RIM)), r((x1-st, Z_LID)), r((x0+st, Z_LID))],
                     y0, y1, 'coco'))
     zp1 = Z_LID - B.S_TOP; zp0 = zp1 - B.PAN_T
-    out.append(([r((st, zp0)), r((LW-st, zp0)), r((LW-st, zp1)), r((st, zp1))],
+    out.append(([r((x0+st, zp0)), r((x1-st, zp0)), r((x1-st, zp1)), r((x0+st, zp1))],
                 B.RAIL, B.LID_L-B.RAIL, 'burl'))
     return out
 
@@ -339,10 +349,9 @@ def shot(name, title, sub_, build, eye, target=None, w=1000, h=620, focal=1500):
 # 1 — tong the, nap dong
 def v1(sc): add_body(sc, show_mag=False); add_lid(sc, show_mag=False)
 shot('fig12a-tong-the-nap-dong', 'HÌNH 12a — Tổng thể, nắp đóng',
-     f'{S["X_OA"]:.1f} × {S["Y_OA"]:.0f} × {S["Z_OA"]:.0f} mm (thân {W:.0f}, ống bản lề nhô {S["PROUD"]:.1f}/bên) '
-     f'· {B.mass_of(S,"loi on dinh")[2]:.2f} kg. '
-     f'Khe ráp giữa {B.SEAM}. Hốc âm hai tay nằm trong vách trái/phải, không nối gỗ ra ngoài. '
-     f'Bản lề mắt mộng gỗ Ø{2*RK:.1f} ở arris — không một chi tiết kim loại.',
+     f'{S["X_OA"]:.1f} × {S["Y_OA"]:.0f} × {S["Z_OA"]:.0f} mm · {B.mass_of(S,"loi on dinh")[2]:.2f} kg. '
+     f'Mắt mộng gỗ Ø{2*RK:.1f} nằm CHÌM trong hạ bậc {RB_D:.1f}×{RB_H:.0f} — nhô ra 0,0 mm, '
+     f'không một chi tiết kim loại. Hốc âm hai tay sâu {B.GRIP_D:.0f} trong vách {S["WALL_HINGE"]:.0f}.',
      v1, eye=(-250, -430, 260), target=(CX, CY, 22), focal=1250)
 
 # 2 — nap mo 180 do
@@ -394,6 +403,6 @@ def v5(sc):
     add_lid(sc, math.radians(50), leaves=(True, False))
     add_lid(sc, 0.0, leaves=(False, True))
 shot('fig12e-chi-tiet-goc', 'HÌNH 12e — Vách trái: hốc âm hai tay và bản lề',
-     f'Hốc âm {B.GRIP_W:.0f} × {B.GRIP_H:.0f} sâu {B.GRIP_D:.0f} nằm gọn trong vách {S["WALL_GRIP"]:.0f} mm, '
-     f'dải gỗ trên hốc {S["GRIP_LEDGE"]:.0f} mm. {B.N_KN} mắt mộng gỗ Ø{2*RK:.1f} ngay trên arris.',
+     f'Hốc âm {B.GRIP_W:.0f} × {B.GRIP_H:.0f} sâu {B.GRIP_D:.0f} trong vách {S["WALL_GRIP"]:.0f}; dải gỗ trên hốc '
+     f'{S["GRIP_LEDGE"]:.0f} cao × {S["GRIP_LEDGE_T"]:.1f} dày. {B.N_KN} mắt mộng gỗ Ø{2*RK:.1f} chìm trong hạ bậc.',
      v5, eye=(-560, -315, 250), target=(105, 172, 24), focal=1450)

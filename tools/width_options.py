@@ -3,11 +3,9 @@
 So sanh ba phuong an be rong hop, dung CHINH bo cong thuc cua box_spec.derive().
 Chay: python3 tools/width_options.py
 
-Nen tang: vach ban le buoc phai 18 (hoc am hai tay: sau 12 + thanh sau 6), nen
-chuoi X 354 cu khong dung duoc nua. Ba cach dong lai chuoi X:
-   370  giu nguyen bo tri long hop
-   366  vach ngan mong con 4
-   362  khoang phu kien con 62
+Nen tang: vach ban le suy ra tu hoc am hai tay (sau GRIP_D + thanh sau GRIP_BACK),
+nen chuoi X 354 cu khong dung duoc nua. Ba cach dong lai chuoi X:
+   giu nguyen bo tri long hop | vach ngan mong con 4 | khoang phu kien con 62
 """
 import os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -17,11 +15,14 @@ TILE_MAX = (25.7, 36.8, 11.4)     # quan lon nhat theo Rev B
 CITES_LIMIT = 10.0                # kg go loai liet ke moi lo (annotation #15 - PHAI xac minh)
 SCALLOP_D, SCALLOP_DEPTH = 25.0, 12.0   # hom ngon ranh Joker
 
-OPTS = [
-    ("370", dict(div=6.0, ac_bay=70.0), "giu nguyen bo tri long hop"),
-    ("366", dict(div=4.0, ac_bay=70.0), "vach ngan mong con 4"),
-    ("362", dict(div=6.0, ac_bay=62.0), "khoang phu kien con 62"),
+# Nhan cot suy ra tu chinh W, khong go cung — vach ban le doi theo hoc am nen
+# tong be rong doi theo, nhung BA CACH DONG CHUOI thi khong doi.
+_OPTS = [
+    (dict(div=6.0, ac_bay=70.0), "giu nguyen bo tri long hop"),
+    (dict(div=4.0, ac_bay=70.0), "vach ngan mong con 4"),
+    (dict(div=6.0, ac_bay=62.0), "khoang phu kien con 62"),
 ]
+OPTS = [(f"{B.derive(**kw)['W']:.0f}", kw, note) for kw, note in _OPTS]
 
 def summarise(kw):
     d = B.derive(**kw)
@@ -49,7 +50,7 @@ for lbl, s, _ in R:
     print(f"  {lbl:>5s}{s['LW']:10.2f}{s['OP_W']:12.2f}{s['ANG']:8.2f}°"
           f"{s['m_c']:16.2f}{s['m_c']*9.81*B.DYN:8.0f} N{s['m_s']:15.2f}")
 base = R[0][1]['m_c']
-print(f"\n  Chenh khoi luong giua 370 va 362: {base - R[2][1]['m_c']:.3f} kg "
+print(f"\n  Chenh khoi luong giua {R[0][0]} va {R[2][0]}: {base - R[2][1]['m_c']:.3f} kg "
       f"({(base-R[2][1]['m_c'])/base*100:.1f} %) — duoi nguong cam nhan khi xach.")
 
 hr("2. NGUONG MIEN TRU CITES (10 kg Dalbergia moi lo — PHAI xac minh)")
@@ -84,14 +85,14 @@ for lbl, s, _ in R:
                else f"CON {left:.0f} mm — khong khoet duoc")
     print(f"    X={lbl}: dai {s['strip']:.0f} - sau {SCALLOP_DEPTH:.0f} -> {verdict}")
 print()
-print("  Vach ngan 4 mm (X=366): cocobolo 4 x 43 x 330, khe dan vao day sau 4 mm.")
+print(f"  Vach ngan 4 mm (X={R[1][0]}): cocobolo 4 x 43 x 330, khe dan vao day sau 4 mm.")
 print("    Ty le manh 330/4 = 82:1. Lam duoc, nhung day la chi tiet duy nhat trong")
 print("    hop KHONG co bien du — va no la thanh cua khoang khay, khay co xat vao.")
 
 hr("4. KET LUAN")
-print("  370  khoi luong +0,06 kg so voi 362, khong doi bat ky chi tiet nao da chot,")
-print("       ty le 370 x 362 gan vuong. So hop/lo CITES khong doi.")
-print("  366  tiet kiem 4 mm bang cach lam mong chi tiet mong nhat cua hop. Doi khong dang.")
-print("  362  pha ca hai chi tiet cong nang cua AC-01: hoc 4 quan du phong 2x2 va")
+print(f"  {R[0][0]}  khoi luong +{base-R[2][1]['m_c']:.2f} kg so voi {R[2][0]}, khong doi bat ky chi tiet nao da chot,")
+print(f"       ty le {R[0][0]} x {R[0][1]['d']['Y_OA']:.0f} gan vuong. So hop/lo CITES khong doi.")
+print(f"  {R[1][0]}  tiet kiem 4 mm bang cach lam mong chi tiet mong nhat cua hop. Doi khong dang.")
+print(f"  {R[2][0]}  pha ca hai chi tiet cong nang cua AC-01: hoc 4 quan du phong 2x2 va")
 print("       hom ngon ranh Joker. Phai bo tri lai, va van khong doi duoc so hop/lo.")
-print("\n  => KHUYEN NGHI: 370.")
+print(f"\n  => KHUYEN NGHI: {R[0][0]}.")

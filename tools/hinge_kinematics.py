@@ -26,8 +26,20 @@ def rot_about(p, px, pz, th):
     c, s = math.cos(th), math.sin(th)
     return (px + x*c - z*s, pz + x*s + z*c)
 def rot(p, th): return rot_about(p, PX, PZ, th)
-def in_body(q):
-    return (EPS < q[0] < W - EPS) and (EPS < q[1] < Z_RIM - EPS)
+RB_D, RB_H = S['REBATE_D'], S['REBATE_H']
+LEAF_X0, REACH = S['LEAF_X0'], S['REACH']
+
+def in_body(q, rb_d=None, rb_h=None):
+    """Diem q co nam TRONG go than hop khong. Ha bac o vanh ngoai TREN da bi tru."""
+    rb_d = RB_D if rb_d is None else rb_d
+    rb_h = RB_H if rb_h is None else rb_h
+    if not ((EPS < q[0] < W - EPS) and (EPS < q[1] < Z_RIM - EPS)):
+        return False
+    # Mat ha bac o x = rb_d la mat TIEP XUC (mat chan 180 do), khong phai mat cam:
+    # dung <= nen diem nam dung tren no khong bi tinh la va cham.
+    if rb_d > 0 and q[0] < rb_d + EPS and q[1] > Z_RIM - rb_h - EPS:
+        return False                      # nam trong ha bac -> khong con go
+    return True
 
 # ==========================================================================
 hr("1. TRUC DAT O DAU — VA CHO DO EP DUONG KINH ONG GO BAO NHIEU")
@@ -46,7 +58,7 @@ def nose_radius(px, pz, nx=160, nz=40, dth=0.5):
             z = Z_RIM + T*j/nz
             th = 0.0
             while th <= 180.0 + 1e-9:
-                if in_body(rot_about((x, z), px, pz, math.radians(th))):
+                if in_body(rot_about((x, z), px, pz, math.radians(th)), 0.0, 0.0):
                     rmin = min(rmin, math.hypot(x-px, z-pz)); break
                 th += dth
     return 0.0 if rmin is math.inf else rmin
@@ -69,58 +81,91 @@ print(f"  truc nam tren no thi ca mat dau la mot tia xuat phat tu truc, quay bao
 print(f"  cung chi truot tren chinh no, khong bao gio dam vao than.")
 print(f"  Truc lui vao trong bao nhieu thi mat dau quet thanh cung, va phai bo tron")
 print(f"  dung bay nhieu. O giua be day nap: R_mui = {r_mid:.1f} = {T:.0f}/2 = nua be day nap.\n")
-print(f"  => CHI CO DUNG HAI HO NGHIEM:\n")
-print(f"    HO A — truc TRONG vat lieu (tot nhat: tam mat dau canh)")
+print(f"  => BA HO NGHIEM, va chi ba:\n")
+print(f"    HO A — truc TRONG vat lieu, o tam mat dau canh ({T/2:.1f} , {Z_RIM+T/2:.1f})")
 print(f"      Dau canh nap bo tron R{T/2:.1f}; ong go CHINH LA dau canh nap bo tron nen")
 print(f"      KHONG nho ra ngoai phu bi. Nhung R bi be day nap ep cung: ong luon O{T:.0f}.")
-print(f"      Muon ong manh hon thi CHI CON cach lam nap mong hon. Do la ly do ban goc")
-print(f"      di tu O18 (nap 18) xuong O15 (nap 15) — va van con to.\n")
+print(f"      Va o 180 do KHONG co mat chan tu nhien.\n")
 print(f"    HO B — truc TREN mat phang ngoai, o arris (0 , {Z_RIM:.0f})")
-print(f"      Khong phai bo tron gi. R cua ong go TU DO chon theo do ben thanh go")
-print(f"      quanh lo chot, KHONG theo be day nap. Gia: ong nho ra {R_KN:.1f} mm moi ben.\n")
-print(f"  Trong ho B, moi diem tren mat phang x = 0 tu Z{Z_RIM:.0f} den Z{Z_LID:.0f} deu cho")
-print(f"  R_mui = 0. Chon DUNG arris (pz = {Z_RIM:.0f}) vi chi o do, khi mo 180 do mat canh")
-print(f"  nap moi ap thang vao mat ngoai vach — co MAT CHAN TU NHIEN — va canh mo moi")
-print(f"  nam phang bang vanh than.")
+print(f"      Khong phai bo tron gi. R tu do theo do ben thanh go. Nhung tam ong nam")
+print(f"      dung tren mat ngoai vach nen nua ong NHO RA {S['R_KN']:.1f} mm moi ben.\n")
+print(f"    HO C — truc LUI VAO dung R, van o cao do vanh ({S['R_KN']:.1f} , {Z_RIM:.0f})")
+print(f"      Ong tiep tuyen mat ngoai vach TU BEN TRONG -> CHIM HAN, khong nho ra ti nao.")
+print(f"      Truc van nam tren mat dau canh nap (chi la mat do lui vao {S['R_KN']:.1f}) nen")
+print(f"      R_mui van bang 0. Hai he qua bat buoc, ca hai deu tinh duoc:")
+print(f"        1. mep ngoai canh nap lui vao dung {S['R_KN']:.1f} mm;")
+print(f"        2. vanh ngoai TREN cua vach phai HA BAC {S['R_KN']:.1f} sau — cao bao nhieu?\n")
+
+def min_rebate_h(rb_d, nx=200, nz=60, dth=0.25):
+    """Chieu cao ha bac NHO NHAT de canh nap quay het 0-180 do khong cham vach."""
+    lo, hi = 0.0, T + 2.0
+    def ok(h):
+        for i in range(nx+1):
+            x = S['LEAF_X0'] + LW*i/nx
+            for j in range(nz+1):
+                z = Z_RIM + T*j/nz
+                th = 0.0
+                while th <= 180.0 + 1e-9:
+                    if in_body(rot((x, z), math.radians(th)), rb_d, h): return False
+                    th += dth
+        return True
+    for _ in range(9):
+        mid = (lo + hi)/2
+        if ok(mid): hi = mid
+        else: lo = mid
+    return hi
+
+if B.HG_MODE == 'C':
+    h_min = min_rebate_h(S['REBATE_D'])
+    print(f"  Quet so: ha bac phai cao it nhat {h_min:.2f} mm — tuc DUNG BANG be day nap")
+    print(f"  {T:.0f} mm, khong hon khong kem. Ly do: o 180 do mat dau canh nap (cao {T:.0f})")
+    print(f"  quay xuong nam gon trong ha bac; thap hon mot ly la goc tren cua no cham vach.")
+    print(f"  Dac ta dat REBATE_H = T_LID nen tri so nay tu dung theo be day nap.\n")
 
 # ==========================================================================
-hr("2. HAI HO NGHIEM — BANG SO")
-dA, dB = B.derive_mode('A'), B.derive_mode('B')
-print(f"  {'':32s}{'HO A · truc trong nap':>24s}{'HO B · truc o arris':>22s}")
+hr("2. BA HO NGHIEM — BANG SO")
+dA, dB, dC = B.derive_mode('A'), B.derive_mode('B'), B.derive_mode('C')
+print(f"  {'':30s}{'HO A':>16s}{'HO B':>16s}{'HO C':>16s}")
+print(f"  {'':30s}{'truc trong nap':>16s}{'truc tren mat':>16s}{'truc lui vao R':>16s}")
 def line(lbl, f):
-    print(f"  {lbl:32s}{f(dA):>24s}{f(dB):>22s}")
-line("Truc xoay",              lambda d: f"({d['PIN_X']:.1f} , {d['PIN_Z']:.1f})")
-line("Duong kinh ong go",      lambda d: f"O{2*d['R_KN']:.1f}")
-line("Ong bi ep boi",          lambda d: "be day nap" if d['HG_MODE']=='A' else "chot + thanh go")
-line("Nho ra ngoai moi ben",   lambda d: f"{d['PROUD']:.1f} mm")
-line("Phu bi X",               lambda d: f"{d['X_OA']:.1f}")
-line("Thanh go quanh lo chot", lambda d: f"{d['KN_WALL_EFF']:.2f} mm")
-line("Chan 180 do",            lambda d: "phai PHAY mat chan" if d['STOP_A'] <= 0 else "tu nhien")
-line("Dien tich chan",         lambda d: "—" if d['STOP_A'] <= 0 else f"{d['STOP_A']:.0f} mm2")
-line("Canh mo nam o",          lambda d: (f"Z{Z_RIM-T:.0f}..{Z_RIM:.0f}" if d['HG_MODE']=='B'
-                                          else f"Z{Z_RIM:.0f}..{Z_RIM+T:.0f}"))
-line("So voi vanh than",       lambda d: "phang bang vanh" if d['HG_MODE']=='B'
-                                         else f"cao hon vanh {T:.0f}")
-line("Khoi luong (khay o.d.)", lambda d: f"{B.mass_of(d,'loi on dinh')[2]:.2f} kg")
+    print(f"  {lbl:30s}{f(dA):>16s}{f(dB):>16s}{f(dC):>16s}")
+line("Truc xoay",            lambda d: f"({d['PIN_X']:.1f},{d['PIN_Z']:.0f})")
+line("Ong go",               lambda d: f"O{2*d['R_KN']:.1f}")
+line("Ong bi ep boi",        lambda d: "be day nap" if d['HG_MODE']=='A' else "chot+thanh go")
+line("NHO RA moi ben",       lambda d: f"{d['PROUD']:.1f} mm")
+line("Ha bac vanh",          lambda d: "khong" if d['REBATE_D']<=0
+                                       else f"{d['REBATE_D']:.1f} x {d['REBATE_H']:.0f}")
+line("Mep nap lui vao",      lambda d: f"{d['LEAF_X0']:.1f} mm")
+line("Phu bi X",             lambda d: f"{d['X_OA']:.1f}")
+line("Chan 180 do",          lambda d: "PHAI PHAY" if d['STOP_A'] <= 0 else "tu nhien")
+line("Dien tich chan",       lambda d: "—" if d['STOP_A'] <= 0 else f"{d['STOP_A']:.0f} mm2")
+line("Canh mo, mat tren o",  lambda d: f"Z{Z_RIM:.0f}" if d['HG_MODE'] != 'A' else f"Z{Z_RIM+T:.0f}")
+line("So voi vanh than",     lambda d: "bang vanh" if d['HG_MODE'] != 'A' else f"cao hon {T:.0f}")
+line("Canh mo vuon ra",      lambda d: f"{d['REACH']:.1f}")
+line("Khoi luong (loi o.d.)",lambda d: f"{B.mass_of(d,'loi on dinh')[2]:.2f} kg")
 print()
-print(f"  Ho A giu nguyen phu bi nhung ong bang DUNG be day nap: O{2*dA['R_KN']:.0f} chay suot")
-print(f"  {dA['KN_RUN']:.0f} mm doc canh — chinh la cai da bi che 'qua to va tho'.")
-print(f"  Ho B cho ong O{2*dB['R_KN']:.1f}, manh hon {dA['R_KN']/dB['R_KN']:.2f} lan, doi lai")
-print(f"  nho ra {dB['PROUD']:.1f} mm moi ben (phu bi X {dA['X_OA']:.0f} -> {dB['X_OA']:.1f}).")
+print(f"  Ho A: phu bi nho nhat nhung ong bang DUNG be day nap ({2*dA['R_KN']:.0f} mm) va khong co")
+print(f"        mat chan 180 do — phai phay mat chan trong long mat mong.")
+print(f"  Ho B: ong manh nhat nhung nho ra {dB['PROUD']:.1f} mm moi ben, phu bi X {dB['X_OA']:.1f}.")
+print(f"  Ho C: ong CHIM HAN (nho ra 0), phu bi X {dC['X_OA']:.1f} — bang dung ho A — va van giu")
+print(f"        nguyen mat chan tu nhien {dC['STOP_A']:.0f} mm2 cua ho B.")
+print(f"        Gia phai tra: ha bac {dC['REBATE_D']:.1f} x {dC['REBATE_H']:.0f} suot {B.LID_L:.0f} mm tren vanh,")
+print(f"        va mep ngoai canh nap lui vao {dC['LEAF_X0']:.1f} mm.")
 print(f"\n  DA CHON: HO {B.HG_MODE}.  Doi B.HG_MODE roi chay lai la ra ho kia.")
 
 # ==========================================================================
 hr(f"3. CANH MO RA NAM O DAU  (ho {B.HG_MODE})")
-pts = {'mep ban le, mat duoi': (PX, Z_RIM), 'mep ban le, mat tren': (PX, Z_LID),
-       'mep khe giua, mat duoi': (LW, Z_RIM), 'mep khe giua, mat tren': (LW, Z_LID)}
+X1 = S['LEAF_X0'] + LW                       # mep khe rap giua
+pts = {'mep ban le, mat duoi': (S['LEAF_X0'], Z_RIM), 'mep ban le, mat tren': (S['LEAF_X0'], Z_LID),
+       'mep khe giua, mat duoi': (X1, Z_RIM), 'mep khe giua, mat tren': (X1, Z_LID)}
 print(f"  {'diem':26s}{'dong X':>9s}{'dong Z':>9s}{'mo 180: X':>13s}{'Z':>9s}")
 for k, p in pts.items():
     q = rot(p, math.pi)
     print(f"  {k:26s}{p[0]:9.1f}{p[1]:9.1f}{q[0]:13.1f}{q[1]:9.1f}")
-zt_open = Z_RIM if B.HG_MODE == 'B' else Z_RIM + T
+zt_open = Z_RIM + T if B.HG_MODE == 'A' else Z_RIM
 print(f"\n  Mat TREN cua canh mo nam tai Z{zt_open:.0f}"
-      + (" — dung cao do VANH THAN." if B.HG_MODE == 'B' else f" — cao hon vanh {T:.0f} mm."))
-print(f"  Vuon ra {LW - PX:.2f} mm. Mat tren canh mo chinh la mat duoi nap khi dong,")
+      + (f" — cao hon vanh {T:.0f} mm." if B.HG_MODE == 'A' else " — dung cao do VANH THAN."))
+print(f"  Vuon ra {S['REACH']:.2f} mm. Mat tren canh mo chinh la mat duoi nap khi dong,")
 print(f"  tuc long lom om tam Nu — khay bo bai sau {T - B.S_TOP - B.PAN_T:.1f} mm.")
 
 # ==========================================================================
@@ -129,8 +174,12 @@ m_leaf = (S['V']['khung nap']/2/1e6*B.RHO['cocobolo']
           + S['V']['tam Nu']/2/1e6*B.RHO['Nu go do'])
 if S['STOP_A'] > 0:
     SH, A_stop = S['STOP_H'], S['STOP_A']
-    print(f"  O 180 do, mat canh ban le cua nap ap DUNG vao mat ngoai vach than —")
-    print(f"  ca hai deu la mat phang x = 0. Chan tu nhien, khong phay gi them.\n")
+    _xf = S['LEAF_X0']
+    print(f"  O 180 do, mat canh ban le cua nap ap DUNG vao mat doi dien ben than —")
+    print(f"  ca hai deu la mat phang x = {_xf:.1f} " +
+          ("(mat ngoai vach)." if _xf == 0 else "(mat ha bac)."))
+    print(f"  Ca hai deu di qua truc nen chi cham nhau DUNG o 180 do, khong co ma sat")
+    print(f"  trong hanh trinh. Chan tu nhien, khong phay gi them.\n")
     print(f"  Trong doan mong ({S['KN_RUN']:.0f} mm) ong go an mat {R_KN:.1f} nen chan cao")
     print(f"  {SH:.2f}; ngoai doan mong ({B.LID_L - S['KN_RUN']:.0f} mm) canh nap con vuong nen")
     print(f"  chan cao ca {T:.0f} mm. Tong dien tich chan {A_stop:.0f} mm2.\n")
@@ -143,7 +192,7 @@ if S['STOP_A'] > 0:
         F = M/(arm_r/1000); sig = F/A_stop
         print(f"  {lbl:36s}{M:10.2f}{F:9.0f}{sig:8.3f}{B.C_PERP/sig:7.0f}x")
     print(f"\n  Ho A phai phay mat chan phang trong long mat mong, he so 10x.")
-    print(f"  Ho B chan bang ca mat canh nap ap vao ca mat vach: he so hang tram lan.")
+    print(f"  Ho {B.HG_MODE} chan bang ca mat canh nap ap vao ca mat than: he so hang tram lan.")
 else:
     print(f"  Ho A KHONG co mat chan tu nhien: o 180 do canh nap nam ngang o")
     print(f"  Z{Z_RIM:.0f}..{Z_RIM+T:.0f}, treo hoan toan tren chot.")
@@ -219,20 +268,25 @@ print(f"  DAC TINH KIEM: vong dau canh mo <= 1,5 mm duoi tai 5 kg tai mep ngoai.
 # ==========================================================================
 hr("8. CHOT LAI CAC TRI SO CHO HD-01")
 for a, b in [("Vat lieu ban le", "MONG GO lien khoi — khong mot chi tiet kim loai nao"),
-             ("Ho nghiem", f"{B.HG_MODE} — " + ("truc tren mat phang ngoai, o arris"
-                            if B.HG_MODE == 'B' else "truc trong vat lieu, tam mat dau canh")),
+             ("Ho nghiem", f"{B.HG_MODE} — " + {
+                 'A': "truc trong vat lieu, tam mat dau canh",
+                 'B': "truc tren mat ngoai vach, o arris",
+                 'C': "truc lui vao dung R — ong go chim han"}[B.HG_MODE]),
              ("Truc xoay", f"X = {PX:.1f} , Z = {PZ:.1f}"),
              ("Suy ra tu", "R_mui = 0 chi khi truc nam tren mat phang ngoai (muc 1)"),
              ("Ong go", f"O{2*R_KN:.1f} — dinh boi chot O{B.KN_PIN:.0f} + thanh go "
                         f"{S['KN_WALL_EFF']:.1f} mm, KHONG boi be day nap"),
              ("Nho ra ngoai", f"{PROUD:.1f} mm moi ben -> phu bi X {S['X_OA']:.1f}"),
+             ("Ha bac vanh", "khong" if S['REBATE_D'] <= 0 else
+              f"{S['REBATE_D']:.1f} sau x {S['REBATE_H']:.0f} cao, suot {B.LID_L:.0f} mm"),
+             ("Mep nap lui vao", f"{S['LEAF_X0']:.1f} mm"),
              ("Mat mong", f"{B.N_KN} x {B.KN_LEN:.0f}, buoc {S['KN_PITCH']:.0f}, "
                           f"chuoi {S['KN_RUN']:.0f}, dat giua canh"),
              ("Chot", f"go O{B.KN_PIN:.0f} x {B.KN_PIN_L:.0f}, 2 chot moi canh"),
              ("Chan 180 do", f"mat canh nap ap vao mat ngoai vach — tu nhien, {S['STOP_A']:.0f} mm2"),
              ("Goc mo", "180 do +0/-1 do"),
              ("Vi tri canh khi mo", f"nam ngang, mat tren Z{zt_open:.0f} (= vanh than), "
-                                    f"vuon ra {LW-PX:.0f}"),
+                                    f"vuon ra {S['REACH']:.0f}"),
              ("Day nap", f"{T:.0f} deu, khong vat — be day nap KHONG con dinh ong go"),
              ("Phu bi", f"{S['X_OA']:.1f} x {S['Y_OA']:.0f} x {S['Z_OA']:.0f}"),
              ("Khoi luong", f"{B.mass_of(S,'loi on dinh')[2]:.2f} kg (khay loi on dinh) / "

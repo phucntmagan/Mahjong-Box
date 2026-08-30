@@ -5,31 +5,32 @@ các tài liệu trước đó sai hoặc đã hết hiệu lực**. Đọc nó 
 
 | | Rev B | Chốt hiện tại | Nguồn |
 |---|---|---|---|
-| Phủ bì | 354 × 350 × 80 | **382,2 × 350 × 62** (thân 370) | `box_spec.py` |
-| Chuỗi X | 10+126+6+70+6+126+10 | **18+126+6+70+6+126+18** | `width_options.py` |
+| Phủ bì | 354 × 350 × 80 | **378 × 350 × 62** | `box_spec.py` |
+| Chuỗi X | 10+126+6+70+6+126+10 | **22+126+6+70+6+126+22** | `width_options.py` |
 | Phương án xách | (chưa có) | **C — hốc âm hai tay** | `handle_option_c.py` |
 | Đáy hộp | 8 | **6** | `detail_features.py` |
 | Tấm nắp Nu | 10 | **7** | `lid_solid_calc.py` |
 | Nắp | 18 → 8 (vát) | **đều 15, không vát** | `box_spec.py` |
-| **Trục xoay bản lề** | không định nghĩa | **P = (0 , 47) — trên arris** | `hinge_kinematics.py` |
+| **Trục xoay bản lề** | không định nghĩa | **P = (6,1 , 47) — lùi vào đúng R** | `hinge_kinematics.py` |
 | **Bản lề** | mắt mộng gỗ + chốt Ø6 | **mắt mộng gỗ + chốt gỗ Ø6** (không đổi) | `hinge_kinematics.py` |
-| Ống gỗ | Ø18 | **Ø12,2**, nhô ra 6,1 mỗi bên | `hinge_kinematics.py` |
+| Ống gỗ | Ø18 | **Ø12,2**, CHÌM HẲN — nhô ra 0,0 | `hinge_kinematics.py` |
+| Hốc âm hai tay | (chưa có) | **sâu 16** (từ 12) → vách 22 | `handle_option_c.py` |
 | Khe ráp giữa | 0,6 | **1,5 ±0,3** | `lid_solid_calc.py` |
 | Khóa nắp | không có | **8 cặp nam châm nắp↔thân** | `lid_latch.py` |
-| Khối lượng | không tính | **6,17 / 6,78 kg** | `box_spec.py` |
-| Tải thiết kế | — | **181 / 200 N** | `box_spec.py` |
+| Khối lượng | không tính | **6,20 / 6,82 kg** | `box_spec.py` |
+| Tải thiết kế | — | **182 / 201 N** | `box_spec.py` |
 
 ## 1. Bề rộng: 370
 
-Vách bản lề buộc phải dày 18 — lúc quyết định là vì ống gỗ R9, nay là vì **hốc âm hai tay** (sâu 12 +
-thành sau 6). Lý do đổi nhưng con số không đổi, nên chuỗi X 354 của Rev B vẫn không dùng được. Ba cách
-đóng lại:
+Vách bản lề dày **22** — lúc quyết định là 18 vì ống gỗ R9, nay là 22 vì **hốc âm hai tay sâu 16 +
+thành sau 6**. Lý do đổi và con số cũng đổi, nhưng kết luận về khoang thì không: chuỗi X 354 của Rev B
+vẫn không dùng được. Ba cách đóng lại (so ở bề rộng khoang, không phải bề dày vách):
 
 | Vách | Khay | Ngăn | Phụ kiện | Tổng | Khối lượng | Hộp/lô | Đổi lại |
 |---:|---:|---:|---:|---:|---:|---:|---|
-| 18 | 126 | 6 | 70 | **370** | 6,78 kg | 2 | không đổi gì |
-| 18 | 126 | 4 | 70 | 366 | 6,71 kg | 2 | vách ngăn 4 mm, mảnh 82:1 |
-| 18 | 126 | 6 | 62 | 362 | 6,66 kg | 2 | mất 2 chi tiết công năng |
+| 22 | 126 | 6 | 70 | **378** | 6,82 kg | 2 | không đổi gì |
+| 22 | 126 | 4 | 70 | 374 | 6,75 kg | 2 | vách ngăn 4 mm, mảnh 82:1 |
+| 22 | 126 | 6 | 62 | 370 | 6,70 kg | 2 | mất 2 chi tiết công năng |
 
 *(khối lượng khay cocobolo ở cấu hình hiện hành; chạy `python3 tools/width_options.py` để đối chiếu)*
 
@@ -47,8 +48,9 @@ Chênh khối lượng 370 ↔ 362 chỉ 0,13 kg. Không đáng đổi.
 
 Bỏ sống khóa và quai da. Hai hốc lòng bàn tay 120 × 30 sâu 16 phay vào vách trước và vách sau.
 
-Hốc âm nằm ở **vách trái và phải** — tức vách bản lề, dày 18, đủ nuốt hốc sâu 12 + thành sau 6 mà **không
-phải nối gỗ ra ngoài**. Phủ bì không đổi.
+Hốc âm nằm ở **vách trái và phải** — vách dày **22**, nuốt hốc sâu **16** + thành sau 6 mà **không
+phải nối gỗ ra ngoài**. Chiều sâu 16 chứ không phải 12: đốt ngón tay ngoài cùng dài ~15 mm, ở hốc 12 nó
+chỉ lọt 80 % nên ngón không gập lại móc được, tải dồn hết qua đầu ngón bấm vào mép (104 kPa).
 
 *(Bản đầu đặt hốc âm ở vách trước/sau dày 10 và kết luận C phải nới Y 350 → 374. Kết luận đó sai vì chọn
 nhầm vách: vách trước/sau còn phải mang cả ba khe luồn ngón nhấc khay lẫn tám nam châm khóa nắp — ba chi
@@ -56,10 +58,10 @@ tiết tranh nhau một bộ phận dày 10 mm.)*
 
 | | A · sống khóa + quai da | C · hốc âm hai tay |
 |---|---|---|
-| Phủ bì | 370 × 362 × 78 | **370 × 350 × 62** |
+| Phủ bì | 370 × 362 × 78 | **378 × 350 × 62** |
 | Thể tích bao | 10,45 L | **8,03 L** |
-| Khối lượng (khay cocobolo) | 7,19 kg | **6,78 kg** |
-| Khối lượng (khay lõi ổn định) | 6,59 kg | **6,17 kg** |
+| Khối lượng (khay cocobolo) | 7,19 kg | **6,82 kg** |
+| Khối lượng (khay lõi ổn định) | 6,59 kg | **6,20 kg** |
 | Số tay | một | hai |
 | Tải mỗi tay | 71 N | **34 N** |
 | Chi tiết chuyển động | 2 chốt xoay | **0** |
@@ -159,9 +161,9 @@ và cách nhấc AC-01 bằng kẹp hai dải gỗ qua hõm ngón rãnh Joker �
 **(b) Ống bản lề Ø18 → Ø12** (bước trung gian, nay đã bỏ). Lập luận khi đó: ống phải tiếp tuyến cả vành thân
 lẫn mặt trên nắp, nên R = nửa bề dày nắp; muốn ống thanh hơn thì phải làm nắp mỏng hơn.
 
-![Tổng thể nắp đóng: mắt mộng gỗ Ø12,2 chạy dọc cạnh trái, không một chi tiết kim loại.](figs/fig12a-tong-the-nap-dong.png)
+![Tổng thể nắp đóng: mắt mộng gỗ Ø12,2 nằm chìm trong hạ bậc dọc cạnh trái, không một chi tiết kim loại.](figs/fig12a-tong-the-nap-dong.png)
 
-**(c) Bỏ ống gỗ Ø15: đưa trục xoay ra arris.** Đây là thay đổi lớn nhất của phiên này, và nó bắt đầu từ
+**(c) Bỏ ống gỗ Ø15: đưa trục xoay ra khỏi giữa bề dày nắp.** Đây là thay đổi lớn nhất của phiên này, và nó bắt đầu từ
 một câu hỏi: *bản lề trong ảnh gần như vô hình, mà nắp vẫn dày — sao họ làm được?*
 
 Lập luận (b) **đúng, nhưng chỉ đúng bên trong một giả thiết chưa hề được đặt câu hỏi**: rằng trục xoay
@@ -174,22 +176,36 @@ chứ không phải hình học. Ràng buộc thật sự chỉ có một: cánh
 |---|---:|---:|---:|---:|---|
 | giữa bề dày nắp | (7,5 , 54,5) | 7,52 | Ø15,0 | 0 | phải PHAY |
 | lùi vào 2 mm | (2,0 , 54,5) | 7,55 | Ø15,1 | 0 | phải PHAY |
-| **trên mặt ngoài, ở arris** | **(0 , 47)** | **0,00** | **Ø12,2** | 6,1 | **tự nhiên** |
+| trên mặt ngoài, ở arris | (0 , 47) | 0,00 | Ø12,2 | **6,1** | tự nhiên |
+| **lùi vào đúng R** | **(6,1 , 47)** | **0,00** | **Ø12,2** | **0,0** | **tự nhiên** |
 
-R tụt về 0 **đúng khi trục nằm trên mặt phẳng ngoài của thân**: mặt đầu cánh nắp *chính là* mặt phẳng
-x = 0, nên trục nằm trên nó thì cả mặt đầu là một tia xuất phát từ trục. **Quy tắc: trục cắm sâu vào
-vật liệu bao nhiêu thì phải bỏ đi bấy nhiêu** — và ở giữa bề dày nắp, con số đó đúng bằng nửa bề dày nắp.
+R tụt về 0 **đúng khi trục nằm trên mặt phẳng của mép đầu cánh nắp**: mặt đầu đó là một tia xuất phát
+từ trục nên quay bao nhiêu cũng chỉ trượt trên chính nó. **Quy tắc: trục cắm sâu vào vật liệu bao nhiêu
+thì phải bỏ đi bấy nhiêu** — và ở giữa bề dày nắp, con số đó đúng bằng nửa bề dày nắp.
 
-Đưa trục ra arris thì đường kính ống hết bị bề dày nắp ép, và được định lại theo **độ bền thành gỗ quanh
-lỗ chốt**: Ø12,2 = chốt gỗ Ø6 + thành 3,0 mỗi bên. Mảnh hơn 1,23 lần. Kèm theo: mặt chặn 180° trở thành
-**tự nhiên** (mặt cạnh nắp áp vào mặt vách, 3 335 mm², hệ số 29× dưới người tỳ 5 kg) thay cho mặt phay
-10× trong lòng mộng, và cánh mở nằm **phẳng bằng vành thân** thay vì cao hơn 15 mm.
+Đường kính ống hết bị bề dày nắp ép, và được định lại theo **độ bền thành gỗ quanh lỗ chốt**:
+Ø12,2 = chốt gỗ Ø6 + thành 3,0 mỗi bên. Mảnh hơn 1,23 lần. Kèm theo: mặt chặn 180° trở thành **tự nhiên**
+(mặt cạnh nắp áp vào mặt thân, 3 335 mm², hệ số 29× dưới người tỳ 5 kg) thay cho mặt phay 10× trong lòng
+mộng, và cánh mở nằm **phẳng bằng vành thân** thay vì cao hơn 15 mm.
 
-**Cái giá, nói thẳng:** tâm ống nằm trên mặt ngoài vách nên nửa ống nhô ra **6,1 mm mỗi bên** — phủ bì X
-đi từ 370 lên **382,2**. Lòng hộp, khay và chuỗi X của thân không đổi.
+**Hàng cuối là phương án đã chốt (họ C).** Lùi trục vào đúng bán kính ống thì ống tiếp tuyến mặt ngoài
+vách **từ bên trong** — **chìm hẳn, nhô ra 0,0 mm**, phủ bì X không phình. Hai hệ quả bắt buộc, cả hai
+đều là trị số suy ra:
+
+- **mép ngoài cánh nắp lùi vào 6,1 mm** — bằng đúng bán kính ống;
+- **hạ bậc vành ngoài trên của vách 6,1 sâu × 15 cao**, suốt 350 mm. Cao phải ≥ bề dày nắp: quét số cho
+  ngưỡng **15,01 mm**, thấp hơn một ly là góc trên của mặt đầu cánh nắp chạm vào vách.
 
 Vì bề dày nắp hết bị ràng buộc, nó được chọn lại theo công năng: **15 mm**, cho khay bỏ bài sâu **5,0 mm**
 (thay vì 3,5) và tấm Nu **7 mm** (lip rãnh phay được).
+
+**(d) Hốc âm hai tay 12 → 16 sâu.** Ở 12 mm, đốt ngón tay ngoài cùng (~15 mm) chỉ lọt 80 %: ngón không
+gập lại **móc** được, toàn bộ tải dồn qua đầu ngón bấm vào mép — đúng trường hợp "dồn mép" 104 kPa mà
+`handle_option_c.py` §4 đã cảnh báo. Ở 16 mm cả đốt lọt vào và còn 1 mm kê.
+
+Kéo theo: vách bản lề = 16 + 6 = **22** (nay `box_spec.py` tính `WALL_HINGE = GRIP_D + GRIP_BACK` nên hai
+trị số không thể lệch nhau), chuỗi X dài thêm 8 mm → **378**. Dải gỗ trên hốc còn **15,9 dày** sau hạ bậc
+bản lề, hệ số an toàn khi xách **23×**.
 
 ### Một lần đi chệch phải ghi lại
 

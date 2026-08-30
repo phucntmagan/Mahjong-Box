@@ -81,18 +81,20 @@ for xc in list(B.MAG_X) + [W-x for x in B.MAG_X]:         # hoc nam cham khoa na
     for yc in (B.MAG_Y, YB-B.MAG_Y):
         b.append(v.rect(xc-B.MAG[0]/2, xc+B.MAG[0]/2, yc-B.MAG[1]/2, yc+B.MAG[1]/2,
                         '#2f5d9e', '#1a3a66', 1.0))
-RK = S['R_KN']
-for xp in (0.0, W):                # mat mong go — ong O2RK co TAM tren mat ngoai vach
+RK, RB = S['R_KN'], S['REBATE_D']
+for xp in (S['PIN_X'], W - S['PIN_X']):   # truc chot: LUI VAO dung RK -> ong chim han
+    lo, hi = min(xp-RK, xp+RK), max(xp-RK, xp+RK)
+    b.append(v.rect(lo, hi, kn[0][0]-2, kn[-1][0]+B.KN_LEN+2, VOID, ACC, 0.9,
+                    'stroke-dasharray="3,3"'))          # ha bac vanh, suot chuoi mong
     for y0, is_body in kn:
-        b.append(v.rect(xp-RK, xp+RK, y0, y0+B.KN_LEN,
-                        WALL if is_body else LID, CUT, 0.8))
-    b.append(v.path([(xp, kn[0][0]-10), (xp, kn[-1][0]+B.KN_LEN+10)], ACC, 1.4, '10,4'))
+        b.append(v.rect(lo, hi, y0, y0+B.KN_LEN, WALL if is_body else LID, CUT, 0.8))
+    b.append(v.path([(xp, kn[0][0]-12), (xp, kn[-1][0]+B.KN_LEN+12)], ACC, 1.4, '10,4'))
 # chuoi kich thuoc
 xs_ = [0, WH, WH+BAY, x_ac[0], x_ac[1], W-WH-BAY, W-WH, W]
 for i in range(len(xs_)-1):
     b.append(v.dim(xs_[i], xs_[i+1], 0, f'{xs_[i+1]-xs_[i]:.0f}', dy=30))
 b.append(v.dim(0, W, 0, f'{W:.0f}  THAN', dy=54))
-b.append(v.dim(-S['R_KN'], W+S['R_KN'], 0, f"{S['X_OA']:.1f}  PHU BI X (ke ong ban le)", dy=104))
+b.append(v.dim(0, W, 0, f"{S['X_OA']:.1f}  PHU BI X (ong ban le chim han, khong nho ra)", dy=104))
 for y0, y1, lbl, dx in [(FB, YB-FB, f'{IY:.0f}', 20), (0, YB, f'{YO:.0f}  PHU BI Y', 48)]:
     xx = v.X(W)+dx
     b.append(f'<line x1="{xx:.1f}" y1="{v.Z(y0):.1f}" x2="{xx:.1f}" y2="{v.Z(y1):.1f}" '
@@ -115,12 +117,13 @@ b.append(T(v.X(XS-20), v.Z(YB+14), 'B', font_size=11, font_weight='bold', fill=H
            text_anchor='middle'))
 # bong so
 ITEMS = [
- (1, (0, kn[0][0]+B.KN_LEN/2), 'L',
-  f'Truc chot go O{B.KN_PIN:.0f} nam DUNG tren arris: X = 0 (mat ngoai vach) va '
-  f'Z{S["Z_RIM"]:.0f} (vanh than). Doi xung hai ben.'),
- (2, (W-S['R_KN'], kn[4][0]+B.KN_LEN/2), 'R',
+ (1, (S['PIN_X'], kn[0][0]+B.KN_LEN/2), 'L',
+  f'Truc chot go O{B.KN_PIN:.0f} LUI VAO {S["PIN_X"]:.1f} tu mat ngoai vach, o Z{S["Z_RIM"]:.0f} '
+  f'(vanh than) — ong go chim han, KHONG nho ra ngoai phu bi. Doi xung hai ben.'),
+ (2, (W-S['PIN_X'], kn[4][0]+B.KN_LEN/2), 'R',
   f'{B.N_KN} mat mong go x {B.KN_LEN:.0f}, buoc {S["KN_PITCH"]:.0f}, chuoi {S["KN_RUN"]:.0f}. '
-  f'Mat sam thuoc THAN, mat sang thuoc NAP. Ong go O{2*S["R_KN"]:.1f}.'),
+  f'Mat sam thuoc THAN, mat sang thuoc NAP. Ong go O{2*S["R_KN"]:.1f}. Ha bac vanh '
+  f'{S["REBATE_D"]:.1f} sau x {S["REBATE_H"]:.0f} cao suot {B.LID_L:.0f}.'),
  (3, (WH/2, GY1-14), 'L',
   f'Hoc am hai tay {B.GRIP_W:.0f} x {B.GRIP_H:.0f} sau {B.GRIP_D:.0f}, Y {GY0:.0f}..{GY1:.0f}, '
   f'nam gon trong vach ban le {WH:.0f} — khong noi go ra ngoai.'),
@@ -135,8 +138,8 @@ ITEMS = [
  (8, (x_div[0][1], YB*0.78), 'T',
   f'Vach ngan {DIV:.0f}, cao toi vanh tai chinh vi tri no.'),
  (9, (WH/2, kn[-1][0]+30), 'L',
-  f'Vach ban le {WH:.0f} — dinh ra boi hoc am: sau {B.GRIP_D:.0f} + thanh sau '
-  f'{B.GRIP_BACK:.0f}. Ong go chi an {S["R_KN"]:.1f} mm.'),
+  f'Vach ban le {WH:.0f} — SUY RA tu hoc am: sau {B.GRIP_D:.0f} + thanh sau '
+  f'{B.GRIP_BACK:.0f}. Dai go tren hoc con {S["GRIP_LEDGE_T"]:.1f} day sau ha bac.'),
  (10, (B.MAG_X[1], B.MAG_Y), 'B',
   f'Hoc nam cham khoa nap {B.MAG[0]+0.2:.1f} x {B.MAG[1]+0.2:.1f} x sau {B.MAG_REC:.1f}, '
   f'8 cai tren than (va 8 doi ung tren nap). Vi tri +/-0,2.'),
@@ -205,7 +208,7 @@ for left in (True, False):
     b.append(va.poly([(xa, za), (xb_, zb), (xb_, Z_LID), (xa, Z_LID)], LID, CUT, 1.1))
     b.append(va.rect(xa+(B.STILE if left else 0), xb_-(0 if left else B.STILE),
                      Z_LID-B.S_TOP-B.PAN_T, Z_LID-B.S_TOP, NU, CUT, 0.8))
-for x0 in (0, W):                                   # ong go mat mong tren arris
+for x0 in (S['PIN_X'], W - S['PIN_X']):             # ong go mat mong, chim han
     b.append(va.circ((x0, Z_RIM), S['R_KN'], LID, CUT, 1.2))
 b.append(va.path([(-4, Z_RIM), (W+4, Z_RIM)], '#2f7a3c', 0.9, '6,4'))
 b.append(va.dim(0, W, 0, f'{W:.0f}', dy=22))
@@ -247,33 +250,39 @@ b.append(f'<line x1="{vb.X(YB*0.62):.1f}" y1="{vb.Z(0):.1f}" x2="{vb.X(YB*0.62):
          f'<text x="{vb.X(YB*0.62):.1f}" y="{vb.Z(0)+39:.1f}" text-anchor="middle" '
          f'font-size="11" font-weight="bold">A</text>')
 
-# --- CT 1: mat mong go tren arris
-SD = 7.0
-RH, KH = S['R_KN'], S['KN_HOLE']
+# --- CT 1: mat mong go CHIM HAN (ho C)
+SD = 3.5
+RH, KH, RB = S['R_KN'], S['KN_HOLE'], S['REBATE_D']
+PXX, RBH = S['PIN_X'], S['REBATE_H']
+Z_BOT = Z_RIM - 21
 def arcd(cx, cz, r, a0, a1, n=20):
     return [(cx+r*math.cos(math.radians(a0+(a1-a0)*i/n)),
              cz+r*math.sin(math.radians(a0+(a1-a0)*i/n))) for i in range(n+1)]
-vd = V(806, 116+Z_RIM*SD, SD)
-b.append(panel(736, 92, 224, 214, f'CT 1 — mat mong go tren arris.  TL {SD:.0f}:1'))
-# than: vach + vanh Z_RIM ; goc arris duoc ong go chiem cho
-b.append(vd.poly([(0, Z_RIM-12), (0, Z_RIM-RH)] + arcd(0, Z_RIM, RH, 270, 360)
-                 + [(WH, Z_RIM), (WH, Z_RIM-12)], WALL, CUT, 1.2))
-# nap: mat duoi Z_RIM ; goc arris duoi cung do ong go chiem
-b.append(vd.poly([(0, Z_RIM+RH)] + arcd(0, Z_RIM, RH, 90, 0)
-                 + [(WH, Z_RIM), (WH, Z_LID), (0, Z_LID)], LID, CUT, 1.2))
-# ong go: nua nho ra ngoai + lo chot
-b.append(vd.circ((0, Z_RIM), RH, LID, CUT, 1.4))
-b.append(vd.circ((0, Z_RIM), KH/2, '#1a1208', CUT, 1.0))
-b.append(vd.path([(-RH-2, Z_RIM), (WH+3, Z_RIM)], '#2f7a3c', 1.0, '5,3'))
-b.append(vd.path([(0, Z_RIM-14), (0, Z_LID+3)], HID, 1.0, '8,3,2,3'))
-b.append(T(vd.X(WH+4), vd.Z(Z_RIM)+3, f'Z{Z_RIM:.0f}', font_size=8.5, fill='#2f7a3c'))
-b.append(T(vd.X(WH+4), vd.Z(Z_LID)+3, f'Z{Z_LID:.0f}', font_size=8.5, fill='#2f7a3c'))
-b.append(vd.dim(-RH, 0, Z_RIM, f'{RH:.1f} nho ra', dy=-42, fs=8.5))
-for k, t in enumerate([f'truc chot = (0 , {Z_RIM:.0f}) — dung tren arris, tu chuan B va A',
-                       f'ong go O{2*RH:.1f} = chot O{B.KN_PIN:.0f} + thanh go {S["KN_WALL_EFF"]:.1f} moi ben',
-                       f'nua ong nho ra ngoai {RH:.1f} -> phu bi X {S["X_OA"]:.1f}',
-                       f'mat chan 180 do: {S["STOP_H"]:.2f} trong doan mong, {B.T_LID:.0f} ngoai']):
-    b.append(T(748, 258+k*13, t, font_size=9, fill=DIM))
+vd = V(812, 118 + Z_LID*SD, SD)
+b.append(panel(736, 92, 224, 214, f'CT 1 — mat mong go, chim han.  TL {SD:.1f}:1'))
+# THAN: mat ngoai x=0 den Z_RIM-RBH, roi ha bac vao RB, roi ong go
+b.append(vd.poly([(0, Z_BOT), (0, Z_RIM-RBH), (RB, Z_RIM-RBH), (RB, Z_RIM-RH)]
+                 + arcd(PXX, Z_RIM, RH, 270, 360)
+                 + [(WH, Z_RIM), (WH, Z_BOT)], WALL, CUT, 1.2))
+# NAP: mep ngoai lui vao dung PIN_X
+b.append(vd.poly([(PXX, Z_RIM+RH)] + arcd(PXX, Z_RIM, RH, 90, 0)
+                 + [(WH, Z_RIM), (WH, Z_LID), (PXX, Z_LID)], LID, CUT, 1.2))
+b.append(vd.circ((PXX, Z_RIM), RH, LID, CUT, 1.4))
+b.append(vd.circ((PXX, Z_RIM), KH/2, '#1a1208', CUT, 1.0))
+b.append(vd.path([(-3, Z_RIM), (WH+2, Z_RIM)], '#2f7a3c', 1.0, '5,3'))
+b.append(vd.path([(0, Z_BOT-3), (0, Z_LID+4)], HID, 1.0, '8,3,2,3'))
+b.append(T(vd.X(WH+3), vd.Z(Z_RIM)+3, f'Z{Z_RIM:.0f}', font_size=8, fill='#2f7a3c'))
+b.append(T(vd.X(WH+3), vd.Z(Z_LID)+3, f'Z{Z_LID:.0f}', font_size=8, fill='#2f7a3c'))
+b.append(vd.dim(0, RB, Z_LID, f'{RB:.1f}', dy=-5, fs=8))
+b.append(arrow(vd.X(-6), vd.Z(Z_RIM-RBH/2), vd.X(RB-0.5), vd.Z(Z_RIM-RBH/2), ACC, 1.3, 4))
+b.append(T(vd.X(-7), vd.Z(Z_RIM-RBH/2)+3, 'hạ bậc', text_anchor='end', font_size=8, fill=ACC))
+for k, t in enumerate([f'trục chốt ({PXX:.1f} , {Z_RIM:.0f}) — lùi vào {PXX:.1f}',
+                       f'ống Ø{2*RH:.1f} tiếp tuyến mặt ngoài TỪ TRONG',
+                       f'→ nhô ra 0,0 mm',
+                       f'hạ bậc {RB:.1f} × {RBH:.0f} = đúng bề dày nắp',
+                       f'mép nắp lùi {S["LEAF_X0"]:.1f}',
+                       f'chặn 180°: {S["STOP_A"]:.0f} mm²']):
+    b.append(T(742, 252 + k*11, t, font_size=8, fill=DIM))
 
 # --- CT 2: khe luon ngon
 SE = 5.6

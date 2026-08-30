@@ -1,8 +1,9 @@
 # Phương án nắp gỗ đặc — khung gỗ đỏ ôm tấm Nu
 
 > **Cập nhật 29-08-2026 — lập luận đã đổi trục, kết luận không đổi.** Bản gốc chứng minh "không dùng
-> tấm Nu đặc" bằng chuỗi mắt mộng nằm ở **giữa bề dày nắp**. Trục xoay đã dời ra **arris** nên chuỗi
-> mắt mộng đổi vị trí và đường kính (Ø18 → **Ø12,2**) — xem `docs/DONG-HOC-BAN-LE.md`. Bản lề vẫn là
+> tấm Nu đặc" bằng chuỗi mắt mộng nằm ở **giữa bề dày nắp**. Trục xoay nay **lùi vào 6,1 mm** từ mặt
+> ngoài vách nên chuỗi mắt mộng đổi vị trí và đường kính (Ø18 → **Ø12,2**, chìm hẳn không nhô ra) —
+> xem `docs/DONG-HOC-BAN-LE.md`. Bản lề vẫn là
 > **mắt mộng gỗ, không kim loại**. Kết luận **khung + tấm thả vẫn đúng**, nhưng nay đứng trên hai chân
 > chắc hơn: **khe ráp giữa** và **đố dọc bản lề**. Mục dưới viết lại theo `tools/lid_solid_calc.py`.
 
@@ -55,12 +56,12 @@ Không tính được bằng bảng, nhưng chặn thiết kế:
 |---|---|---|
 | Đố dọc cạnh bản lề | 34 × 350 × 15 | cocobolo đặc, thớ dọc 350; mang 3 mắt mộng Ø12,2 và lỗ chốt Ø6,20 |
 | Đố dọc cạnh khe giữa | 34 × 350 × 15 | không còn rãnh sống khóa |
-| Đố ngang trước/sau | 30 × 116,25 | |
-| Lòng khung | 116,25 × 290 | |
-| Tấm Nu | 128,25 × 302 × **7** | mộng 6 vào rãnh sâu 9 → **thả 3 mm mỗi phía** |
+| Đố ngang trước/sau | 30 × 114,15 | |
+| Lòng khung | 114,15 × 290 | |
+| Tấm Nu | 126,15 × 302 × **7** | mộng 6 vào rãnh sâu 9 → **thả 3 mm mỗi phía** |
 | Khe ráp giữa | 0,6 → **1,5 ±0,3** | không có sống khóa phủ, nên đây là **đặc tính nhìn thấy** |
 
-Chỉ hai thanh đố nằm trong chuỗi kích thước bề rộng: 184,25 = 34 + 116,25 (THẢ) + 34.
+Chỉ hai thanh đố nằm trong chuỗi kích thước bề rộng: 182,15 = 34 + 114,15 (THẢ) + 34.
 Tấm Nu nở vào khoảng trống 3 mm trong rãnh, không đẩy vào khe ráp giữa.
 
 Tấm Nu **7 mm chứ không phải 10**: ở tấm 10 thì lip dưới của rãnh ôm tấm chỉ còn 0,23 mm — không phay
@@ -73,7 +74,7 @@ Tấm Nu **7 mm chứ không phải 10**: ở tấm 10 thì lip dưới của r�
 ## Khay bỏ bài hình thành miễn phí
 
 Khung dày đều 15, tấm Nu dày 7 thụt 3 mm dưới mặt trên khung → mặt dưới tấm cao hơn mặt dưới khung
-**5,0 mm**. Lòng lõm 116,25 × 290 đó chính là khay bỏ bài, và khi mở 180° nó nằm ngửa lên đúng cao độ
+**5,0 mm**. Lòng lõm 114,15 × 290 đó chính là khay bỏ bài, và khi mở 180° nó nằm ngửa lên đúng cao độ
 vành thân Z47.
 
 Giải luôn: §3.1 review Rev B (cánh nắp cần lòng lõm) và vấn đề "không phay được lòng ở mép 8 mm".
@@ -82,10 +83,10 @@ Giải luôn: §3.1 review Rev B (cánh nắp cần lòng lõm) và vấn đề 
 
 | Cấu tạo khay | Gỗ | + Quân | TỔNG |
 |---|---:|---:|---:|
-| Khay cocobolo | 4,35 | 2,43 | **6,78 kg** |
-| Khay lõi ổn định | 3,73 | 2,43 | **6,17 kg** |
+| Khay cocobolo | 4,38 | 2,43 | **6,82 kg** |
+| Khay lõi ổn định | 3,77 | 2,43 | **6,20 kg** |
 
-Tải thiết kế **200 N** (khay cocobolo) / **181 N** (khay lõi ổn định). Không còn sống khóa, không còn
+Tải thiết kế **201 N** (khay cocobolo) / **182 N** (khay lõi ổn định). Không còn sống khóa, không còn
 quai — xem `docs/CHOT-REV-C.md`.
 
 ## Mộng khung bằng cocobolo — rủi ro lớn nhất
@@ -108,8 +109,8 @@ lệch màu ở mép nắp.
 
 ## Tấm Nu — mua và xử lý
 
-Cần 2 tấm đã lạng **128,25 × 302 × 9** (bào xuống 7), lạng liên tiếp để book-match.
-Khối Nu thô tối thiểu ~168 × 342 × 36.
+Cần 2 tấm đã lạng **126,15 × 302 × 9** (bào xuống 7), lạng liên tiếp để book-match.
+Khối Nu thô tối thiểu ~166 × 342 × 36.
 
 | | |
 |---|---|
@@ -123,7 +124,7 @@ Khối Nu thô tối thiểu ~168 × 342 × 36.
 
 Sống khóa 44 × 20, chốt xoay Ø16 và quai da đều **đã bỏ** cùng với phương án A. Khóa nắp nay là
 8 cặp nam châm nối nắp với thân — xem `docs/KHOA-NAP.md`. Nắp **đều 15, không vát**. Phủ bì
-**382,2 × 350 × 62** (thân 370 + ống bản lề nhô 6,1 mỗi bên).
+**378 × 350 × 62** — ống bản lề chìm hẳn, không nhô ra.
 
 ## Pháp lý
 
@@ -138,8 +139,8 @@ Khung nắp cocobolo còn quyết định số hộp gửi được mỗi lô h�
 
 | Cấu tạo khay | Dalbergia / hộp | Tối đa mỗi lô (ngưỡng 10 kg) |
 |---|---:|---:|
-| Khay cocobolo | 3,86 kg | **2 hộp** |
-| Khay lõi ổn định | 2,40 kg | **4 hộp** |
+| Khay cocobolo | 3,90 kg | **2 hộp** |
+| Khay lõi ổn định | 2,44 kg | **4 hộp** |
 
 ## Thay đổi so với bản trước
 

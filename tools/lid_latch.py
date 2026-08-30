@@ -44,8 +44,8 @@ def theta_for_gap(g, z=Z_BOLT):
 
 # ==========================================================================
 hr("1. KHOA PHAI CHAN HUONG NAO — dong hoc")
-print(f"  Truc chot P = ({PX:.0f} , {PZ:.0f}) — canh ngoai tren cua vach ban le,")
-print(f"  KHONG phai giua be day nap (xem hinge_kinematics.py muc 1).")
+print(f"  Truc chot P = ({PX:.1f} , {PZ:.0f}) — lui vao {PX:.1f} tu mat ngoai vach, o cao do")
+print(f"  vanh. KHONG phai giua be day nap (xem hinge_kinematics.py muc 1).")
 print(f"  Mep khe rap giua = ({XA:.2f} , {ZT:.0f}),")
 print(f"  cach truc {Rs:.2f} mm.\n")
 print(f"  Quay canh mot goc nho theta, mep khe di chuyen:")

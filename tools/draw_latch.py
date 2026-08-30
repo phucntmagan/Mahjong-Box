@@ -22,7 +22,8 @@ def rot_about(p, c, th):
     return (c[0] + x*cs - z*sn, c[1] + x*sn + z*cs)
 PIN_L, PIN_R = (PX, PZ), (W-PX, PZ)
 def leaf(th, right=False):
-    p = [(0, Z_RIM), (LW, Z_SEAM), (LW, Z_LID), (0, Z_LID)]
+    x0, x1 = S['LEAF_X0'], S['LEAF_X0'] + LW
+    p = [(x0, Z_RIM), (x1, Z_SEAM), (x1, Z_LID), (x0, Z_LID)]
     if right:
         p = [(W-x, z) for x, z in p]
         return [rot_about(q, PIN_R, -th) for q in p]

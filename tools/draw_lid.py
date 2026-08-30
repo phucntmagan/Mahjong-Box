@@ -71,7 +71,7 @@ b=[panel(80,92,220,380,'A · Mặt bằng một cánh  TL 1:1,16'),
 _S = B.derive()
 for i in range(B.N_KN):                            # chuoi mat mong go tren do doc
     y0 = _S['KN_Y0'] + i*_S['KN_PITCH']
-    b.append(p.rect(-_S['R_KN'], _S['R_KN'], y0, y0+B.KN_LEN,
+    b.append(p.rect(0, 2*_S['R_KN'], y0, y0+B.KN_LEN,
                     SP if i % 2 == 0 else FR, sw=0.9))
 b += [p.dim(0,ST_H,0,f'{ST_H:.0f}',dy=16), p.dim(ST_H,ST_H+op_w,0,f'lòng {op_w:.2f}',dy=16),
       p.dim(ST_H+op_w,LW,0,f'{ST_S:.0f}',dy=16), p.dim(0,LW,0,f'{LW:.2f}',dy=38),

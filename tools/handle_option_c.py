@@ -56,10 +56,15 @@ for a, bb in [("Kich thuoc", f"{B.GRIP_W:.0f} rong (theo Y) x {B.GRIP_H:.0f} cao
               ("Bang Z", f"{C['GRIP_Z0']:.0f} .. {C['GRIP_Z1']:.0f} — day hoc ngang san trong"),
               ("Be day vach tai hoc", f"{C['WALL_GRIP']:.0f} mm, KHONG noi go ra ngoai"),
               ("Thanh sau hoc", f"{B.GRIP_BACK:.0f} mm"),
-              ("Dai go TREN hoc", f"{C['GRIP_LEDGE']:.2f} mm (toi vanh than Z{C['Z_RIM']:.0f})"),
+              ("Dai go TREN hoc", f"cao {C['GRIP_LEDGE']:.2f} (toi vanh Z{C['Z_RIM']:.0f}) x day"
+                                  f" {C['GRIP_LEDGE_T']:.1f} (vach {C['WALL_GRIP']:.0f} tru ha bac"
+                                  f" ban le {C['REBATE_D']:.1f})"),
               ("Dai go DUOI hoc", f"{C['GRIP_SKIRT']:.0f} mm, lai duoc day hop {B.BOT:.0f} do lung"),
-              ("Va cham", f"khong — ban le brass nam tren vanh Z{C['Z_RIM']:.0f},"
-                          f" hoc am o Z{C['GRIP_Z1']:.0f} tro xuong")]:
+              ("Va cham voi ban le", f"ha bac ban le {C['REBATE_D']:.1f} sau nam o Z"
+                                     f"{C['Z_RIM']-C['REBATE_H']:.0f}..{C['Z_RIM']:.0f}; hoc am sau"
+                                     f" {B.GRIP_D:.0f} o Z{C['GRIP_Z0']:.0f}..{C['GRIP_Z1']:.0f}."
+                                     f" Chong nhau Z{C['Z_RIM']-C['REBATE_H']:.0f}..{C['GRIP_Z1']:.0f}"
+                                     f" — trong do hoc am sau hon nen ha bac khong lay them gi")]:
     print(f"   {a:22s}: {bb}")
 print(f"\n  Hai tay dat o hai vach trai/phai, cach nhau {C['W']:.0f} mm — hop gan vuong")
 print(f"  ({C['W']:.0f} x {C['Y_OA']:.0f}) nen dat o vach nao cung cho khoang cach hai tay nhu nhau.")
@@ -68,10 +73,12 @@ hr("3. KIEM BEN — dai go tren hoc la duong truyen luc duy nhat")
 m_C = B.mass_of(C, 'cocobolo')[2]
 P_des = m_C*9.81*B.DYN
 P_hand = P_des/2
-L, h, b = B.GRIP_W, C['GRIP_LEDGE'], C['WALL_GRIP']
+L, h, b = B.GRIP_W, C['GRIP_LEDGE'], C['GRIP_LEDGE_T']
 print(f"  Khoi luong {m_C:.2f} kg -> tai thiet ke {P_des:.0f} N (he so dong {B.DYN:.0f})"
       f" -> {P_hand:.0f} N moi tay\n")
-print(f"  Dai go tren hoc = dam nhip {L:.0f}, tiet dien {h:.2f} (cao) x {b:.0f} (day),")
+print(f"  Dai go tren hoc = dam nhip {L:.0f}, tiet dien {h:.2f} (cao) x {b:.1f} (day),")
+print(f"  Be day lay {C['WALL_GRIP']:.0f} tru {C['REBATE_D']:.1f} ha bac ban le — ha bac nam DUNG")
+print(f"  tren dai nay nen khong duoc bo qua.")
 print(f"  ngam hai dau vao chinh vach hai ben hoc. Tho go chay DOC nhip. Tot.")
 M = P_hand*L/8                      # ngam hai dau, tai phan bo giua nhip
 Zs = b*h**2/6
@@ -121,6 +128,22 @@ print(f"     hoc am chi co {A_flat:.0f} mm2 dau ngon tay: ap luc tinh "
       f"{m_C*9.81/2/A_flat*1000:.0f} kPa so voi {m_A*9.81/strapA*1000:.0f} kPa cua quai da.")
 print(f"   - Neu tran hoc phang va mep sac, luc don het ve mep truoc: "
       f"{m_C*9.81/2/A_edge*1000:.0f} kPa. Do la luc hoc am tro thanh kho chiu.")
+
+print(f"\n  CHIEU SAU HOC: {B.GRIP_D:.0f} mm — vi sao khong phai 12.")
+print(f"  Dot ngon tay ngoai cung (distal phalanx) dai ~{L_DISTAL:.0f} mm. De MOC duoc —")
+print(f"  tuc gap dot do lai va an vao mat trong dai go — ca dot phai lot vao trong hoc.")
+print(f"  {'sau hoc':>10s}{'dot ngon lot vao':>19s}{'con moc duoc?':>20s}{'dien tich ap':>16s}")
+for gd in (12.0, 14.0, 16.0, 18.0):
+    eng = min(gd, L_DISTAL)
+    a_f = N_FING*W_FING*eng
+    ok = 'CO, du ke' if gd >= L_DISTAL + 1 else ('vua du' if gd >= L_DISTAL else 'KHONG — chi bam mep')
+    print(f"  {gd:8.0f}{eng:16.0f} mm {ok:>19s}{a_f:11.0f} mm2")
+print(f"  O {12:.0f} mm dot ngon chi lot {12/L_DISTAL*100:.0f} %: ngon khong gap lai duoc,")
+print(f"  toan bo tai doi qua dau ngon bam vao mep — dung cai truong hop 'don mep' o tren")
+print(f"  ({m_C*9.81/2/A_edge*1000:.0f} kPa). O {B.GRIP_D:.0f} mm ca dot lot vao va con {B.GRIP_D-L_DISTAL:.0f} mm ke.")
+print(f"  Gia phai tra: vach ban le {B.GRIP_D:.0f} + {B.GRIP_BACK:.0f} = {B.WALL_HINGE:.0f} mm")
+print(f"  (truoc la 12 + 6 = 18) -> chuoi X dai them {2*(B.WALL_HINGE-18):.0f} mm.")
+
 print(f"\n  => Hai yeu cau bat buoc cho tran hoc, neu khong C mat het cai loi cua no:")
 print(f"     a) Tran hoc PHAI doc vao trong ~10 do de dau ngon tay ap deu ca "
       f"{min(B.GRIP_D,L_DISTAL):.0f} mm sau,")
