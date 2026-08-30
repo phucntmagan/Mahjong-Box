@@ -74,7 +74,7 @@ def sheet00():
     P.append(['Vách ngăn', '2', f'{B.INNER_Y + 2*B.DIV_TON:.0f} × {Z_RIM - Z_FL:.0f} × {DIV:.0f}',
               'cocobolo', f'kể cả mộng ngậm {B.DIV_TON:.0f} hai đầu'])
     P.append(['Đố dọc cánh nắp', '4', f'{B.LID_L:.0f} × {B.STILE:.0f} × {B.T_LID:.0f}',
-              'cocobolo', 'thẳng thớ; 2 chiếc mang mắt mộng'])
+              'cocobolo', 'XẺ XUYÊN TÂM, góc vòng năm ≥ 60° (P7); 2 chiếc mang mắt mộng'])
     P.append(['Đố ngang cánh nắp', '4', f'{S["OP_W"] + 2*B.TON:.1f} × {B.RAIL:.0f} × {B.T_LID:.0f}',
               'cocobolo', 'kể cả mộng hai đầu'])
     P.append(['Tấm Nu (tấm nâng)', '2', f'{S["PAN_L"]:.0f} × {S["PAN_W"]:.1f} × {S["PAN_TH"]:.0f}',
@@ -452,7 +452,8 @@ def sheetHD01():
     o.append(lead(*vd.P((B.PAN_REV/2, TL_)), 620, 360,
                   f'khe {B.PAN_REV:.1f} quanh lòng tấm', anchor='start'))
     # ---------------- BANG
-    rows = [['Đố dọc × 2', f'{B.LID_L:.0f} × {ST:.0f} × {TL_:.0f}', 'thẳng thớ dọc 350'],
+    rows = [['Đố dọc × 2', f'{B.LID_L:.0f} × {ST:.0f} × {TL_:.0f}',
+             f'XẺ XUYÊN TÂM, vòng năm ≥ 60° — P7'],
             ['Đố ngang × 2', f'{S["OP_W"]+2*B.TON:.1f} × {RL:.0f} × {TL_:.0f}', 'kể cả mộng hai đầu'],
             ['Tấm Nu nâng', f'{S["PAN_L"]:.0f} × {S["PAN_W"]:.2f} × {S["PAN_TH"]:.0f}',
              f'bậc {B.S_TOP:.0f} × {S["PAN_REB"]:.0f} quanh mép trên'],
@@ -469,16 +470,25 @@ def sheetHD01():
     o.append(t)
     o.append(T(1070, yy + 26, 'GỖ NỞ — vì sao có khe quanh lòng tấm',
                font_size=11, font_weight='bold', fill=INK))
-    mv = [['đã ổn định 11 %, ±{:.0f} %'.format(B.DMC_DES), f'{S["PAN_MOVE"]:.2f}',
+    mv = [['đã ổn định 11 %, ±{:.0f} % — TRƯỜNG HỢP THIẾT KẾ'.format(B.DMC_DES),
+           f'{S["PAN_MOVE"]:.2f}',
            f'{B.PAN_REV-S["PAN_MOVE"]:.2f}', f'{B.PAN_REV+S["PAN_MOVE"]:.2f}'],
-          ['lắp thẳng ở 9 %, +{:.0f} %'.format(B.DMC_DRY), f'{S["PAN_MOVE_DRY"]:.2f}',
+          ['xấu nhất, kể cả dung sai ±{:.2f}'.format(B.PAN_REV_TOL),
+           f'{S["PAN_MOVE"]:.2f}',
+           f'{B.PAN_REV-B.PAN_REV_TOL-S["PAN_MOVE"]:.2f}',
+           f'{B.PAN_REV+B.PAN_REV_TOL+S["PAN_MOVE"]:.2f}'],
+          ['lắp thẳng ở 9 %, +{:.0f} % — P5 CẤM'.format(B.DMC_DRY), f'{S["PAN_MOVE_DRY"]:.2f}',
            f'{B.PAN_REV-S["PAN_MOVE_DRY"]:.2f}', f'{B.PAN_REV+S["PAN_MOVE_DRY"]:.2f}']]
     t2, _ = table(1070, yy + 36, ['TRƯỜNG HỢP', 'DỊCH/PHÍA', 'KHE MIN', 'KHE MAX'], mv,
                   476, rh=20, fs=9.5, colw=[196, 96, 92, 92])
     o.append(t2)
     notes = [f'Tấm Nu THẢ trong rãnh — chỉ dán/chốt 1 điểm ở đúng tâm tấm. Dán quanh rãnh là tấm nứt.',
-             f'Tấm phải được ổn định về 11 % MC TRƯỚC khi lắp.',
-             f'Khe ráp giữa hai cánh {B.SEAM} ±0,3 — đặc tính nhìn thấy, không có sống khóa phủ.']
+             f'Khe quanh lòng tấm {B.PAN_REV:.1f} ±{B.PAN_REV_TOL:.2f} chỉ đủ khi tấm ĐÃ ổn định '
+             f'về 11 % MC (P5). Hàng cuối bảng bên phải là hậu quả nếu bỏ P5: khe âm, tấm ép vỡ mộng khung.',
+             f'Khe ráp giữa hai cánh {B.SEAM:.1f} ±{B.SEAM_TOL:.2f} — bào CHUNG hai mép giáp nhau '
+             f'sau khi lắp bản lề, không cộng hai bề rộng cánh.',
+             f'Đố dọc XẺ XUYÊN TÂM (P7): khe ráp giữa {B.SEAM:.1f} tính theo hệ số {B.RAD_TAN:.2f}. '
+             f'Xẻ tiếp tuyến thì khe đóng hẳn ở ΔMC {B.SEAM/(2*2*B.STILE*B.K["cocobolo ngang tho"]):.1f} %.']
     return sheet('HD-01', 'CÁNH NẮP', '1:2 / 1:1 / 4:1', 'cocobolo + Nu gõ đỏ',
                  f'{(S["V"]["khung nap"]/1e6*B.RHO["cocobolo"] + S["V"]["tam Nu"]/1e6*B.RHO["Nu go do"])/2:.2f} kg/cánh',
                  4, N_SH, ''.join(o), notes=notes)
@@ -868,12 +878,18 @@ def sheetQA01():
            ['P4', f'Đo lực tách 1 cặp nam châm {B.MAG[0]:.0f}×{B.MAG[1]:.0f}×{B.MAG[2]:.0f} qua lớp hoàn thiện',
             f'≥ {B.MAG_PULL*(1-B.MAG_DERATE):.0f} N mỗi cặp',
             'catalogue ghi 30 N khi tiếp xúc trực tiếp'],
-           ['P5', 'Ổn định tấm Nu và mọi phôi về 11 % MC', '11 % ±1',
-            f'lắp ở 9 % thì cả {B.DMC_DRY:.0f} % dồn về một phía'],
+           ['P5', 'Ổn định tấm Nu và mọi phôi về 11 % MC — ĐIỀU KIỆN CHẶN', '11 % ±1',
+            f'khe quanh lòng tấm {B.PAN_REV:.1f} chỉ đủ NẾU P5 đạt; bỏ P5 thì cần '
+            f'{S["PAN_MOVE_DRY"]:.2f} và tấm ép vỡ mộng khung'],
            ['P6', 'Đo cạnh quân xúc xắc thuộc ĐÚNG lô mua (tối thiểu 4 quân)',
             f'≤ {B.DIE:.1f} mm mỗi cạnh',
             f'ổ {B.DICE_SOCK:.0f} chỉ chừa {(B.DICE_SOCK-B.DIE)/2:.1f} mm mỗi bên; '
-            f'quân lớn hơn là làm lại cả ổ lẫn nắp che — xem AC-02']]
+            f'quân lớn hơn là làm lại cả ổ lẫn nắp che — xem AC-02'],
+           ['P7', 'Kiểm góc vòng năm của 4 đố dọc cánh nắp — phải XẺ XUYÊN TÂM',
+            '≥ 60° so với mặt đố',
+            f'khe ráp giữa {B.SEAM:.1f} tính theo hệ số xuyên tâm {B.RAD_TAN:.2f} '
+            f'(tra bảng). Xẻ tiếp tuyến thì khe đóng hẳn ở ΔMC '
+            f'{B.SEAM/(2*2*B.STILE*B.K["cocobolo ngang tho"]):.1f} %']]
     t, yy = table(x0, y0, ['#', 'PHÉP THỬ', 'TIÊU CHÍ ĐẠT', 'VÌ SAO'], pre, 1480, rh=26,
                   fs=10.5, colw=[50, 560, 350, 520])
     o.append(T(x0, yy + 34, 'DUNG SAI CHUNG', font_size=15, font_weight='bold', fill=INK))
@@ -882,8 +898,10 @@ def sheetQA01():
            ['Vị trí hốc nam châm', '±0,2', 'lệch quá thì hai cánh không đều'],
            ['Đồng phẳng vành thân', '≤ 0,2 trên 350', 'nắp đóng phải kín'],
            ['Đồng phẳng mặt nắp (tấm Nu ↔ khung)', '≤ 0,15', 'đặc tính nhìn thấy chính'],
-           ['Khe ráp giữa hai cánh', f'{B.SEAM} ±0,3', 'nhìn thấy, không có sống khóa phủ'],
-           ['Khe quanh lòng tấm Nu', f'{B.PAN_REV:.1f} ±0,3', 'chỗ cho gỗ nở'],
+           ['Khe ráp giữa hai cánh', f'{B.SEAM:.1f} ±{B.SEAM_TOL:.2f}',
+            'bào chung hai mép SAU khi lắp bản lề — không cộng hai bề rộng cánh'],
+           ['Khe quanh lòng tấm Nu', f'{B.PAN_REV:.1f} ±{B.PAN_REV_TOL:.2f}',
+            f'chỗ cho gỗ nở; xấu nhất {B.PAN_REV-B.PAN_REV_TOL:.2f} so với nở {S["PAN_MOVE"]:.2f}'],
            ['Góc mở nắp', '180° +0 / −1°', 'chặn tự nhiên bằng mặt cạnh nắp'],
            ['Độ nhám bề mặt lộ ra', 'P400 trước khi hoàn thiện', '']]
     t2, yy2 = table(x0, yy + 44, ['MỤC', 'DUNG SAI', 'GHI CHÚ'], tol, 720, rh=22, fs=10,
@@ -897,6 +915,8 @@ def sheetQA01():
            ['5', 'Ghép khung nắp, thả tấm Nu, chỉ chốt 1 điểm ở tâm tấm'],
            ['6', 'Đặt nắp lên thân, kẹp, khoan lỗ chốt bản lề XUYÊN cả hai (match-drill)'],
            ['7', 'Tháo, vét sạch, lắp chốt gỗ; kiểm mở 180° và đồng phẳng vành'],
+           ['7b', f'Bào CHUNG hai mép giáp nhau của hai cánh xuống khe {B.SEAM:.1f} — '
+                  f'khe do một lượt bào tạo ra, không do hai bề rộng cộng lại'],
            ['8', 'Phay hốc nam châm bằng dưỡng, dán nam châm, kiểm lực tách'],
            ['9', 'Hoàn thiện; dán nỉ; lắp khay']]
     t3, yy3 = table(x0 + 760, yy + 44, ['#', 'BƯỚC'], seq, 720, rh=22, fs=10, colw=[46, 674])
@@ -908,8 +928,8 @@ def sheetQA01():
                font_size=15, font_weight='bold', fill=INK))
     chk = [['Phủ bì X', f'{S["X_OA"]:.1f} ±0,5'], ['Phủ bì Y', f'{S["Y_OA"]:.0f} ±0,5'],
            ['Phủ bì Z (nắp đóng)', f'{S["Z_OA"]:.0f} ±0,5'],
-           ['Khe ráp giữa hai cánh', f'{B.SEAM} ±0,3 (đo 3 điểm)'],
-           ['Khe quanh lòng tấm Nu', f'{B.PAN_REV:.1f} ±0,3 (đo 4 cạnh × 2 cánh)'],
+           ['Khe ráp giữa hai cánh', f'{B.SEAM:.1f} ±{B.SEAM_TOL:.2f} (đo 3 điểm)'],
+           ['Khe quanh lòng tấm Nu', f'{B.PAN_REV:.1f} ±{B.PAN_REV_TOL:.2f} (đo 4 cạnh × 2 cánh)'],
            ['Đồng phẳng tấm Nu ↔ khung', '≤ 0,15'],
            ['Góc mở nắp', '180° +0 / −1°'],
            ['Cánh mở nằm ngang, mặt trên bằng vành', f'Z{Z_RIM:.0f} ±0,3'],

@@ -42,17 +42,22 @@ trên nắp, **27 mm** ở giữa bề dày, **33 mm** nếu sát mặt dưới.
 
 ## 2. Độ ẩm giết nốt họ nghiệm đó
 
-Mỗi cánh nắp có 68 mm gỗ ngang thớ nằm trong chuỗi bề rộng (hai đố dọc 34 mm; tấm Nu thả nên không
-đóng góp). Ở ΔMC 5 % mỗi cánh nở 0,54 mm → **khe ráp giữa đóng lại 1,09 mm**.
+Mỗi cánh nắp có 48 mm gỗ ngang bề rộng nằm trong chuỗi (hai đố dọc 24 mm **xẻ xuyên tâm**;
+tấm Nu thả nên không đóng góp). Ở ΔMC 5 % mỗi cánh nở 0.24 mm → **khe ráp giữa đóng lại 0.48 mm**.
 
-Bất kỳ khóa nào nối hai cánh với nhau đều phải có 1,09 mm rơ theo X để còn lắp được quanh năm. Mà
-1,09 mm rơ đó, theo mục 1, cho mỗi cánh mở 2,7° và **khe vênh lên 8,5 mm** — ngay cả khi chốt còn
-nguyên trong ổ.
+Bất kỳ khóa nào nối hai cánh với nhau đều phải có 0.48 mm rơ theo X để còn lắp được quanh năm. Mà
+0.48 mm rơ đó, theo mục 1, cho mỗi cánh mở 1.4° và **khe vênh lên 4.6 mm** — ngay cả khi
+chốt còn nguyên trong ổ.
+
+> Trị số này **nhỏ đi ba lần** so với bản trước (1,09 mm), vì Rev C3b thu đố dọc 34 → 24 và
+> xẻ xuyên tâm để siết khe ráp giữa xuống 0.7. Kết luận không đổi: 4.6 mm vênh vẫn là hỏng.
+> Và nếu P7 trượt, đố dọc hoá ra xẻ tiếp tuyến, thì chuyển vị quay lại 0.77 mm — lập luận chỉ
+> mạnh thêm chứ không yếu đi.
 
 **Hai mục đầu cộng lại cho một kết luận cứng:**
 
 - Khóa phải nối **NẮP với THÂN**, không phải cánh với cánh.
-- Và nó chỉ được chặn **phương Z**, để tự do theo X. Nếu nó chặn cả X, nó sẽ chống lại 1,09 mm giãn nở
+- Và nó chỉ được chặn **phương Z**, để tự do theo X. Nếu nó chặn cả X, nó sẽ chống lại 0.48 mm giãn nở
   theo mùa và tự phá gỗ.
 
 Đúng một loại chi tiết thoả cả hai: thứ **ép xuống** mà **trượt tự do ngang**.
@@ -91,7 +96,7 @@ Bốn điểm giữ mỗi cánh, tay đòn 116 và 138 mm ở cả hai đầu h�
 | Khối lượng thêm | 60 g |
 
 Vì sao hợp: nam châm hút theo **phương Z** — đúng hướng mạnh nhất của nó — và **hoàn toàn tự do theo
-X**. 1,09 mm giãn nở theo mùa chỉ làm lệch 4 % bề mặt, gần như không đổi lực hút. Đó chính xác là thứ
+X**. 0.48 mm giãn nở theo mùa chỉ làm lệch 2 % bề mặt, gần như không đổi lực hút. Đó chính xác là thứ
 mục 2 đòi hỏi.
 
 Vì sao không dùng đĩa thép đối ứng: thép sẽ rỉ trong khí hậu ẩm, và cocobolo nhiều dầu làm khó phát
@@ -188,7 +193,7 @@ luồn ngón ↔ hốc âm hai tay.
 
 ## 8. Kéo theo
 
-- Khối lượng: **6.50 kg** (khay lõi ổn định) / **7.12 kg** (khay cocobolo) — đã tính cả 8 cặp nam châm
+- Khối lượng: **6.45 kg** (khay lõi ổn định) / **7.08 kg** (khay cocobolo) — đã tính cả 8 cặp nam châm
   và trừ 16 hốc âm. Bản lề mắt mộng gỗ không thêm chi tiết nào ngoài gỗ.
 - BOM thêm: 16 nam châm khối 20 × 5 × 5 N45 mạ Ni, epoxy dán.
 - QA thêm: đo lực tách mỗi cặp trên mẫu đã hoàn thiện, ngưỡng 12,6 N.

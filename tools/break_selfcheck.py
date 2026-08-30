@@ -38,6 +38,17 @@ CASES = [
  ("hom ngon thoc vao o xuc xac",    {'COVER_NOTCH': 34.0},  "thoc qua khe luon ngon"),
  ("hom ngon rong hon khe",          {'COVER_NOTCH': 20.0},  "rong hon khe luon ngon"),
  ("canh nap che canh hom qua mong", {'COVER_NOTCH': 21.0},  "canh hom ngon"),
+ # --- khe nhin thay tren mat nap (siet 30-08-2026)
+ ("khe long tam duoi he so an toan", {'PAN_REV': 0.7},   "khe quanh long tam"),
+ ("bo P5 thi ve kho song lai",      {'MC_STABILISED': False}, "lap o do am xuong"),
+ ("khe rap giua dong o 5 %",        {'SEAM': 0.5},        "khe rap giua con"),
+ ("do doc xe tiep tuyen thay vi xuyen tam",
+                                    {'STILE_GRAIN': 'tiep tuyen'}, "khe rap giua con"),
+ ("do doc mong, het go giua ranh va ong", {'STILE': 18.0}, "go dac giua ranh om tam"),
+ ("khe long tam 0,8 khong song noi dung sai", {'PAN_REV': 0.8}, "truong hop xau"),
+ ("dung sai khe long tam qua rong", {'PAN_REV_TOL': 0.25}, "truong hop xau"),
+ ("dung sai khe rap giua qua rong", {'SEAM_TOL': 0.25},   "khe rap giua o truong hop xau"),
+ ("lop hoan thien day (son phu)",  {'FINISH_T': 0.3},     "truong hop xau"),
  # --- vai dieu kien cu, de chung minh cai khung nay khong tu bia ra ket qua
  ("thanh go quanh lo chot",         {'KN_WALL': 1.5},       "thanh go quanh lo chot"),
  ("bo mep tran hoc am qua nho",     {'GRIP_R': 2.0},        "bo mep tran qua nho"),

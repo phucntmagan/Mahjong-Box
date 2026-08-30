@@ -77,15 +77,20 @@ print(f"\n  => Khoa noi CANH voi CANH khong dung duoc, du chot to den may.")
 
 # ==========================================================================
 hr("2. DO AM — giet not ho khoa canh-canh")
-mv1 = 2*B.STILE*B.K['cocobolo ngang tho']*5
+mv1 = 2*B.STILE*B.k_stile()*5          # do doc xe XUYEN TAM (P7)
+mv1_t = 2*B.STILE*B.K['cocobolo ngang tho']*5   # neu P7 truot: xe tiep tuyen
 mv = 2*mv1
-print(f"  Moi canh nap co {2*B.STILE:.0f} mm go NGANG THO nam trong chuoi be rong")
-print(f"  (hai do doc {B.STILE:.0f}); tam Nu tha nen khong dong gop.")
+print(f"  Moi canh nap co {2*B.STILE:.0f} mm go ngang be rong nam trong chuoi")
+print(f"  (hai do doc {B.STILE:.0f}, xe {B.STILE_GRAIN}); tam Nu tha nen khong dong gop.")
 print(f"  O dMC 5 %: moi canh no {mv1:.2f} mm -> khe rap giua dong lai {mv:.2f} mm.\n")
 th_mv = theta_for_gap(mv)
 print(f"  Bat ky khoa nao noi hai canh voi nhau deu phai co {mv:.2f} mm re theo X")
 print(f"  de con lap duoc quanh nam. Ma {mv:.2f} mm re do, theo muc 1, cho moi canh")
 print(f"  mo {math.degrees(th_mv):.1f}° va khe venh len {seam_dz(th_mv):.1f} mm.")
+_thT = theta_for_gap(2*mv1_t)
+print(f"  Neu P7 truot va do doc hoa ra xe tiep tuyen: {2*mv1_t:.2f} mm re -> "
+      f"{math.degrees(_thT):.1f}° va {seam_dz(_thT):.1f} mm venh.")
+print(f"  Ket luan khong doi theo huong nao — no chi manh hon o truong hop xau.")
 print(f"\n  => KET LUAN CUA HAI MUC DAU:")
 print(f"     Khoa phai noi NAP voi THAN, khong phai canh voi canh.")
 print(f"     Va no chi duoc chan phuong Z — de tu do theo X — neu khong no se")

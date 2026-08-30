@@ -14,26 +14,27 @@
 
 Nắp gỗ đặc làm được — **nhưng không phải bằng một tấm Nu nguyên khối.**
 
-Nắp gập đôi: hai cánh 184,25 mm, khe ráp giữa 1,5 mm. Cả hai cánh cùng hút ẩm và cùng lớn ra, mỗi bên
+Nắp gập đôi: hai cánh 188.65 mm, khe ráp giữa 0.7 mm. Cả hai cánh cùng hút ẩm và cùng lớn ra, mỗi bên
 ăn vào khe một nửa. Nu không có hướng thớ nên nở đều mọi phương và **cả bề rộng cánh nằm trong chuỗi
 kích thước**; ở **ΔMC 1,85 %** khe đã đóng hoàn toàn — chưa hết một mùa. Hai cánh chống nhau rồi tự phá
 gỗ hoặc đẩy bung bản lề.
 
 Lời giải: **khung gỗ đặc thẳng thớ ôm tấm Nu thả trong rãnh** — đúng thứ trong ảnh mẫu. Khung chỉ đưa
-**68 mm** gỗ ngang thớ (hai đố dọc 34) vào chuỗi bề rộng; tấm Nu thả tự do trong rãnh nên nở bao nhiêu
+**48 mm** gỗ ngang bề rộng (hai đố dọc 24, **xẻ xuyên tâm**) vào chuỗi bề rộng; tấm Nu thả tự do trong rãnh nên nở bao nhiêu
 cũng không đẩy khe.
 
 ## Khe ráp giữa còn lại theo ΔMC (mm)
 
 | Cấu tạo cánh nắp | Hệ số | 2 % | 3 % | 4 % | 5 % | khe đóng ở ΔMC |
 |---|---:|---:|---:|---:|---:|---:|
-| Tấm Nu ĐẶC | 0,22 % | −0,12 | −0,93 | −1,74 | −2,55 | **1,85 %** |
-| Lõi ổn định + veneer | 0,05 % | 1,13 | 0,95 | 0,76 | 0,58 | 8,14 % |
-| Khung gỗ đặc + tấm thả | 0,16 % | 1,06 | 0,85 | 0,63 | 0,41 | 6,89 % |
+| Tấm Nu ĐẶC | 0,22 % | -0.96 | -1.79 | -2.62 | -3.45 | **0.84 %** |
+| Lõi ổn định + veneer | 0,05 % | 0.32 | 0.13 | -0.05 | -0.24 | 3.71 % |
+| Khung gỗ đặc + tấm thả, đố dọc 34 tiếp tuyến | 0,16 % | 1,06 | 0,85 | 0,63 | 0,41 | 6,89 % |
+| **Khung gỗ đặc + tấm thả, đố dọc 24 XUYÊN TÂM** | 0.10 % | 0.51 | 0.41 | 0.32 | 0.22 | **7.29 %** |
 
 Xưởng làm ở 9 % MC, mùa nồm miền Bắc/Nam lên 13 % → ΔMC = 4 %.
 
-![Khe ráp giữa đóng lại theo ΔMC: tấm Nu đặc đóng ở 1,85 %, khung + tấm thả còn 0,63 mm ở ΔMC 4 %.](figs/fig7-khe-rap-giua.png)
+![Khe ráp giữa đóng lại theo ΔMC: tấm Nu đặc đóng ở 0.84 %, khung + tấm thả còn 0.32 mm ở ΔMC 4 %.](figs/fig7-khe-rap-giua.png)
 
 ## Vấn đề thứ hai — đố dọc bản lề phải chịu được gì
 
@@ -54,17 +55,17 @@ Không tính được bằng bảng, nhưng chặn thiết kế:
 
 | Chi tiết | Kích thước | Ghi chú |
 |---|---|---|
-| Đố dọc cạnh bản lề | 34 × 350 × 15 | cocobolo đặc, thớ dọc 350; mang 3 mắt mộng Ø10.2 và lỗ chốt Ø5.20 |
-| Đố dọc cạnh khe giữa | 34 × 350 × 15 | không còn rãnh sống khóa |
+| Đố dọc cạnh bản lề | 24 × 350 × 15 | cocobolo đặc, **xẻ xuyên tâm** (P7), thớ dọc 350; mang 3 mắt mộng Ø10.2 và lỗ chốt Ø5.20 |
+| Đố dọc cạnh khe giữa | 24 × 350 × 15 | không còn rãnh sống khóa |
 | Đố ngang trước/sau | 30 × 120.25 | |
 | Lòng khung | 120.25 × 290 | |
 | Tấm Nu | 132.25 × 302 × **10** | tấm NÂNG: mộng 7 vào rãnh sâu 9 → **thả 3 mm mỗi phía** |
-| Bậc phay quanh mép TRÊN tấm | sâu 3 × rộng 8 | = ăn vào rãnh 6 + khe 1.5 |
+| Bậc phay quanh mép TRÊN tấm | sâu 3 × rộng 6.9 | = ăn vào rãnh 6 + khe 0.9 |
 | Lòng tấm (phần dâng lên) | 117.25 × 287 | mặt trên ở **Z62 — ngang bằng mặt khung** |
-| Khe quanh lòng tấm | **1.5 mm mỗi phía** | chỗ cho gỗ nở; xem bên dưới |
-| Khe ráp giữa | 0,6 → **1.5 ±0,3** | không có sống khóa phủ, nên đây là **đặc tính nhìn thấy** |
+| Khe quanh lòng tấm | **0.9 ±0.10 mm mỗi phía** | chỗ cho gỗ nở; xem bên dưới |
+| Khe ráp giữa | 0,6 → 1,5 → **0.7 ±0.10** | không có sống khóa phủ, nên đây là **đặc tính nhìn thấy** |
 
-Chỉ hai thanh đố nằm trong chuỗi kích thước bề rộng: 188.25 = 34 + 120.25 (THẢ) + 34.
+Chỉ hai thanh đố nằm trong chuỗi kích thước bề rộng: 188.65 = 24 + 140.65 (THẢ) + 24.
 Tấm Nu nở vào khoảng trống 3 mm trong rãnh, không đẩy vào khe ráp giữa.
 
 Mộng tấm **7 mm chứ không phải 10**: ở mộng 10 thì lip dưới của rãnh ôm tấm chỉ còn 0,23 mm —
@@ -88,23 +89,34 @@ bậc phay quanh mép TRÊN: sâu 3 × rộng 7
 lòng tấm dâng lên đúng Z62 = mặt khung
 ```
 
-Khe 1.5 mm quanh lòng tấm **không phải trang trí** — nó là chỗ cho tấm nở. Tấm thả giữa nên mỗi
+Khe 0.9 mm quanh lòng tấm **không phải trang trí** — nó là chỗ cho tấm nở. Tấm thả giữa nên mỗi
 phía dịch một **nửa** tổng biến thiên:
 
 | trường hợp | dịch mỗi phía | khe hẹp nhất | khe rộng nhất |
 |---|---:|---:|---:|
-| đã ổn định về 11 %, ±2 % | 0.66 | 0.84 | 2.16 |
-| lắp thẳng ở 9 %, +4 % một chiều | 1.33 | 0.17 | 2.83 |
+| đã ổn định về 11 %, ±2 % — **trường hợp thiết kế** | 0.66 | 0.24 | 1.56 |
+| xấu nhất: cộng dung sai 0.10 và lớp hoàn thiện 0.05 | 0.66 | **0.09** | 1.66 |
+| lắp thẳng ở 9 %, +4 % một chiều — **P5 cấm** | 1.33 | -0.43 | 2.23 |
 
-Cả hai trường hợp khe vẫn còn hở. Đó là lý do khe là **1.5** chứ không phải 1,0.
+Khe **0.9** chứ không phải 1,5 như bản trước, và cũng không phải 0,8. Lý do của cả hai:
 
-> **Đặc tính bắt buộc cho xưởng:** tấm Nu phải được ổn định về **11 % MC** trước khi lắp. Xưởng làm ở
-> ~9 %, mùa nóng ẩm lên ~13 % (mục 1). Lắp ở 9 % thì cả 4 % dồn về một phía.
+Bản trước lấy 1,5 để chịu **hàng cuối** bảng — trường hợp lắp thẳng ở 9 % MC. Nhưng QA-01 **P5** đã bắt
+buộc ổn định mọi phôi về 11 % ±1 **trước khi gia công**. Thiết kế chống lại một trường hợp mà một phép
+thử bắt buộc đã cấm là **đếm rủi ro hai lần**. Bỏ hàng đó thì khe chỉ cần 0.66.
 
-Nếu muốn khe **nhỏ hơn** 1.5 mm thì chỉ còn một đường: bỏ Nu đặc, dùng veneer Nu trên lõi ổn định
+Còn 0,8 thì **không sống nổi qua dung sai của chính nó**: 0.10 dung sai phay bậc cộng
+0.05 lớp hoàn thiện trên hai mép, còn lại 0,-14 mm — bằng không.
+0.9 là trị số nhỏ nhất còn để lại 0.09 mm ở trường hợp xấu nhất.
+
+> **Đặc tính bắt buộc cho xưởng — nay là ĐIỀU KIỆN CHẶN:** tấm Nu phải được ổn định về **11 % MC**
+> trước khi lắp (P5). Xưởng làm ở ~9 %, mùa nóng ẩm lên ~13 %. Bỏ P5 thì khe cần 1.33 mm, tức
+> hàng cuối bảng trên, và tấm sẽ ép vỡ mộng khung.
+
+Nếu muốn khe **nhỏ hơn** 0.9 mm thì chỉ còn một đường: bỏ Nu đặc, dùng veneer Nu trên lõi ổn định
 (0.05 %/1%MC thay vì 0.22 %). Lúc đó dịch mỗi phía chỉ
-0.30 mm — khe 0,5 mm là đủ, hoặc dán cứng luôn.
-Đổi lại: mặt cắt cạnh tấm không còn là gỗ thật. Suy: `tools/lid_solid_calc.py` mục 2.
+0.15 mm — khe 0,3 mm là đủ, hoặc dán cứng luôn.
+Đổi lại: mặt cắt cạnh tấm không còn là gỗ thật. Suy: `tools/lid_solid_calc.py` mục 2 và
+`tools/gap_options.py`.
 
 ## Khay bỏ bài hình thành miễn phí
 
@@ -118,8 +130,8 @@ Giải luôn: §3.1 review Rev B (cánh nắp cần lòng lõm) và vấn đề 
 
 | Cấu tạo khay | Gỗ | + Quân | TỔNG |
 |---|---:|---:|---:|
-| Khay cocobolo | 4.69 | 2.43 | **7.12 kg** |
-| Khay lõi ổn định | 4.07 | 2.43 | **6.50 kg** |
+| Khay cocobolo | 4.65 | 2.43 | **7.08 kg** |
+| Khay lõi ổn định | 4.02 | 2.43 | **6.45 kg** |
 
 Tải thiết kế **70 N** (khay cocobolo) / **64 N** (khay lõi ổn định). Không còn sống khóa, không còn
 quai — xem `docs/CHOT-REV-C.md`.
@@ -182,7 +194,7 @@ Khung nắp cocobolo còn quyết định số hộp gửi được mỗi lô h�
 | # | Thay đổi | Lý do |
 |---|---|---|
 | 1 | Cánh nắp: tấm liền → **khung + tấm thả** | Nu đặc đóng khe ráp giữa ở ΔMC 1,85 % |
-| 2 | Khe ráp giữa 0,6 → **1,5 ±0,3** | chuyển vị hai đố ở ΔMC 5 % là 1,09 mm |
+| 2 | Khe ráp giữa 0,6 → 1,5 → **0.7 ±0.10** | đố dọc 24 xẻ xuyên tâm: chuyển vị hai đố ở ΔMC 5 % còn 0.48 mm |
 | 3 | Bỏ nguyên công phay lòng lõm cánh nắp | khung–tấm tự sinh ra khay bỏ bài |
 | 4 | Thêm nguyên công ổn định hoá tấm Nu | chống nứt, chống hút hoàn thiện không đều |
 | 5 | BOM thêm: 2 tấm Nu, epoxy trám, grain filler | |

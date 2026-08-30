@@ -40,7 +40,12 @@ RHO = {                       # g/cm3
 }
 # he so gian no tuyen tinh, phan tram tren moi 1 % thay doi do am
 K = {'doc tho': 0.0001, 'cocobolo ngang tho': 0.0016,
+     'cocobolo xuyen tam': 0.0010,        # xem STILE_GRAIN ngay duoi
      'go do ngang tho': 0.0015, 'Nu moi phuong': 0.0022, 'loi on dinh': 0.0005}
+# Tri so XUYEN TAM = 0,63 x tiep tuyen, theo bang co ngot cocobolo (2,7 / 4,3 %).
+# TRA BANG, CHUA DO tren lo go — va khe rap giua 0,7 PHU THUOC vao no, nen no la
+# mot dieu kien chan: QA-01 P7 doi kiem goc vong nam cua do doc >= 60 do.
+RAD_TAN = 0.63
 
 # tri so co ly cocobolo dung cho kiem ben (MPa)
 MOR, E_W, C_PERP, SHEAR = 110.0, 13000.0, 14.0, 13.0
@@ -142,8 +147,17 @@ T_SEAM  = T_LID
 SPINE_T, SPINE_INSET = 20.0, 4.0   # (A) song khoa day 20, am 4 vao nap
 
 # --- nap
-SEAM    = 1.5            # khe rap giua (0,6 -> 1,5 vi gian no khung go dac)
-STILE   = 34.0           # be rong do doc (ca hai canh)
+# Khe rap giua KHONG con la so chon bang mat. No do DUNG hai do doc cocobolo sinh
+# ra: moi canh no ngang be rong 2*STILE*K*dMC, ban le o hai mep NGOAI nen ca luong
+# no do don vao giua, hai canh cung don. Xem tools/gap_options.py.
+#   do doc 34 tiep tuyen : dong lai 0,218/1%MC -> khe 1,5 chiu 6,9 %MC
+#   do doc 24 XUYEN TAM  : dong lai 0,096/1%MC -> khe 0,7 chiu 7,3 %MC
+# Tuc khe HEP HON lai chiu duoc NHIEU HON, vi go duoc chon lai chu khong vi khe
+# duoc noi ra. CHOT 30-08-2026.
+STILE_GRAIN = 'xuyen tam'   # 'xuyen tam' | 'tiep tuyen' — cach xe hai do doc
+SEAM    = 0.7            # khe rap giua (0,6 -> 1,5 -> 0,7)
+STILE   = 24.0           # be rong do doc (ca hai canh); 34 -> 24 de bot go
+                         # ngang tho trong chuoi be rong canh nap
 RAIL    = 30.0           # be rong do ngang
 PAN_T   =  7.0           # day tam Nu
 GRV     =  9.0           # ranh om tam: sau 9
@@ -157,8 +171,27 @@ S_TOP   =  3.0           # lip khung phia TREN ranh om tam.
 # PAN_T tha trong ranh khung nhu cu, con LONG tam dang len ngang mat khung.
 # Tam van THA (khong dan), nen giua canh long tam va mep trong khung phai chua
 # mot khe PAN_REV de tam no ra khong dap vao khung.
-PAN_REV =  1.5           # khe ho quanh long tam (reveal). Suy o tools/lid_solid_calc.py
+# Khe quanh long tam: CHI con do truong hop DA ON DINH ve 11 % roi bien thien
+# +/-DMC_DES. Truong hop "lap thang o 9 %, ca DMC_DRY don mot chieu" da bi QA-01 P5
+# cam, va thiet ke chong lai mot truong hop ma mot phep thu bat buoc da cam la dem
+# rui ro hai lan. Doi lai, P5 tro thanh DIEU KIEN CHAN that: bo P5 la tam nu ep vo
+# mong khung. Dat MC_STABILISED = False thi tu kiem quay ve doi khe theo DMC_DRY.
+MC_STABILISED = True     # P5 duoc thuc hien va dat
+PAN_REV =  0.9           # khe ho quanh long tam (reveal). Suy o tools/lid_solid_calc.py
 DMC_DES =  2.0           # bien thien am go, +/- % quanh do am LAP RAP (da on dinh 11 %)
+PAN_REV_SF = 1.15        # he so an toan toi thieu cua khe quanh long tam
+DMC_SEASON = 5.0         # bien thien theo mua, dung de kiem KHE RAP GIUA
+SEAM_MIN   = 0.15        # khe rap giua phai con ho bao nhieu o DMC_SEASON
+# Khe cang hep thi dung sai cua chinh no cang phai chat — day la cai gia thu hai
+# cua viec siet, sau cai gia ve vat lieu. Khe rap giua KHONG duoc lam bang cach
+# xe hai canh nap dung be rong roi cong lai: hai dung sai +/-0,3 cong nhau da 0,6,
+# lon gan bang ca khe. No phai duoc TAO RA bang mot luot bao chung hai mep giap
+# nhau SAU khi da lap ban le.
+SEAM_TOL    = 0.10       # dung sai khe rap giua (luot bao chung)
+PAN_REV_TOL = 0.10       # dung sai khe quanh long tam (mot lan ga dao phay bac)
+# Lop hoan thien nam tren CA HAI mep cua moi khe. Dau + sap khong tao mang nen
+# rat mong, nhung khe da xuong duoi 1 mm thi no khong con la so lam tron duoc.
+FINISH_T    = 0.05       # be day lop hoan thien cong lai tren hai mep mot khe
 DMC_DRY =  4.0           # neu lap thang o do am xuong 9 % ma khong on dinh truoc:
                          # go chi no MOT CHIEU, ca 4 % doi ve mot phia
 LID_L   = 350.0          # chieu dai canh nap (theo Y, khong ke tru/hoc am)
@@ -404,6 +437,10 @@ def derive(wall_hinge=WALL_HINGE, bay=BAY, div=DIV, ac_bay=AC_BAY, handle=HANDLE
     # --- lip cua ranh om tam Nu: khung vat nen cho mong nhat la mep trong
     #     cua do doc canh khe giua (x = LW - STILE)
     LIP_BOT = t_lid(LW - STILE) - S_TOP - PAN_T
+    # Do doc bi an hai dau: ranh om tam an GRV tu mep TRONG, ong ban le an R_KN tu
+    # mep NGOAI. Phan go dac con lai giua hai cai do la thu chong lai luc bat khi
+    # mo nap. Thu 34 -> 24 thi day la tri so phai nhin, khong phai be rong do doc.
+    STILE_WEB = STILE - GRV - R_KN
 
     # --- khoa nap bang nam cham: ban kinh tay don tinh tu truc chot ban le
     pass
@@ -756,13 +793,17 @@ TOL_NOTE = ("Phu bi than va phu bi nap KHONG duoc dung sai hoa doc lap: truong h
 # ------------------------------------------------------- CHUYEN DONG THEO MUA
 # Khe rap giua hai canh nap con lai bao nhieu khi go hut them dmc % am.
 # Dung chung boi tools/lid_solid_calc.py va tools/draw_lid.py (hinh 7).
+def k_stile():
+    """He so no NGANG be rong cua do doc, theo cach xe da chon."""
+    return K['cocobolo xuyen tam' if STILE_GRAIN == 'xuyen tam' else 'cocobolo ngang tho']
+
 def seam_left(dmc, kind, lw=None):
     """kind: 'nu' = mot tam Nu dac ; 'core' = loi on dinh + veneer ;
              'frame' = khung go dac + tam tha (chi 2 do ngang tho vao chuoi)."""
     lw = derive()['LW'] if lw is None else lw
     if   kind == 'nu':    grow = lw*K['Nu moi phuong']*dmc
     elif kind == 'core':  grow = lw*K['loi on dinh']*dmc
-    elif kind == 'frame': grow = 2*STILE*K['cocobolo ngang tho']*dmc
+    elif kind == 'frame': grow = 2*STILE*k_stile()*dmc
     else: raise ValueError(kind)
     return SEAM - 2*grow          # hai canh cung no, moi ben an vao khe mot nua
 
@@ -770,7 +811,7 @@ def seam_close_dmc(kind, lw=None):
     """dMC lam khe rap giua dong hoan toan. inf neu khong bao gio dong."""
     lw = derive()['LW'] if lw is None else lw
     k = {'nu': lw*K['Nu moi phuong'], 'core': lw*K['loi on dinh'],
-         'frame': 2*STILE*K['cocobolo ngang tho']}[kind]
+         'frame': 2*STILE*k_stile()}[kind]
     return math.inf if k <= 0 else SEAM/(2*k)
 
 # ============================================================== TU KIEM
@@ -855,12 +896,36 @@ def selfcheck(d=None):
         e.append(f"lip duoi ranh om tam chi con {lip:.2f} mm - tang PAN_T se lam no am")
     if S_TOP < 2.5:                                e.append("lip tren ranh om tam mong hon 2,5")
     # --- tam nang ngang mat khung: khe quanh long tam phai nuot duoc go no
-    if PAN_REV < d['PAN_MOVE']:
-        e.append(f"khe quanh long tam {PAN_REV:.2f} < go no {d['PAN_MOVE']:.2f} mm "
-                 f"o dMC {DMC_DES:.1f} % — long tam se dap vao khung")
-    if PAN_REV < d['PAN_MOVE_DRY']:
+    if PAN_REV < d['PAN_MOVE']*PAN_REV_SF:
+        e.append(f"khe quanh long tam {PAN_REV:.2f} < go no {d['PAN_MOVE']:.2f} x he so "
+                 f"{PAN_REV_SF:.2f} = {d['PAN_MOVE']*PAN_REV_SF:.2f} mm o dMC "
+                 f"{DMC_DES:.1f} % — long tam se dap vao khung")
+    # Truong hop "lap thang o do am thap, ca DMC_DRY don mot chieu" CHI duoc bo khi
+    # P5 (on dinh moi phoi ve 11 %) that su la mot phep thu chan. Dat
+    # MC_STABILISED = False thi dieu kien nay song lai — no khong bi xoa di.
+    if not MC_STABILISED and PAN_REV < d['PAN_MOVE_DRY']:
         e.append(f"khe quanh long tam {PAN_REV:.2f} < go no mot chieu "
                  f"{d['PAN_MOVE_DRY']:.2f} mm neu lap o do am xuong {DMC_DRY:.0f} %")
+    # KHE RAP GIUA — truoc Rev C3 khong co dieu kien nao kiem no ca; be rong 1,5 cu
+    # chi nam trong loi van cua docs/NAP-GO-DAC.md.
+    _sl = seam_left(DMC_SEASON, 'frame', d['LW'])
+    if _sl < SEAM_MIN:
+        e.append(f"khe rap giua con {_sl:.2f} mm o dMC {DMC_SEASON:.0f} % "
+                 f"(< {SEAM_MIN:.2f}) — hai canh nap ty vao nhau")
+    # TRUONG HOP XAU cua mot khe = danh nghia - dung sai - lop hoan thien hai mep.
+    # Khe 1,5 khong can den phep tinh nay; khe duoi 1 mm thi no la phep tinh chinh.
+    _pw = PAN_REV - PAN_REV_TOL - FINISH_T
+    if _pw < d['PAN_MOVE']:
+        e.append(f"khe quanh long tam o truong hop xau {_pw:.2f} < go no "
+                 f"{d['PAN_MOVE']:.2f} mm (danh nghia {PAN_REV:.2f} - dung sai "
+                 f"{PAN_REV_TOL:.2f} - hoan thien {FINISH_T:.2f})")
+    _sw = seam_left(DMC_SEASON, 'frame', d['LW']) - SEAM_TOL - FINISH_T
+    if _sw <= 0.0:
+        e.append(f"khe rap giua o truong hop xau {_sw:.2f} — dong han o dMC "
+                 f"{DMC_SEASON:.0f} % khi ke ca dung sai va lop hoan thien")
+    if d['STILE_WEB'] < 6.0:
+        e.append(f"do doc con {d['STILE_WEB']:.1f} mm go dac giua ranh om tam va ong "
+                 f"ban le (< 6,0)")
     if d['PAN_MOVE'] > d['PAN_FLOAT']:
         e.append(f"tam no {d['PAN_MOVE']:.2f} > khoang tha trong ranh {d['PAN_FLOAT']:.1f} mm")
     if d['PAN_REB'] > GRV:

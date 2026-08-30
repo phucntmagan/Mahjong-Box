@@ -91,7 +91,7 @@ b.append(T(q.X(28)+4, q.Z(zr+tl/2)+3, f'nap {tl:.1f}', font_size=9, fill=DIM))
 b.append(T(q.X(28)+4, q.Z(zr-5)+3, f'vanh Z{zr:.1f}', font_size=9, fill=GRN))
 b.append(arrow(q.X(B.MAG_Y), q.Z(zr+B.MAG_REC+5), q.X(B.MAG_Y), q.Z(zr+0.5), MAGC, 1.8, 5))
 b.append(arrow(q.X(B.MAG_Y), q.Z(zr-B.MAG_REC-5), q.X(B.MAG_Y), q.Z(zr-0.5), MAGC, 1.8, 5))
-mv = 2*2*B.STILE*B.K['cocobolo ngang tho']*5
+mv = 2*2*B.STILE*B.k_stile()*5
 for k, t_ in enumerate([f'hut theo phuong Z — huong manh nhat cua nam cham',
                         f'go con {S["MAG_MAR_OUT"]:.1f} ra mep nap, {S["MAG_MAR_IN"]:.1f} vao long hop',
                         f'tu do theo X: gian no theo mua {mv:.2f} mm chi lam',

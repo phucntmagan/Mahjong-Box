@@ -15,11 +15,13 @@ các tài liệu trước đó sai hoặc đã hết hiệu lực**. Đọc nó 
 | **Bản lề** | mắt mộng gỗ + chốt Ø6 | **mắt mộng gỗ + chốt gỗ Ø5** | `hinge_kinematics.py` |
 | Ống gỗ | Ø18 | **Ø10.2**, nhô ra 5.1 mm mỗi bên, **KHÔNG hạ bậc** | `hinge_kinematics.py` |
 | Hốc âm hai tay | (chưa có) | **sâu 16** → vách 22; khe hở vào tay **22.6**, trần bo **R8** + dốc 10° | `grip_hook.py` |
-| Khe ráp giữa | 0,6 | **1,5 ±0,3** | `lid_solid_calc.py` |
+| Khe ráp giữa | 0,6 | **0.7 ±0.10** — đố dọc 24 xẻ xuyên tâm | `gap_options.py` |
+| Khe quanh lòng tấm | (chưa có) | **0.9 ±0.10** — P5 thành điều kiện chặn | `gap_options.py` |
+| Đố dọc cánh nắp | 34, thẳng thớ | **24, XẺ XUYÊN TÂM** (P7) | `gap_options.py` |
 | Khóa nắp | không có | **8 cặp nam châm nắp↔thân** | `lid_latch.py` |
 | Ổ xúc xắc | 4 ổ 18 sâu 18 **đo từ vành** | **4 ổ 18 sâu 18 đo từ SÀN đặt nắp** + khe luồn ngón 12 | `dice_layout()` |
 | Nắp che ổ xúc xắc | 51 × 64 (= trường ổ) | **72.5 × 57.5 × 4** (= miệng hốc) | `drawings.py` AC-02 |
-| Khối lượng | không tính | **6.52 / 7.15 kg** | `box_spec.py` |
+| Khối lượng | không tính | **6.45 / 7.08 kg** | `box_spec.py` |
 | Tải thiết kế | — | **64 / 70 N** | `box_spec.py` |
 
 ## 1. Bề rộng: 370
@@ -62,8 +64,8 @@ tiết tranh nhau một bộ phận dày 10 mm.)*
 |---|---|---|
 | Phủ bì | 370 × 362 × 78 | **388.2 × 350 × 62** |
 | Thể tích bao | 10,45 L | **8,03 L** |
-| Khối lượng (khay cocobolo) | 7,19 kg | **7.12 kg** |
-| Khối lượng (khay lõi ổn định) | 6,59 kg | **6.50 kg** |
+| Khối lượng (khay cocobolo) | 7,19 kg | **7.08 kg** |
+| Khối lượng (khay lõi ổn định) | 6,59 kg | **6.45 kg** |
 | Số tay | một | hai |
 | Tải mỗi tay | 71 N | **34 N** |
 | Chi tiết chuyển động | 2 chốt xoay | **0** |
@@ -76,7 +78,7 @@ tiết tranh nhau một bộ phận dày 10 mm.)*
 1. **Khóa nắp — ĐÃ GIẢI** (29-08-2026, sau khi bỏ ràng buộc "không kim loại"). 8 cặp nam châm nối nắp
    với thân. Xem `docs/KHOA-NAP.md`. Điểm cốt lõi: khóa **không được** nối cánh với cánh — hai cánh cùng
    mở thì hai mép khe nâng bằng nhau và chỉ tách nhau, nên chốt trượt ngang tuột ra sau khi khe đã vênh
-   31 mm; và giãn nở theo mùa 1,09 mm buộc mọi khóa cánh–cánh phải có từng ấy rơ, tự nó đã cho 11 mm vênh.
+   31 mm; và giãn nở theo mùa 0.48 mm buộc mọi khóa cánh–cánh phải có từng ấy rơ, tự nó đã cho 4.6 mm vênh.
 2. **Ec-gô-nô-mi trần hốc.** C chia đôi tải nhưng *tăng* áp lực cục bộ: quai da có 3000 mm² bề mặt nắm, hốc
    âm chỉ có 960 mm² đầu ngón. Nếu trần hốc phẳng và mép sắc thì lực dồn hết về mép trước. Bắt buộc: trần hốc
    dốc vào trong ~10°, mép ngoài bo tròn R ≥ 8.
@@ -359,13 +361,69 @@ Z47, nỉ đệm dưới nắp dày 0.8 → nắp che chỉ được nhô tối 
 **0.2 mm**. Nên dung sai phải **một chiều**: sàn phay sâu 4 +0,15/0 và
 nắp che dày 4 0/−0,10, để nắp **luôn** nằm thấp hơn vành 0…0,25 mm.
 
-Khối lượng đổi: 6.52 / 7.15 kg (trước là 6,50 / 7,12) — vì hốc xúc xắc cũ được tính như một
+Khối lượng đổi: 6,52 / 7,15 kg (trước là 6,50 / 7,12; sau Rev C3b lại đổi nữa — xem mục đó) — vì hốc xúc xắc cũ được tính như một
 khối chữ nhật sâu 18,5 suốt 73 × 58, mà thực tế chỉ khoét ba cao độ.
 
 **Lưới tự kiểm.** Thêm 16 điều kiện cho riêng khu này, và thêm `tools/break_selfcheck.py` —
 script *phá thử*: nó đổi từng hằng số cho hỏng đúng chỗ rồi **đòi hỏi** lỗi tương ứng phải nổ.
 Đây là câu trả lời trực tiếp cho bài học Rev C2: từ nay một điều kiện tự kiểm không được coi là có
 thật cho tới khi có người bắt nó nổ.
+
+### Rev C3b — siết ba đường khe trên mặt nắp
+
+Nhìn từ trên, mặt nắp có đúng ba đường: hai khe quanh lòng tấm nu và một khe ráp giữa. Cả ba đều
+**1,5 mm**. Chúng bằng nhau vì đẹp, không vì tính — và khi tính ra thì hai loại khe này hoá ra
+**không cùng một nguyên nhân**:
+
+| | do cái gì sinh ra | 1,5 mua được gì |
+|---|---|---:|
+| Khe quanh lòng tấm | tấm nu **đặc** 302 dài, nở 0.22 %/1%MC mọi phương. Lòng khung không đổi kích thước nên cả chuyển vị là của riêng tấm | 4,5 %MC |
+| Khe ráp giữa | hai **đố dọc cocobolo**. Bản lề ở hai mép ngoài nên toàn bộ lượng nở dồn vào giữa, hai cánh cùng dồn | 6,9 %MC |
+
+Cùng một bề rộng mà mua hai mức an toàn lệch nhau 50 %. Đó là dấu hiệu nó được chọn bằng mắt.
+
+**Khe quanh lòng tấm: 1,5 → 0.9.** 1,5 chống lại trường hợp *"lắp thẳng ở 9 % MC, cả
+4 % dồn một chiều"* — mà QA-01 **P5** đã bắt buộc ổn định mọi phôi về 11 % ±1 trước khi
+gia công. Thiết kế chống lại một trường hợp mà một phép thử bắt buộc đã cấm là **đếm rủi ro hai lần**.
+Bỏ nó thì khe chỉ cần 0.66. Cái giá: **P5 từ phép thử thành điều kiện chặn thật** — bỏ P5 là tấm ép
+vỡ mộng khung. Tự kiểm không xoá điều kiện cũ mà treo nó sau `MC_STABILISED`; đặt biến đó về `False`
+thì nó sống lại.
+
+Và **không phải 0,8**. Khe dưới 1 mm thì dung sai của chính nó không còn làm tròn được nữa:
+0.10 dung sai phay bậc + 0.05 lớp hoàn thiện trên hai mép, ở 0,8 còn lại
+0,04 mm — bằng không. **0.9** là trị số nhỏ nhất còn để lại
+0.09 mm ở trường hợp xấu nhất.
+
+**Khe ráp giữa: 1,5 → 0.7.** Không siết bằng cách nới rủi ro, mà bằng cách **bớt gỗ ngang thớ
+ra khỏi chuỗi bề rộng cánh**: đố dọc 34 → **24** và **xẻ xuyên tâm** (hệ số 0.63
+lần tiếp tuyến). Chuyển vị ở ΔMC 5 % từ 1,09 xuống **0.48 mm**.
+
+| | đố dọc 34, tiếp tuyến | đố dọc 24, xuyên tâm |
+|---|---:|---:|
+| Khe ráp giữa | 1,5 | **0.7** |
+| Đóng lại ở ΔMC 5 % | 1,09 | **0.48** |
+| Khe đóng hẳn ở | 6,89 %MC | **7.29 %MC** |
+
+**Khe hẹp hơn mà chịu được nhiều hơn** — vì gỗ được chọn lại, không phải vì khe được nới ra. Đó là
+kết quả đáng giá nhất của vòng này.
+
+Ba hệ quả phải ghi ra, không được để ngầm:
+
+1. **P7 là phép thử mới, và là điều kiện chặn.** Khe 0.7 tính theo hệ số xuyên tâm
+   0.63 — trị số **tra bảng, chưa đo trên lô gỗ**. Nếu đố dọc hoá ra xẻ tiếp tuyến thì khe
+   đóng hẳn ở 4.6 %MC. QA-01 P7 đòi kiểm góc vòng năm ≥ 60°.
+2. **Khe ráp giữa không còn được tạo ra bằng cách xẻ hai cánh đúng bề rộng.** Hai dung sai ±0,3 cộng
+   lại đã 0,6 — gần bằng cả khe. Nó phải do **một lượt bào chung hai mép giáp nhau sau khi đã lắp bản
+   lề** tạo ra. Đã vào QA-01 bước 7b.
+3. **Đố dọc 24 là chỗ phải nhìn, không phải bề rộng đố.** Rãnh ôm tấm ăn 9 từ mép trong, ống
+   bản lề ăn 5.1 từ mép ngoài; gỗ đặc còn lại giữa hai cái đó là **9.9 mm**.
+   Đó mới là trị số có tự kiểm, chứ không phải con số 24.
+
+Khối lượng đổi: **6.45 / 7.08 kg** (trước là 6,52 / 7,15) — đố dọc hẹp đi nên bớt cocobolo, tấm
+nu rộng ra nhưng nhẹ hơn. Gỗ Dalbergia mỗi hộp xuống 2.35 kg với khay
+lõi ổn định, tức **4 hộp mỗi lô** dưới ngưỡng miễn trừ thay vì 3.
+
+Suy: `tools/gap_options.py`. Lưới tự kiểm thêm 8 điều kiện, phá thử 28/28.
 
 ## 8. Còn lại
 

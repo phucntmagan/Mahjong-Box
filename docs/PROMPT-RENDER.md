@@ -42,13 +42,13 @@ MATERIALS — this is the whole point of the picture, get the wood right
   fine vertical line. No mitre, no exposed end grain, NO DOVETAILS, no finger
   joints, no visible pins or splines on the outside.
 
-LID — two leaves, each 188.25 x 350 x 15 mm
-- Solid cocobolo frame: stiles 34 wide, rails 30 wide, square corners.
-- A raised burl panel 132.2 x 302 sits in the frame with its field
+LID — two leaves, each 188.65 x 350 x 15 mm
+- Solid cocobolo frame: stiles 24 wide, rails 30 wide, square corners.
+- A raised burl panel 152.7 x 302 sits in the frame with its field
   FLUSH with the frame face — the top of the case is one continuous plane.
-  A 1.5 mm reveal gap runs all round the panel field and reads as a fine
+  A 0.9 mm reveal gap runs all round the panel field and reads as a fine
   shadow line. The panel is not glued; it floats.
-- The two leaves meet along the centre with a 1.5 mm seam running front to back.
+- The two leaves meet along the centre with a 0.7 mm seam running front to back.
   No cover strip over the seam, no lock, no catch, no handle, nothing on the top.
 
 HINGE — ALL WOOD, this is a hard constraint
@@ -106,7 +106,7 @@ tessellation grid, no measurement lines.
 
 ```
 Three-quarter view of the closed case from the front left, camera about 25 degrees
-above the top plane. Show the whole top (both leaves, the 1.5 mm centre seam, both
+above the top plane. Show the whole top (both leaves, the 0.7 mm centre seam, both
 burl panels flush in their frames), the front wall, and the left side wall with the
 row of 7 wooden hinge barrels along its top arris and the grip pocket reading as a
 dark horizontal slot below them. The case sits closed on a neutral surface.
@@ -118,7 +118,7 @@ dark horizontal slot below them. The case sits closed on a neutral surface.
 The case opened flat on a table, seen from about 45 degrees above and slightly to
 the front. Both leaves lie fully open at 180 degrees, one to the left and one to the
 right, their top faces up and level with the rim of the body, so the whole thing
-reads as three panels at the same height, about 765 mm wide overall.
+reads as three panels at the same height, about 766 mm wide overall.
 The body between them is full of tiles. The wooden hinge barrels are visible along
 both joints, still the only thing at those edges.
 ```
@@ -162,8 +162,8 @@ nhận ảnh:
 | # | Nhìn cái gì | Đúng là |
 |---|---|---|
 | 1 | Bản lề | 7 ống **gỗ** trên sống cạnh. Thấy đồng, thép, bản lề lá, ốc vít → loại |
-| 2 | Mặt nắp | Tấm nu **ngang bằng** mặt khung, chỉ có khe 1.5 chạy quanh. Thấy tấm thụt xuống hay nổi lên → loại |
-| 3 | Khe ráp giữa | Một khe 1.5 chạy suốt trước–sau, **không** có nẹp che, không khoá |
+| 2 | Mặt nắp | Tấm nu **ngang bằng** mặt khung, chỉ có khe 0.9 chạy quanh. Thấy tấm thụt xuống hay nổi lên → loại |
+| 3 | Khe ráp giữa | Một khe 0.7 chạy suốt trước–sau, **không** có nẹp che, không khoá |
 | 4 | Vách bên | Một rãnh ngang dài 120, cao 22.6. Thấy quai xách → loại |
 | 5 | Vật liệu | Khung đỏ sẫm vân đen (cocobolo) **tương phản rõ** với tấm nu vàng mật. Cùng một màu → loại |
 | 6 | Bề mặt | Satin, sâu, ánh vân chuyển theo góc. Bóng gương như sơn PU → loại |

@@ -71,7 +71,7 @@ mặt trên lẫn mặt dưới nắp, mà hai mặt đó cách nhau đúng bề
 | So với vành thân | cao hơn vành 15 | **bằng vành** | bằng vành |
 | Cánh mở vươn ra | 180.8 | **188.2** | 183.2 |
 | Bo mép trần hốc âm cho phép | — | **≤ R11,0** | ≤ R4,3 |
-| Khối lượng (khay lõi ổn định) | 6.45 kg | **6.50 kg** | 6.41 kg |
+| Khối lượng (khay lõi ổn định) | 6.41 kg | **6.45 kg** | 6.37 kg |
 
 **Đã chọn: HỌ B** (Rev C3). Đổi `B.HG_MODE` trong `tools/box_spec.py` rồi chạy lại là ra họ kia — mọi
 trị số khác tự suy lại theo.
@@ -278,4 +278,4 @@ Cánh mở là dầm console dài 176 mm, ngàm dọc mặt chặn 180°. Ngư�
 | Vị trí cánh khi mở | nằm ngang, mặt trên Z47 (= vành thân), vươn ra 188 |
 | Bề dày nắp | **15 đều, không vát** — bề dày nắp KHÔNG còn định ống gỗ |
 | Phủ bì | **388.2 × 350 × 62** |
-| Khối lượng | **6.50 kg** (khay lõi ổn định) / **7.12 kg** (khay cocobolo) |
+| Khối lượng | **6.45 kg** (khay lõi ổn định) / **7.08 kg** (khay cocobolo) |

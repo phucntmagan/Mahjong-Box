@@ -13,7 +13,7 @@ S = B.derive()
 
 # --------------------------------------------------- he so gian no (%/1% MC)
 K_LONG  = B.K['doc tho']              # doc tho - gan nhu bang 0
-K_TANG  = B.K['cocobolo ngang tho']   # ngang tho, do doc khung cocobolo
+K_TANG  = B.k_stile()                 # do doc khung cocobolo, theo cach xe da chon
 K_BURL  = B.K['Nu moi phuong']        # NU: tho xoan loan, khong huong -> deu moi phuong
 K_CORE  = B.K['loi on dinh']          # loi on dinh (ply/MDF) + veneer
 

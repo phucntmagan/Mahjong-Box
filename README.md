@@ -3,7 +3,7 @@
 Hộp gỗ đựng bộ Mahjong 152 quân (BURLORA), tham chiếu bộ Mahjong của Hermès.
 Khởi đầu là một bản review độc lập cho bản vẽ sản xuất **Rev B**; nay là hồ sơ thiết kế đang tiến hoá.
 
-**Phủ bì đã chốt: 388.2 × 350 × 62 mm · 6.52 kg** (khay lõi ổn định) hoặc **7.15 kg** (khay cocobolo).
+**Phủ bì đã chốt: 388.2 × 350 × 62 mm · 6.45 kg** (khay lõi ổn định) hoặc **7.08 kg** (khay cocobolo).
 Ống gỗ bản lề Ø10.2 nằm **đúng trên arris**, nhô ra 5.1 mm mỗi bên — **không hạ bậc**.
 
 ## Đọc theo thứ tự này
