@@ -216,6 +216,42 @@ bản lề mộng gỗ là ràng buộc vật liệu đã chốt từ đầu và
 Cái giữ lại được từ nhánh sai đó là **hình học**, không phải vật liệu: chỗ đặt trục ở arris đúng cho cả
 mộng gỗ lẫn bản lề kim loại — nó chỉ nói rằng bán kính quét bằng 0, còn cái gì lấp vào chỗ trục thì tuỳ.
 
+### Rev C2 — trần hốc âm: một cái lưới không bao giờ bắt được gì
+
+Sau khi chốt họ C (ống chìm hẳn), **hạ bậc bản lề 6.1 × 15** chạy suốt vách
+bản lề. Hốc âm hai tay nằm **đúng trên vách đó**. Trần hốc lúc ấy vẫn để phẳng ở Z36 — một số **tự chọn**
+(`GRIP_H = 28`) từ thời chưa có hạ bậc. Z36 nằm trong dải hạ bậc Z32…47, nên ở 6.1 mm ngoài
+cùng **không còn gỗ ngay trên trần**: đoạn trần móc được chỉ còn 9.9 mm — 
+66 % đốt ngón, **tệ hơn cả hốc sâu 12 đã bị loại**.
+
+Tự kiểm có một dòng cho đúng chuyện này, và nó **không bao giờ nổ**:
+
+```python
+if GRIP_Z1 > Z_RIM - REBATE_H and REBATE_D > GRIP_D:   # 6.1 > 16 — luôn SAI
+```
+
+Bài học: một điều kiện **và** với một vế luôn sai là một cái lưới trang trí. Tự kiểm mới không so hai số
+nữa mà **quét từng điểm trên trần hốc**, ở mỗi x đòi hỏi còn ≥ 3.0 mm gỗ đặc bên trên
+(`GRIP_LIP_MIN`), với ngưỡng là hằng số **độc lập** với trị số đang dùng.
+
+Sửa lại:
+
+| | Rev C1 | Rev C2 |
+|---|---|---|
+| Chiều cao hốc | `GRIP_H = 28` — **tự chọn** | **suy ra**: khe hở vào tay = Z_RIM − T_LID − sàn − Z_FLOOR = 20 |
+| Trần hốc | phẳng, mép vuông | bo **R4** rồi dốc **10°** vào trong |
+| Đoạn móc được | 9.9 mm | **16 mm**, bề mặt trần 18.5 mm |
+| Dải gỗ trên hốc | 11 cao | **19 cao** (khoẻ hơn) |
+| Phủ bì | 378 | **378 — không đổi** |
+
+Hai yêu cầu "trần dốc 10°, bo mép" trước đây **chỉ nằm trong lời văn** của `handle_option_c.py`, không có
+trong `box_spec.py` và không có trong mô hình 3D. Đó chính là chỗ nhìn vào HÌNH 12a thấy hốc âm bị trống.
+Nay cả hai là kích thước thật, có tự kiểm, và vẽ ra ở **HÌNH 14** và **HÌNH 12f**.
+
+Trị số **R ≥ 8** ghi ở bản trước là **chép từ bài toán quai da**. Ở quai da mép bo là cạnh tự do; ở đây mép
+bo nằm dưới một trần bị khống chế 20 mm, nên R8 để lại lòng hốc 12 mm và ngón tay không
+lọt. Chặn trên thật là **4,30**, làm tròn xuống dao có sẵn: **R4**. Suy: `tools/grip_hook.py`.
+
 ![Nắp mở 180°: hai cánh nằm ngang, mặt trên phẳng đúng cao độ vành thân Z47.](figs/fig12b-nap-mo-180.png)
 
 ## 8. Còn lại
@@ -223,7 +259,7 @@ mộng gỗ lẫn bản lề kim loại — nó chỉ nói rằng bán kính qu�
 | # | Việc | Trạng thái |
 |---|---|---|
 | 1 | Khóa nắp | **đã giải** — `docs/KHOA-NAP.md`. Còn lại: đo lực tách trên mẫu thật |
-| 2 | Ec-gô-nô-mi trần hốc âm: dốc 10°, bo R8 | đã ghi đặc tính, chưa vẽ chi tiết |
+| 2 | Ec-gô-nô-mi trần hốc âm | **đã giải (Rev C2)** — dốc 10°, bo R4, vào `box_spec` và HÌNH 14. R8 ghi ở bản trước là chép sai chỗ |
 | 3 | Sheet nắp và sheet khay theo số mới | chưa vẽ |
 | 4 | Xác minh CITES bằng văn bản gốc | việc của bên mua |
 | 5 | Đo tối thiểu 20 quân thuộc đúng lô mua | chưa làm — chặn mọi thứ về khay |

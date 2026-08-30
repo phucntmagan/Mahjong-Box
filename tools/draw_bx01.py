@@ -125,8 +125,9 @@ ITEMS = [
   f'Mat sam thuoc THAN, mat sang thuoc NAP. Ong go O{2*S["R_KN"]:.1f}. Ha bac vanh '
   f'{S["REBATE_D"]:.1f} sau x {S["REBATE_H"]:.0f} cao suot {B.LID_L:.0f}.'),
  (3, (WH/2, GY1-14), 'L',
-  f'Hoc am hai tay {B.GRIP_W:.0f} x {B.GRIP_H:.0f} sau {B.GRIP_D:.0f}, Y {GY0:.0f}..{GY1:.0f}, '
-  f'nam gon trong vach ban le {WH:.0f} — khong noi go ra ngoai.'),
+  f'Hoc am hai tay: rong {B.GRIP_W:.0f} (Y {GY0:.0f}..{GY1:.0f}), sau {B.GRIP_D:.0f}, khe ho vao '
+  f'tay {S["GRIP_APER"]:.0f} tai mat ngoai. Tran bo R{B.GRIP_R:.0f} roi doc {B.GRIP_SLOPE:.0f}° '
+  f'vao trong — HINH 14. Nam gon trong vach {WH:.0f}, khong noi go ra ngoai.'),
  (4, (wells[0], FB-B.WELL_D/2), 'B',
   f'Khe luon ngon nhac khay: hoc {B.WELL_W:.0f} x sau {B.WELL_D:.0f} vao vach truoc/sau.'),
  (5, (wells[2], YB-FB-ACL-B.NOTCH_D/2), 'R',
@@ -139,7 +140,8 @@ ITEMS = [
   f'Vach ngan {DIV:.0f}, cao toi vanh tai chinh vi tri no.'),
  (9, (WH/2, kn[-1][0]+30), 'L',
   f'Vach ban le {WH:.0f} — SUY RA tu hoc am: sau {B.GRIP_D:.0f} + thanh sau '
-  f'{B.GRIP_BACK:.0f}. Dai go tren hoc con {S["GRIP_LEDGE_T"]:.1f} day sau ha bac.'),
+  f'{B.GRIP_BACK:.0f}. Dai go tren hoc: cao {S["GRIP_LEDGE"]:.0f}, cho mong nhat '
+  f'{S["GRIP_LEDGE_T"]:.1f} (da tru ha bac) — duong truyen luc khi xach.'),
  (10, (B.MAG_X[1], B.MAG_Y), 'B',
   f'Hoc nam cham khoa nap {B.MAG[0]+0.2:.1f} x {B.MAG[1]+0.2:.1f} x sau {B.MAG_REC:.1f}, '
   f'8 cai tren than (va 8 doi ung tren nap). Vi tri +/-0,2.'),
@@ -193,9 +195,16 @@ va = V(84, 284, SC)
 b.append(panel(56, 92, 664, 214, 'MAT CAT A-A — cat ngang giua hop.  TL 1,62:1'))
 b.append(va.rect(0, W, 0, B.FOOT, '#4a3423', CUT, 0.9))
 b.append(va.rect(0, W, B.FOOT, Z_FL, BODY, CUT, 1.2))
-for x0, x1, zt in ([(0, WH, Z_RIM), (W-WH, W, Z_RIM)] +
-                   [(a0, a1, S['z_rim_at']((a0+a1)/2)) for a0, a1 in x_div]):
+for x0, x1, zt in [(a0, a1, S['z_rim_at']((a0+a1)/2)) for a0, a1 in x_div]:
     b.append(va.rect(x0, x1, Z_FL, zt, WALL, CUT, 1.1))
+# vach ban le: A-A cat DUNG qua giua hoc am, nen phai ve bien that —
+# hoc am (bo tron + doc) o duoi, ha bac ban le o tren.
+prof = S['grip_profile'](20)
+wall_prof = ([(0.0, S['GRIP_Z_TOP']), (0.0, Z_RIM - S['REBATE_H']),
+              (S['REBATE_D'], Z_RIM - S['REBATE_H']), (S['REBATE_D'], Z_RIM),
+              (WH, Z_RIM), (WH, Z_FL), (B.GRIP_D, Z_FL)] + list(prof)[::-1])
+for left in (True, False):
+    b.append(va.poly([(x if left else W - x, z) for x, z in wall_prof], WALL, CUT, 1.1))
 for a0, a1 in x_bay:
     for k in (0, 1):
         b.append(va.rect(a0+1, a1-1, Z_FL+k*B.TRAY_H, Z_FL+(k+1)*B.TRAY_H, TRAYC, CUT, 0.9))
@@ -220,27 +229,21 @@ b.append(T(va.X(XS), va.Z(Z_LID)-6, f'khe rap giua {B.SEAM}  (Z{Z_SEAM:.0f})',
 
 vb = V(96, 502, SC)
 b.append(panel(56, 326, 664, 238,
-               f'MAT CAT B-B — cat doc tai X = {XS-20:.0f}, qua giua hoc am.  TL 1,62:1'))
+               f'MAT CAT B-B — cat doc tai X = {XS-20:.0f}, qua khoang khay quan.  TL 1,62:1'))
 b.append(vb.rect(-GO, YB+GO, 0, B.FOOT, '#4a3423', CUT, 0.9))
 b.append(vb.rect(-GO, YB+GO, B.FOOT, Z_FL, BODY, CUT, 1.2))
 z_at = S['z_rim_at'](XS-20)
 for y0, y1 in [(-GO, FB), (YB-FB, YB+GO)]:
     b.append(vb.rect(y0, y1, Z_FL, z_at, WALL, CUT, 1.1))
-for y0, y1 in [(-GO, -GO+B.GRIP_D), (YB+GO-B.GRIP_D, YB+GO)]:
-    b.append(vb.rect(y0, y1, S['GRIP_Z0'], S['GRIP_Z1'], VOID, ACC, 1.4))
 b.append(vb.rect(FB+ACL, YB-FB-ACL, Z_FL, Z_FL+B.AC_H, AC, CUT, 0.9))
 b.append(vb.rect(-GO, YB+GO, z_at, Z_LID, LID, CUT, 1.1))
 b.append(vb.rect(FB, YB-FB, Z_LID-B.S_TOP-B.PAN_T, Z_LID-B.S_TOP, NU, CUT, 0.8))
 b.append(vb.dim(-GO, YB+GO, 0, f'{YO:.0f}  phu bi Y', dy=22))
 b.append(vb.dim(0, YB, 0, f'{YB:.0f}  than, chuan C', dy=44))
-for zz, lbl in [(S['GRIP_Z0'], f'day hoc Z{S["GRIP_Z0"]:.0f}'),
-                (S['GRIP_Z1'], f'tran hoc Z{S["GRIP_Z1"]:.0f}'),
-                (z_at, f'vanh Z{z_at:.1f}')]:
-    b.append(T(vb.X(YB+GO)+8, vb.Z(zz)+3, lbl, font_size=8.5, fill=ACC if 'hoc' in lbl else DIM))
-b.append(arrow(vb.X(-GO)-16, vb.Z((S['GRIP_Z0']+S['GRIP_Z1'])/2),
-               vb.X(-GO+B.GRIP_D/2), vb.Z((S['GRIP_Z0']+S['GRIP_Z1'])/2), ACC, 1.6, 5))
+for zz, lbl in [(Z_FL, f'san trong Z{Z_FL:.0f}'), (z_at, f'vanh Z{z_at:.1f}')]:
+    b.append(T(vb.X(YB+GO)+8, vb.Z(zz)+3, lbl, font_size=8.5, fill=DIM))
 b.append(T(vb.X(YB/2), vb.Z(Z_LID)-8,
-           f'dai go tren hoc {S["GRIP_LEDGE"]:.2f} mm — day la duong truyen luc duy nhat khi xach',
+           f'Hoc am hai tay o VACH TRAI/PHAI, khong nam trong mat cat nay — xem A-A va HINH 14',
            font_size=8.5, fill=ACC, text_anchor='middle'))
 # chuan A tren mat cat
 b.append(f'<line x1="{vb.X(YB*0.62):.1f}" y1="{vb.Z(0):.1f}" x2="{vb.X(YB*0.62):.1f}" '

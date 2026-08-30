@@ -38,7 +38,7 @@ print(f"  Ba chi tiet tranh nhau mot bo phan day {B.WALL_FB:.0f} mm.\n")
 print(f"  Vach TRAI/PHAI day {C['WALL_HINGE']:.0f} mm, va tren no KHONG co gi khac tranh cho:")
 print(f"  ong go ban le O{2*C['R_KN']:.1f} nam o ARRIS (0 , Z{C['Z_RIM']:.0f}), chiem {C['R_KN']:.1f} mm")
 print(f"  be day vach tinh tu mat ngoai,")
-print(f"  con hoc am o Z{C['GRIP_Z0']:.0f}..{C['GRIP_Z1']:.0f} — hai vung roi nhau hoan toan.")
+print(f"  con hoc am o Z{C['GRIP_Z0']:.0f}..{C['GRIP_Z_TOP']:.0f} — hai vung roi nhau theo Z.")
 print(f"  (Chinh hoc am dinh ra be day {C['WALL_HINGE']:.0f}: sau {B.GRIP_D:.0f} + thanh sau"
       f" {B.GRIP_BACK:.0f} = {C['WALL_HINGE']:.0f}.")
 print(f"   Ong go chi an {C['R_KN']:.1f} mm vao vach {C['WALL_HINGE']:.0f}, con {C['WALL_HINGE']-C['R_KN']:.1f} mm;")
@@ -49,22 +49,23 @@ print(f"     (Ban truoc dat hoc am o vach truoc/sau va ket luan C phai noi phu b
 print(f"      350 -> 374. Ket luan do SAI vi chon nham vach.)")
 
 hr("2. HINH HOC HOC AM")
-for a, bb in [("Kich thuoc", f"{B.GRIP_W:.0f} rong (theo Y) x {B.GRIP_H:.0f} cao x"
-                             f" {B.GRIP_D:.0f} sau"),
+for a, bb in [("Kich thuoc", f"{B.GRIP_W:.0f} rong (theo Y) x sau {B.GRIP_D:.0f};"
+                             f" khe ho vao tay {C['GRIP_APER']:.0f} tai mat ngoai"),
               ("Bang Y", f"{C['GRIP_Y0']:.0f} .. {C['GRIP_Y1']:.0f}  (giua chieu sau hop,"
                          f" doi xung quanh Y={C['Y_BODY']/2:.0f})"),
-              ("Bang Z", f"{C['GRIP_Z0']:.0f} .. {C['GRIP_Z1']:.0f} — day hoc ngang san trong"),
+              ("Bang Z", f"{C['GRIP_Z0']:.0f} .. {C['GRIP_Z_TOP']:.0f} — day hoc ngang san trong"),
+              ("Tran hoc", f"bo R{B.GRIP_R:.0f} o mep ngoai roi doc {B.GRIP_SLOPE:.0f}° vao trong;"
+                           f" be mat {C['GRIP_SURF']:.1f} mm. Suy o tools/grip_hook.py"),
               ("Be day vach tai hoc", f"{C['WALL_GRIP']:.0f} mm, KHONG noi go ra ngoai"),
               ("Thanh sau hoc", f"{B.GRIP_BACK:.0f} mm"),
               ("Dai go TREN hoc", f"cao {C['GRIP_LEDGE']:.2f} (toi vanh Z{C['Z_RIM']:.0f}) x day"
                                   f" {C['GRIP_LEDGE_T']:.1f} (vach {C['WALL_GRIP']:.0f} tru ha bac"
                                   f" ban le {C['REBATE_D']:.1f})"),
               ("Dai go DUOI hoc", f"{C['GRIP_SKIRT']:.0f} mm, lai duoc day hop {B.BOT:.0f} do lung"),
-              ("Va cham voi ban le", f"ha bac ban le {C['REBATE_D']:.1f} sau nam o Z"
-                                     f"{C['Z_RIM']-C['REBATE_H']:.0f}..{C['Z_RIM']:.0f}; hoc am sau"
-                                     f" {B.GRIP_D:.0f} o Z{C['GRIP_Z0']:.0f}..{C['GRIP_Z1']:.0f}."
-                                     f" Chong nhau Z{C['Z_RIM']-C['REBATE_H']:.0f}..{C['GRIP_Z1']:.0f}"
-                                     f" — trong do hoc am sau hon nen ha bac khong lay them gi")]:
+              ("Va cham voi ban le", f"ha bac ban le nam o Z{C['Z_RIM']-C['REBATE_H']:.0f}.."
+                                     f"{C['Z_RIM']:.0f}. Dinh hoc am dung o Z{C['GRIP_Z_TOP']:.0f},"
+                                     f" tuc duoi day ha bac {B.GRIP_LIP:.0f} mm go dac — HAI VUNG"
+                                     f" KHONG CON CHONG NHAU. Day la thay doi Rev C2")]:
     print(f"   {a:22s}: {bb}")
 print(f"\n  Hai tay dat o hai vach trai/phai, cach nhau {C['W']:.0f} mm — hop gan vuong")
 print(f"  ({C['W']:.0f} x {C['Y_OA']:.0f}) nen dat o vach nao cung cho khoang cach hai tay nhu nhau.")
@@ -74,6 +75,8 @@ m_C = B.mass_of(C, 'cocobolo')[2]
 P_des = m_C*9.81*B.DYN
 P_hand = P_des/2
 L, h, b = B.GRIP_W, C['GRIP_LEDGE'], C['GRIP_LEDGE_T']
+print(f"  (Can duoi: chi lay dai go tren tran. Tiet dien THAT la chu L, ke ca thanh")
+print(f"   sau hoc — tools/grip_hook.py muc 7 tinh bang tich phan so.)")
 print(f"  Khoi luong {m_C:.2f} kg -> tai thiet ke {P_des:.0f} N (he so dong {B.DYN:.0f})"
       f" -> {P_hand:.0f} N moi tay\n")
 print(f"  Dai go tren hoc = dam nhip {L:.0f}, tiet dien {h:.2f} (cao) x {b:.1f} (day),")
@@ -92,7 +95,7 @@ print(f"    Uon          sigma          = {sig:7.2f} MPa  / MOR {B.MOR:.0f}"
 print(f"    Cat          tau            = {tau:7.2f} MPa  / {B.SHEAR:.0f}"
       f"      -> he so {B.SHEAR/tau:4.0f}x")
 print(f"    Vong giua nhip              = {dfl:7.3f} mm   (khong cam thay duoc)")
-A_back = B.GRIP_W*B.GRIP_H
+A_back = B.GRIP_W*C['GRIP_APER']
 print(f"\n  Thanh sau {B.GRIP_BACK:.0f} mm: khong nam tren duong truyen luc, chi chan ngon tay.")
 print(f"    Tua vao ca bon canh; day duoi lai duoc day hop {B.BOT:.0f} mm do.")
 print(f"    Neu an manh 200 N deu tren {A_back:.0f} mm2 -> {200/A_back*1000:.0f} kPa. Khong van de.")
@@ -144,12 +147,14 @@ print(f"  ({m_C*9.81/2/A_edge*1000:.0f} kPa). O {B.GRIP_D:.0f} mm ca dot lot vao
 print(f"  Gia phai tra: vach ban le {B.GRIP_D:.0f} + {B.GRIP_BACK:.0f} = {B.WALL_HINGE:.0f} mm")
 print(f"  (truoc la 12 + 6 = 18) -> chuoi X dai them {2*(B.WALL_HINGE-18):.0f} mm.")
 
-print(f"\n  => Hai yeu cau bat buoc cho tran hoc, neu khong C mat het cai loi cua no:")
-print(f"     a) Tran hoc PHAI doc vao trong ~10 do de dau ngon tay ap deu ca "
-      f"{min(B.GRIP_D,L_DISTAL):.0f} mm sau,")
-print(f"        khong phai chi bam mep.")
-print(f"     b) Mep ngoai tran hoc bo tron R >= 8 (cung tri so da chot cho quai da).")
-print(f"        Canh vuong o {m_C*9.81/2:.0f} N moi tay se hang tay sau ~30 giay.")
+print(f"\n  => Hai yeu cau bat buoc cho tran hoc. TRUOC Rev C2 hai dong nay chi la")
+print(f"     chu trong file nay, khong co trong box_spec — nay da thanh kich thuoc:")
+print(f"     a) Tran hoc doc {B.GRIP_SLOPE:.0f}° vao trong (GRIP_SLOPE) de dau ngon ap deu ca")
+print(f"        {min(B.GRIP_D,L_DISTAL):.0f} mm sau, khong phai chi bam mep.")
+print(f"     b) Mep ngoai tran bo tron (GRIP_R). Tri so R>=8 ghi o ban truoc la CHEP")
+print(f"        tu bai toan quai da va SAI o day: no lam long hoc chi con 12 mm, ngon")
+print(f"        tay khong lot. Chot R{B.GRIP_R:.0f} — chan tren tu ec-go-no-mi la 4,30.")
+print(f"     Xem tools/grip_hook.py va HINH 14. Ca hai deu co tu kiem trong box_spec.")
 
 # ============================================================================
 hr("5. BO GI VA PHAI THEM LAI GI")

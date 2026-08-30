@@ -86,9 +86,29 @@ POST_IN    =   4.0       # (A) tru an vao trong
 # Ly do: vach truoc/sau chi day 10 nen hoc am 16 sau + khe luon ngon 6 sau an
 # thung vach; va vach truoc/sau con phai mang ca ba khe luon ngon lan nam cham.
 # Vach 18 nuot duoc hoc sau 12 + thanh sau 6 ma KHONG phai noi go ra ngoai.
-GRIP_W, GRIP_H, GRIP_D = 120.0, 28.0, 16.0   # (C) hoc am: rong (Y) x cao x sau
+GRIP_W, GRIP_D = 120.0, 16.0     # (C) hoc am: rong (theo Y) x sau (theo X)
 GRIP_BACK  =   6.0       # (C) go con lai phia sau hoc
 WALL_HINGE = GRIP_D + GRIP_BACK    # vach ban le suy ra tu hoc am — 16 + 6 = 22
+# CHIEU CAO hoc am KHONG con la so tu chon. Ha bac ban le lay het go o
+# x < REBATE_D tu Z(Z_RIM - REBATE_H) len vanh; tran hoc phai nam DUOI dai do,
+# neu khong thi doan tran o phia mat ngoai bi rong va ngon tay khong bau vao dau
+# duoc. Vay khe ho vao tay tai mat ngoai la mot HE QUA:
+#     GRIP_APER = Z_RIM - REBATE_H - GRIP_LIP - Z_FLOOR
+# Xem tools/grip_hook.py — moi tri so duoi day deu duoc suy o do.
+GRIP_LIP   =   4.0       # go dac giua dinh bo tron va day ha bac ban le
+GRIP_LIP_REQ =  3.0      # san toi thieu doc lap — de kiem GRIP_LIP khong bi ha bua
+GRIP_SLOPE =  10.0       # tran hoc doc len phia trong (do). Chan tren = atan(MU_SKIN)
+GRIP_R     =   4.0       # bo tron mep ngoai tran hoc — tools/grip_hook.py muc 3
+                         # (chan tren tu ec-go-no-mi 4,40; lam tron XUONG dao R4 co san)
+MU_SKIN    =   0.40      # ma sat da tay tren go danh bong (tra bang, lay can duoi)
+FING_T_DIP =  16.0       # be day ngon tay o khop DIP (nam giua)
+FING_T_TIP =  11.0       # be day ngon tay o dau mut
+FING_W     =  16.0       # be rong mot ngon
+N_FING     =   4         # so ngon chiu luc moi tay
+L_DISTAL   =  15.0       # chieu dai dot ngon ngoai cung
+FING_MAR   =   0.5       # khe toi thieu giua lung ngon tay va day hoc
+WRAP_SKIN  =  60.0       # goc da dau ngon boc quanh mep bo (do)
+P_COMFORT  =   0.40      # ap luc toi da chiu duoc lau tren dau ngon (MPa = 400 kPa)
 # (C) song noi giua tren AC-01: DA BO. tools/detail_features.py muc 3 tinh lai do
 # vong mep tu do cua nap o be day 12 (khong phai 8 nhu Rev B) va cho 0,6 mm duoi
 # 50 N — khong can do. Bo song lai giai luon xung dot song-vs-ranh Joker.
@@ -333,13 +353,63 @@ def derive(wall_hinge=WALL_HINGE, bay=BAY, div=DIV, ac_bay=AC_BAY, handle=HANDLE
     GRIP_Y0   = Y_BODY/2 - GRIP_W/2
     GRIP_Y1   = Y_BODY/2 + GRIP_W/2
     GRIP_Z0   = Z_FLOOR                                  # day hoc ngang san trong
-    GRIP_Z1   = GRIP_Z0 + GRIP_H
     WALL_GRIP = wall_hinge + grip_out                    # be day vach tai hoc
-    GRIP_LEDGE = Z_RIM - GRIP_Z1                         # CHIEU CAO dai go tren hoc am
     GRIP_SKIRT = GRIP_Z0 - FOOT                          # dai go duoi hoc am
-    # BE DAY dai go tren hoc: ha bac ban le an mat REBATE_D o dung dai nay, va day
-    # la duong truyen luc duy nhat khi xach hop. Phai kiem theo be day THAT.
+
+    # --- TRAN HOC AM: bo tron mep ngoai + doc len phia trong.
+    # Dinh cua bo tron la diem CAO NHAT ma hoc am an len vach. No phai nam duoi
+    # day ha bac ban le mot doan GRIP_LIP -> day la rang buoc dinh ra tat ca.
+    _th       = math.radians(GRIP_SLOPE)
+    GRIP_Z_TOP = Z_RIM - REBATE_H - GRIP_LIP             # dinh bo tron, tai mat ngoai
+    GRIP_APER  = GRIP_Z_TOP - GRIP_Z0                    # khe ho vao tay tai mat ngoai
+    # tam cung bo tron: cach mat ngoai dung R, cach mat phang tran dung R
+    GRIP_CX, GRIP_CZ = GRIP_R, GRIP_Z_TOP
+    GRIP_TANG = GRIP_R/math.tan(math.radians((90.0 - GRIP_SLOPE)/2))  # dinh -> tiep diem
+    GRIP_Z1   = GRIP_Z_TOP - GRIP_TANG                   # DINH ao cua tran (tai x=0)
+    GRIP_H    = GRIP_Z1 - GRIP_Z0                        # chieu cao doan tran phang keo ve x=0
+    GRIP_XT   = GRIP_R*(1.0 + math.sin(_th))             # x tiep diem cung/tran
+    GRIP_ZT   = GRIP_CZ - GRIP_R*math.cos(_th)
+    GRIP_FLAT = GRIP_D - GRIP_XT                         # doan tran phang con lai
+    GRIP_ARC  = GRIP_R*math.radians(90.0 + GRIP_SLOPE)   # do dai cung bo tron
+    GRIP_SURF = GRIP_ARC + GRIP_FLAT/math.cos(_th)       # CHIEU DAI BE MAT tran hoc
+    GRIP_Z_IN = GRIP_Z1 + GRIP_D*math.tan(_th)           # tran tai day hoc (x = GRIP_D)
+
+    def grip_ceil(x):
+        """Cao do TRAN hoc tai x (0 = mat ngoai vach). Cung bo tron roi mat doc."""
+        x = min(max(x, 0.0), GRIP_D)
+        if x <= GRIP_XT:
+            return GRIP_CZ - math.sqrt(max(0.0, GRIP_R*GRIP_R - (x - GRIP_CX)**2))
+        return GRIP_Z1 + x*math.tan(_th)
+
+    def grip_profile(n=14):
+        """Bien duoi cua dai go tren hoc: cung bo tron roi mat doc. Tu mat ngoai
+        (0 , GRIP_Z_TOP) vao toi day hoc (GRIP_D , GRIP_Z_IN)."""
+        sw = 90.0 + GRIP_SLOPE                           # cung quet 100 do
+        pts = [(GRIP_CX + GRIP_R*math.cos(math.radians(180.0 + sw*i/n)),
+                GRIP_CZ + GRIP_R*math.sin(math.radians(180.0 + sw*i/n)))
+               for i in range(n + 1)]
+        return pts + [(GRIP_D, GRIP_Z_IN)]
+
+    # dien tich TIET DIEN hoc am (chu nhat + net doc + phan bo tron) — tich phan so
+    _m = 256
+    GRIP_A = sum((grip_ceil(GRIP_D*i/_m) + grip_ceil(GRIP_D*(i+1)/_m))/2 - GRIP_Z0
+                 for i in range(_m))*GRIP_D/_m
+
+    # be day dai go tren hoc o vung bi ha bac an mat — duong truyen luc khi xach
     GRIP_LEDGE_T = WALL_GRIP - REBATE_D
+    GRIP_LEDGE   = Z_RIM - GRIP_Z_TOP                    # CHIEU CAO dai go, do tu dinh bo tron
+
+    # --- ngon tay co lot HET chieu sau hoc khong (khong thi hoc sau bao nhieu cung vo ich)
+    def fing_t(x):
+        """Be day ngon tay tai x, gia thiet dau mut cham day hoc (x = GRIP_D)."""
+        u = min(max(GRIP_D - x, 0.0), L_DISTAL)
+        return FING_T_TIP + (FING_T_DIP - FING_T_TIP)*u/L_DISTAL
+    _n = 64
+    GRIP_FIT = min(grip_ceil(GRIP_D*i/_n) - GRIP_Z0 - fing_t(GRIP_D*i/_n)
+                   for i in range(_n + 1))               # khe hep nhat lung ngon/day hoc
+    GRIP_LIP_MIN = min((Z_RIM - REBATE_H if GRIP_D*i/_n < REBATE_D else Z_RIM)
+                       - grip_ceil(GRIP_D*i/_n) for i in range(_n + 1))
+    GRIP_EJECT = math.tan(_th)                           # he so day ngon tay ra
 
     # --- khay phu kien: chuoi dai khep ve AC_Y
     AC_W_OUT  = ac_bay - 2.0                             # khe 1,0 moi ben
@@ -421,7 +491,7 @@ def derive(wall_hinge=WALL_HINGE, bay=BAY, div=DIV, ac_bay=AC_BAY, handle=HANDLE
         V_NAP  = ['khung nap','song khoa']
     else:
         # hoc am khoet vao vach trai/phai (khong con go noi ra ngoai)
-        v['vach trai/phai'] -= 2*GRIP_W*GRIP_H*GRIP_D
+        v['vach trai/phai'] -= 2*GRIP_W*GRIP_A
         v['nap che o xuc xac'] = (AC_W_IN + 2*COVER_LIP)*(2*DICE_SOCK + 3*DICE_RIB)*COVER_T
         # hoc am nam cham khoet vao nap va vao vanh than (4 moi canh + 4 doi ung)
         n_mag = 2*MAG_N_LEAF
@@ -433,7 +503,8 @@ def derive(wall_hinge=WALL_HINGE, bay=BAY, div=DIV, ac_bay=AC_BAY, handle=HANDLE
     V_KIM  = []                      # KHONG co chi tiet kim loai nao trong ban le
 
     d.update({k: val for k, val in locals().items()
-              if k.isupper() or k in ('t_lid', '_int_t', 'z_rim_at')})
+              if k.isupper() or k in ('t_lid', '_int_t', 'z_rim_at',
+                                      'grip_ceil', 'grip_profile', 'fing_t')})
     d.update(dict(HG_MODE=HG_MODE, WALL_HINGE=wall_hinge, BAY=bay, DIV=div, AC_BAY=ac_bay,
                   HANDLE=handle, V=v, V_THAN=V_THAN, V_KHAY=V_KHAY, V_NAP=V_NAP,
                   V_KIM=V_KIM))
@@ -598,8 +669,30 @@ def selfcheck(d=None):
     if d['HANDLE'] == 'C':
         if d['GRIP_LEDGE'] < 8.0:  e.append("dai go tren hoc am thap hon 8 mm")
         if d['GRIP_LEDGE_T'] < 8.0: e.append("dai go tren hoc am mong hon 8 mm sau khi ha bac")
-        if GRIP_Z1 > Z_RIM - REBATE_H + 1e-9 and REBATE_D > GRIP_D:
-            e.append("ha bac sau hon hoc am o doan chong nhau")
+        # HA BAC BAN LE AN VAO TRAN HOC — loi da tung lot luoi mot lan (Rev C1):
+        # kiem cu chi bat khi REBATE_D > GRIP_D nen khong bao gio no. Nay kiem
+        # tung diem mot: o MOI x tren tran hoc phai con GRIP_LIP go dac ben tren.
+        if d['GRIP_LIP_MIN'] < GRIP_LIP_REQ:
+            e.append(f"tran hoc am thoc len sat ha bac ban le: con {d['GRIP_LIP_MIN']:.2f} "
+                     f"< {GRIP_LIP_REQ:.1f} mm go dac")
+        if d['GRIP_FIT'] < FING_MAR - 1e-9:
+            e.append(f"ngon tay khong lot het chieu sau hoc: khe hep nhat {d['GRIP_FIT']:.2f} mm")
+        if d['GRIP_APER'] < FING_T_DIP + 2.0:
+            e.append(f"khe ho vao tay {d['GRIP_APER']:.1f} hep hon ngon tay {FING_T_DIP:.0f} + 2")
+        if d['GRIP_SURF'] < L_DISTAL:
+            e.append("be mat tran hoc ngan hon dot ngon tay — chi bam duoc mep")
+        if d['GRIP_FLAT'] < 3.0:
+            e.append("bo tron mep an het doan tran phang")
+        # chan DUOI cua ban kinh bo: luc luon bat dau don ve mep, da tay boc
+        # duoc chung WRAP_SKIN do quanh no. Bo cang nho, dai cham cang hep.
+        _P = mass_of(d, 'loi on dinh')[2]*9.81*DYN/2
+        _p = _P/(N_FING*FING_W*GRIP_R*math.radians(WRAP_SKIN))
+        if _p > P_COMFORT:
+            e.append(f"bo mep tran qua nho: ap luc luc bat luc {_p*1000:.0f} kPa "
+                     f"> {P_COMFORT*1000:.0f} (can R >= "
+                     f"{_P/(N_FING*FING_W*math.radians(WRAP_SKIN)*P_COMFORT):.2f})")
+        if d['GRIP_EJECT'] > MU_SKIN:
+            e.append("tran hoc doc hon goc ma sat — ngon tay bi day tuot ra")
         if d['GRIP_SKIRT'] < 4.0:  e.append("dai go duoi hoc am mong hon 4 mm")
         if d['GRIP_Y0'] < WALL_FB + 10:            e.append("hoc am cham vach truoc/sau")
     return e

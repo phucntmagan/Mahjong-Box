@@ -15,6 +15,7 @@ import math, os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import box_spec as B
 S = B.derive()
+LATCH_DZ = 7.0     # truc luoi gai dat duoi vanh bao nhieu (rieng cua khoa nap)
 def hr(t): print("\n" + "="*78 + "\n" + t + "\n" + "="*78)
 
 PX, PZ = S['PIN_X'], S['PIN_Z']
@@ -201,7 +202,9 @@ for a, bb in [("Vi tri", f"X = {LX[0]:.0f} (canh trai) va {LX[1]:.0f} (canh phai
               ("De ban ma", f"vach truoc day {B.WALL_FB:.0f}, vanh o Z{z_rim_at(LX[0]):.0f};"
                             f" hoc am nay o vach trai/phai nen mat truoc con trong"),
               ("De", f"brass 40 x 12 x 3, ha bac 3 mm vao mat vach"),
-              ("Truc xoay", f"chot brass O3, truc chay theo X, o Z{S['GRIP_Z1']+4:.0f}"),
+              ("Truc xoay", f"chot brass O3, truc chay theo X, o Z{S['Z_RIM']-LATCH_DZ:.0f}"
+                            f" (lui {LATCH_DZ:.0f} mm duoi vanh — de de brass 40x12 nam tron"
+                            f" tren mat vach ma khong cham vanh)"),
               ("Luoi gai", f"brass 3 mm day, voi ra {B.WALL_FB+10:.0f}, dau luoi de len"
                            f" mat nap {10:.0f} mm"),
               ("Ha bac tren nap", f"10 (Y) x 34 (X) x sau 3,2 -> luoi phang voi mat nap"),

@@ -130,6 +130,12 @@ X_DIV = [(WH+BAY, WH+BAY+DIV), (W-WH-BAY-DIV, W-WH-BAY)]
 X_AC = (WH+BAY+DIV, WH+BAY+DIV+ACB)
 WELLS = [WH+BAY/2, XS, W-WH-BAY/2]
 
+def gp(x0, prof):
+    """Tiet dien vach ban le: x do tu MAT NGOAI vao. Vach trai giu nguyen,
+    vach phai lat guong qua giua hop. Tra ve dung chieu quay cho prism_y."""
+    if x0 == 0: return list(prof)
+    return [(W - x, z) for x, z in prof][::-1]
+
 def add_body(sc, show_mag=True):
     C, D = COL['coco'], COL['cut']
     sc.box(0, W, 0, YB, 0, B.FOOT, COL['foot'])                       # chan dem
@@ -143,13 +149,17 @@ def add_body(sc, show_mag=True):
             xa1 = (x0 + RB_D) if x0 == 0 else x0                # tren: da ha bac
             xb1 = x1 if x0 == 0 else (x1 - RB_D)
             sc.box(xa1, xb1, ya, yb_, Z_RIM - RB_H, Z_RIM, C, D)
-        # doan co hoc: chi con thanh sau + dai go tren + dai go duoi
-        xa, xb_ = (x0 + B.GRIP_D, x1) if x0 == 0 else (x0, x1 - B.GRIP_D)
-        sc.box(xa, xb_, gy0, gy1, S['GRIP_Z0'], S['GRIP_Z1'], COL['coco_d'], D)
-        # dai go tren hoc — da tru ha bac ban le o mat ngoai
-        xa2 = (x0 + RB_D) if x0 == 0 else x0
-        xb2 = x1 if x0 == 0 else (x1 - RB_D)
-        sc.box(xa2, xb2, gy0, gy1, S['GRIP_Z1'], Z_RIM, C, D)
+        # doan co hoc am: ba manh — thanh sau, dai go tren hoc, va vanh tren ha bac.
+        # Tran hoc KHONG phang: bo tron R o mep ngoai roi doc len phia trong, nen
+        # phai ve theo bien that (S['grip_profile']) chu khong the ve bang mot hop.
+        sc.prism_y(gp(x0, [(B.GRIP_D, Z_FL), (WH, Z_FL), (WH, Z_RIM), (B.GRIP_D, Z_RIM)]),
+                   gy0, gy1, C, D)                              # thanh sau hoc
+        prof = S['grip_profile']()                              # (0,Z_TOP) -> (GRIP_D,Z_IN)
+        sc.prism_y(gp(x0, prof + [(B.GRIP_D, Z_RIM - RB_H), (0.0, Z_RIM - RB_H)]),
+                   gy0, gy1, C, D)                              # dai go TREN tran hoc
+        sc.prism_y(gp(x0, [(RB_D, Z_RIM - RB_H), (B.GRIP_D, Z_RIM - RB_H),
+                           (B.GRIP_D, Z_RIM), (RB_D, Z_RIM)]),
+                   gy0, gy1, C, D)                              # vanh con lai sau ha bac
     # vach truoc/sau. Chia theo X vi hai le: dinh vach doc (gay tai X=185) va
     # khe luon ngon an 6 mm vao mat trong -> tai bang khe, vach chi con 4 mm.
     cuts = sorted({0.0, XS, W}
@@ -350,8 +360,8 @@ def shot(name, title, sub_, build, eye, target=None, w=1000, h=620, focal=1500):
 def v1(sc): add_body(sc, show_mag=False); add_lid(sc, show_mag=False)
 shot('fig12a-tong-the-nap-dong', 'HÌNH 12a — Tổng thể, nắp đóng',
      f'{S["X_OA"]:.1f} × {S["Y_OA"]:.0f} × {S["Z_OA"]:.0f} mm · {B.mass_of(S,"loi on dinh")[2]:.2f} kg. '
-     f'Mắt mộng gỗ Ø{2*RK:.1f} nằm CHÌM trong hạ bậc {RB_D:.1f}×{RB_H:.0f} — nhô ra 0,0 mm, '
-     f'không một chi tiết kim loại. Hốc âm hai tay sâu {B.GRIP_D:.0f} trong vách {S["WALL_HINGE"]:.0f}.',
+     f'Mắt mộng gỗ Ø{2*RK:.1f} CHÌM trong hạ bậc {RB_D:.1f}×{RB_H:.0f} — nhô ra 0,0 mm, không một '
+     f'chi tiết kim loại. Hốc âm hai tay khe hở {S["GRIP_APER"]:.0f} × sâu {B.GRIP_D:.0f} — xem HÌNH 14.',
      v1, eye=(-250, -430, 260), target=(CX, CY, 22), focal=1250)
 
 # 2 — nap mo 180 do
@@ -403,6 +413,18 @@ def v5(sc):
     add_lid(sc, math.radians(50), leaves=(True, False))
     add_lid(sc, 0.0, leaves=(False, True))
 shot('fig12e-chi-tiet-goc', 'HÌNH 12e — Vách trái: hốc âm hai tay và bản lề',
-     f'Hốc âm {B.GRIP_W:.0f} × {B.GRIP_H:.0f} sâu {B.GRIP_D:.0f} trong vách {S["WALL_GRIP"]:.0f}; dải gỗ trên hốc '
-     f'{S["GRIP_LEDGE"]:.0f} cao × {S["GRIP_LEDGE_T"]:.1f} dày. {B.N_KN} mắt mộng gỗ Ø{2*RK:.1f} chìm trong hạ bậc.',
+     f'Hốc âm {B.GRIP_W:.0f} rộng, khe hở vào tay {S["GRIP_APER"]:.0f}, sâu {B.GRIP_D:.0f} trong vách '
+     f'{S["WALL_GRIP"]:.0f}; dải gỗ trên hốc {S["GRIP_LEDGE"]:.0f} cao × {S["GRIP_LEDGE_T"]:.1f} dày. '
+     f'{B.N_KN} mắt mộng gỗ Ø{2*RK:.1f} chìm trong hạ bậc.',
      v5, eye=(-560, -315, 250), target=(105, 172, 24), focal=1450)
+
+# 6 — CAT NGANG QUA HOC AM: cho thay dung cai "phan bau ngon tay"
+def v6(sc):
+    sc.clip_y = (YB/2, YB + 1)
+    add_body(sc, show_mag=False)
+    add_lid(sc, 0.0, show_mag=False)
+shot('fig12f-hoc-am-cat', 'HÌNH 12f — Cắt ngang hốc âm: phần bấu ngón tay',
+     f'Cắt tại Y{YB/2:.0f}, giữa hốc. Trần hốc KHÔNG phẳng: bo R{B.GRIP_R:.0f} ở mép ngoài rồi '
+     f'dốc lên {B.GRIP_SLOPE:.0f}° vào trong, kết thúc ở Z{S["GRIP_Z_IN"]:.1f}. '
+     f'Khe hở vào tay {S["GRIP_APER"]:.0f} mm; bề mặt trần {S["GRIP_SURF"]:.1f} mm > đốt ngón {B.L_DISTAL:.0f}.',
+     v6, eye=(-95, -330, 118), target=(46, YB/2, 24), w=1000, h=560, focal=2500)

@@ -88,7 +88,8 @@ khi ống thì tiếp tuyến mặt ngoài vách **từ bên trong**, tức chì
    - **Cao** phải ≥ bề dày nắp. Quét số cho ngưỡng **15,01 mm**; thấp hơn một ly là góc trên của mặt
      đầu cánh nắp chạm vào vách. Đặc tả đặt `REBATE_H = T_LID` nên trị số này tự đúng theo bề dày nắp.
 
-Hạ bậc nằm đúng trên dải gỗ trên hốc âm hai tay, nên dải đó còn **15,9 mm dày** thay vì 22. Đã kiểm lại:
+Hạ bậc nằm đúng trên dải gỗ trên hốc âm hai tay, nên dải đó còn **15,9 mm dày** thay vì 22, **và nó khoá
+cao độ trần hốc xuống Z28** (`docs/BX-01.md`, mục *Hốc âm hai tay*). Đã kiểm lại:
 hệ số an toàn khi xách vẫn **23×**.
 
 ![Hành trình 0→180° và hai họ nghiệm: trục trong vật liệu ép ống Ø15, trục trên mặt phẳng ngoài cho ống Ø12,2.](figs/fig8-dong-hoc-ban-le.png)
