@@ -72,7 +72,26 @@ python3 tools/draw_lid.py      # sinh figs/fig6, fig7
 python3 tools/draw_handle.py   # sinh figs/fig1..fig5
 ./tools/render_figs.sh         # SVG -> PNG (cửa sổ chụp cao hơn SVG rồi crop)
 ./tools/build_pdf.sh           # docs/*.md -> build/*.html -> build/*.pdf
+./tools/build_drawings.sh      # BỘ BẢN VẼ SẢN XUẤT -> build/BAN-VE-SAN-XUAT.pdf (7 tờ A3)
 ```
+
+## Bộ bản vẽ sản xuất
+
+`build/BAN-VE-SAN-XUAT.pdf` — 7 tờ A3 ngang, có khung tên, sinh từ `tools/drawings.py`.
+
+| Tờ | Nội dung | Tỉ lệ |
+|---|---|---|
+| 00 | Danh mục · bảng kê phôi · quy ước chung | — |
+| BX-01 | Thân hộp — mặt bằng, mặt cắt A-A, B-B | 1:2 |
+| BX-02 | Vách bản lề — hốc âm, mắt mộng, **bảng toạ độ trần cho CNC** | 4:1 / 1:2 |
+| HD-01 | Cánh nắp — khung + tấm Nu nâng | 1:2 / 1:1 / 4:1 |
+| TR-01 | Khay quân (4 chiếc) | 1:2 / 1:1 |
+| AC-01 | Khay phụ kiện | 1:2 |
+| QA-01 | Dung sai, đặc tính kiểm bắt buộc, thứ tự lắp, bảng kiểm xuất xưởng | — |
+
+Mối ghép góc thân được chốt trong vòng này (trước đó **không tài liệu nào định nghĩa**):
+vách trước/sau **ngậm 5 mm** vào rãnh trên mặt trong vách bản lề + 2 chốt
+draw-bore Ø5 mỗi góc; đáy **thả** trong rãnh sâu 6, mộng 4.
 
 `tools/md2html.py` dùng chung CSS với `build/review.html` nên PDF mới và cũ đồng bộ định dạng.
 

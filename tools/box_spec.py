@@ -121,6 +121,14 @@ FELT_PAD = 0.8           # (C) dem ni duoi nap de ep khay, thay cho song noi
 FOOT   =  2.0            # chan dem
 BOT    =  6.0            # day hop (8 -> 6)
 BOT_TON=  4.0            # mong day chay vao ranh trong vach
+BOT_GRV=  6.0            # CHIEU SAU ranh om day -> day THA (BOT_GRV - BOT_TON) moi phia
+# --- MOI GHEP THAN (chot Rev C3; truoc do khong tai lieu nao dinh nghia)
+# Vach truoc/sau day 10, vach ban le day 22 — hai be day khac nhau nen KHONG the
+# ghep mong vat 45 do. Vach truoc/sau NGAM vao ranh tren mat trong vach ban le.
+JOINT_D  =  5.0          # sau ranh ngam vach truoc/sau vao vach ban le
+JOINT_PIN=  5.0          # chot go draw-bore moi goc
+JOINT_NP =  2            # so chot moi goc
+DIV_TON  =  4.0          # vach ngan ngam vao ranh tren mat trong vach truoc/sau
 TRAY_H = 19.0            # chieu cao mot khay quan
 N_STACK = 2              # so khay chong trong mot khoang
 CLR_Z  =  1.0            # khe tren dinh khay
@@ -461,6 +469,16 @@ def derive(wall_hinge=WALL_HINGE, bay=BAY, div=DIV, ac_bay=AC_BAY, handle=HANDLE
                        for i in range(_n + 1))           # go dac mong nhat TREN tran
     GRIP_EJECT = math.tan(_th)                           # he so day ngon tay ra
 
+    # --- moi ghep than
+    # Ranh ngam nam o HAI DAU vach ban le (Y 0..WALL_FB va cuoi), hoc am nam o
+    # GIUA (Y GRIP_Y0..GRIP_Y1). Chung KHONG chong nhau theo Y, nen KHONG duoc
+    # cong hai chieu sau lai — do dung la loai loi da lam hong tran hoc am mot lan.
+    JOINT_LEFT = wall_hinge - JOINT_D                   # go con lai sau ranh ngam
+    BOT_FLOAT  = BOT_GRV - BOT_TON                      # day tha bao nhieu moi phia
+    BOT_W, BOT_L = (W - 2*wall_hinge) + 2*BOT_TON, INNER_Y + 2*BOT_TON
+    BOT_MOVE   = max(BOT_W, BOT_L)*K['cocobolo ngang tho']*DMC_DRY/2
+    DIV_LEFT   = WALL_FB - DIV_TON                      # go con lai sau ranh om vach ngan
+
     # --- khay phu kien: chuoi dai khep ve AC_Y
     AC_W_OUT  = ac_bay - 2.0                             # khe 1,0 moi ben
     AC_W_IN   = AC_W_OUT - 2*AC_WALL
@@ -709,6 +727,35 @@ def selfcheck(d=None):
     if d['PAN_TH'] + d['LIP_BOT'] > T_LID + 1e-9:
         e.append("tam nang day hon cho con lai trong be day nap")
     if (WALL_FB - BOT_TON)/2 < 2.5:                e.append("ranh om day lam vach truoc/sau qua mong")
+    # --- moi ghep than
+    if d['JOINT_LEFT'] < 8.0:
+        e.append(f"vach ban le con {d['JOINT_LEFT']:.1f} mm sau ranh ngam — mong hon 8")
+    # ranh ngam (hai dau) va hoc am (giua) phai roi nhau THEO Y
+    if d['GRIP_Y0'] < WALL_FB + JOINT_D:
+        e.append("hoc am cham ranh ngam vach truoc/sau theo Y")
+    if JOINT_D > WALL_FB - 2.0:
+        e.append("ranh ngam sau hon be day vach truoc/sau tru 2 mm")
+    if d['BOT_MOVE'] > d['BOT_FLOAT']:
+        e.append(f"day hop no {d['BOT_MOVE']:.2f} > khoang tha {d['BOT_FLOAT']:.1f} mm")
+    # khi go CO lai, mong day rut ra khoi ranh — phai con ngam du sau
+    if BOT_TON - d['BOT_MOVE'] < 2.5:
+        e.append(f"day co lai thi mong chi con ngam {BOT_TON - d['BOT_MOVE']:.2f} mm "
+                 f"trong ranh (< 2,5)")
+    if d['DIV_LEFT'] < 4.0:
+        e.append(f"vach truoc/sau con {d['DIV_LEFT']:.1f} mm sau ranh om vach ngan")
+    # ranh om vach ngan va khe luon ngon deu an vao MAT TRONG vach truoc/sau:
+    # cong hai chieu sau la thung vach, nen chung phai roi nhau THEO X
+    for xa, xb in ((WALL_HINGE + bay_, WALL_HINGE + bay_ + div_) for bay_, div_ in
+                   [(d['BAY'], d['DIV'])]):
+        for xc in d['WELL_X']:
+            if xa - WELL_W/2 < xc < xb + WELL_W/2:
+                e.append(f"ranh om vach ngan X={xa:.0f} cham khe luon ngon X={xc:.0f}")
+    if DIV_TON + WELL_D > WALL_FB and not all(
+            abs(xc - (WALL_HINGE + d['BAY'] + d['DIV']/2)) > (WELL_W + d['DIV'])/2
+            for xc in d['WELL_X']):
+        e.append("ranh om vach ngan + khe luon ngon an thung vach truoc/sau")
+    if JOINT_PIN + 2*2.5 > WALL_FB:
+        e.append("chot draw-bore goc than lam vach truoc/sau khong con go quanh chot")
     if d['HANDLE'] == 'C':
         if d['MAG_MAR_OUT'] < MAG_EDGE:
             e.append(f"nam cham cach mep nap {d['MAG_MAR_OUT']:.1f} < {MAG_EDGE:.1f} mm")
