@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8">
+<title>Review kỹ thuật bản vẽ Rev B</title>
+<style>
+@page { size: A4; margin: 16mm 15mm 14mm 15mm; }
+* { box-sizing: border-box; }
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body { font-family: "DejaVu Sans", sans-serif; font-size: 9.3pt; line-height: 1.5;
+       color: #1a1a1a; margin: 0; }
+h1 { font-size: 17pt; margin: 0 0 2mm; letter-spacing: -0.2pt; }
+h2 { font-size: 12pt; margin: 7mm 0 2.5mm; padding-bottom: 1.2mm;
+     border-bottom: 1.2pt solid #1a1a1a; break-after: avoid; }
+h3 { font-size: 10pt; margin: 4.5mm 0 1.5mm; break-after: avoid; }
+p { margin: 0 0 2mm; }
+ul, ol { margin: 0 0 2mm; padding-left: 5mm; }
+li { margin-bottom: 0.8mm; }
+table { width: 100%; border-collapse: collapse; margin: 2mm 0 3mm; font-size: 8.4pt;
+        break-inside: avoid; }
+th { background: #ecebe7; text-align: left; font-weight: bold; padding: 1.3mm 1.8mm;
+     border: 0.4pt solid #b8b5ae; }
+td { padding: 1.2mm 1.8mm; border: 0.4pt solid #cfccc5; vertical-align: top; }
+td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; }
+td.c, th.c { text-align: center; }
+tr:nth-child(even) td { background: #f7f6f3; }
+code, pre { font-family: "DejaVu Sans Mono", monospace; }
+pre { background: #f4f3ef; border-left: 2.5pt solid #8a8madd; border-left-color: #8a877e;
+      padding: 2.5mm 3mm; font-size: 8pt; line-height: 1.45; margin: 2mm 0 3mm;
+      white-space: pre; break-inside: avoid; }
+code { font-size: 8.4pt; background: #f0efeb; padding: 0.2mm 0.8mm; border-radius: 1pt; }
+.head { border-bottom: 2.5pt solid #1a1a1a; padding-bottom: 3mm; margin-bottom: 4mm; }
+.head .meta { font-size: 8.2pt; color: #55524b; margin-top: 1.5mm; }
+.head .meta b { color: #1a1a1a; }
+.verdict { background: #f2f0ea; border: 0.8pt solid #b8b5ae; border-left: 3pt solid #1a1a1a;
+           padding: 3mm 3.5mm; margin: 3mm 0 4mm; break-inside: avoid; }
+.verdict .big { font-size: 10.5pt; font-weight: bold; display: block; margin-bottom: 1.5mm; }
+.warn { background: #fdf6e8; border: 0.6pt solid #d9c184; border-left: 3pt solid #c79a1e;
+        padding: 2.5mm 3mm; margin: 2.5mm 0; font-size: 8.6pt; break-inside: avoid; }
+.fix { background: #eef4ee; border-left: 3pt solid #4a7a52; padding: 2.5mm 3mm;
+       margin: 2.5mm 0; font-size: 8.8pt; break-inside: avoid; }
+.fix b:first-child { color: #2f5a36; }
+.ok  { color: #2f7a3c; font-weight: bold; }
+.bad { color: #a8332a; font-weight: bold; }
+.tag { display: inline-block; font-size: 7.4pt; font-weight: bold; padding: 0.4mm 1.6mm;
+       border-radius: 1.5pt; vertical-align: 1pt; margin-right: 1.5mm; letter-spacing: 0.3pt; }
+.t-crit { background: #a8332a; color: #fff; }
+.t-maj  { background: #c07a12; color: #fff; }
+.t-min  { background: #6b6862; color: #fff; }
+figure { margin: 3mm 0 4mm; break-inside: avoid; text-align: center; }
+figcaption { font-size: 7.8pt; color: #55524b; margin-top: 1.5mm; text-align: left; }
+.foot { margin-top: 6mm; padding-top: 2mm; border-top: 0.6pt solid #cfccc5;
+        font-size: 7.6pt; color: #6b6862; }
+.pb { break-before: page; }
+.nb { break-inside: avoid; }
+</style></head><body>
+<div class="head"><h1>Review kỹ thuật bản vẽ Rev B</h1><div class="meta"><b>Bộ hồ sơ:</b> Hộp Mahjong 152 quân, BURLORA · <b>Đơn vị:</b> mm<br><b>Nguồn số:</b> tools/check_dimensions.py</div></div>
+<h1>Review bản vẽ sản xuất — Hộp Mahjong 152 quân, Rev B</h1>
+<div class="warn"><b>Trạng thái 29-08-2026.</b> Đây là bản review gốc của Rev B, giữ nguyên làm hồ sơ. Bốn kết luận trong đây đã thay đổi: §2.3 (đề xuất hốc nhấc khay không đóng được), §3.2 (mép tự do nắp không còn cần chi tiết đỡ), §8.1 (phần CITES đã tra lại, xem <code>tools/cites_check.py</code>), và toàn bộ chuỗi kích thước. Số hiện hành: <b><code>docs/CHOT-REV-C.md</code></b> và <b><code>docs/BX-01.md</code></b>.</div>
+<p><b>Tài liệu được review:</b> <code>Ban_ve_san_xuat_hop_Mahjong_152_quan_RevB.pdf</code> (BURLORA, 6 sheet, Rev B 24-08-2026) <b>Phạm vi:</b> kiểm tra độc lập toàn bộ chuỗi kích thước, dung sai, sức chứa và tính khả thi chế tạo. <b>Công cụ kiểm tra:</b> <code>tools/check_dimensions.py</code> (chạy lại được, không phụ thuộc thư viện ngoài).</p>
+<p><b>Kết luận tổng quát:</b> số học của Rev B <b>đúng toàn bộ</b> — 0 lỗi tính. Nhưng có <b>5 vấn đề hình học/công năng</b> đủ nghiêm trọng để phải giải quyết trước khi lập trình CNC, cộng 2 chi tiết công năng bị bỏ sót so với ảnh mẫu và 1 rủi ro độ ẩm có thể làm nắp kẹt cứng.</p>
+<div class="pb"></div>
+<h2>1. Phần đã verify — tất cả đều đúng</h2>
+<table><tr><th class="">#</th><th class="">Hạng mục</th><th class="">Rev B ghi</th><th class="">Tính lại</th><th class=""></th></tr><tr><td class="">1</td><td class="">Quân 1 × 1-7/16 × 7/16 in</td><td class="">25,4 × 36,51 × 11,11</td><td class="">25,400 × 36,512 × 11,113</td><td class="">✅</td></tr><tr><td class="">2</td><td class="">Chuỗi X thân hộp</td><td class="">10+126+6+70+6+126+10 = 354</td><td class="">354</td><td class="">✅</td></tr><tr><td class="">3</td><td class="">Chuỗi Y thân hộp</td><td class="">10+330+10 = 350</td><td class="">350</td><td class="">✅</td></tr><tr><td class="">4</td><td class="">Khe khay quân</td><td class="">1,0 mỗi bên / 2,5 mỗi đầu</td><td class="">(126−124)/2 = 1,0 ; (330−325)/2 = 2,5</td><td class="">✅</td></tr><tr><td class="">5</td><td class="">Khe giữa 12 cột, quân max 25,7</td><td class="">≥ 0,42</td><td class="">0,418</td><td class="">✅</td></tr><tr><td class="">6</td><td class="">Khe giữa 3 hàng, quân max 36,8</td><td class="">≥ 0,80</td><td class="">0,800</td><td class="">✅</td></tr><tr><td class="">7</td><td class="">Mép khay cao hơn quân max</td><td class="">2,8</td><td class="">19 − 4,0 − 0,8 − 11,4 = 2,800</td><td class="">✅</td></tr><tr><td class="">8</td><td class="">Lòng Joker</td><td class="">4×36,8 + 3×0,4 + 2×0,8 = 150</td><td class="">150,000</td><td class="">✅</td></tr><tr><td class="">9</td><td class="">Chuỗi dài AC-01</td><td class="">5+150+5+75+5+80+5</td><td class="">325</td><td class="">✅</td></tr><tr><td class="">10</td><td class="">Góc vát mặt dưới nắp</td><td class="">3,24°</td><td class="">atan(10/176,7) = 3,239°</td><td class="">✅</td></tr><tr><td class="">11</td><td class="">Nắp khép về phủ bì</td><td class="">2×176,7 + 0,6</td><td class="">354,0</td><td class="">✅</td></tr><tr><td class="">12</td><td class="">Stack dung sai nắp</td><td class="">±0,8</td><td class="">2×(±0,3) + (±0,2) = ±0,8</td><td class="">✅</td></tr><tr><td class="">13</td><td class="">Chiều dài mộng hoạt động</td><td class="">7×44 + 6×1 = 314</td><td class="">314</td><td class="">✅</td></tr><tr><td class="">14</td><td class="">Phủ bì Z tại mộng</td><td class="">2+60+18 = 80</td><td class="">80</td><td class="">✅</td></tr><tr><td class="">15</td><td class="">Phủ bì Z tại khe giữa</td><td class="">2+70+8 = 80</td><td class="">80</td><td class="">✅</td></tr><tr><td class="">16</td><td class="">Sức chứa</td><td class="">4×36 + 8 = 152</td><td class="">152</td><td class="">✅</td></tr></table>
+<p>Chuỗi dung sai ở mục 12 đặc biệt đáng ghi nhận — hiếm bản vẽ nào ở giai đoạn này đã cộng stack.</p>
+<div class="pb"></div>
+<h2>2. Năm vấn đề phải sửa</h2>
+<h3>2.1 — Chiều cao 80 mm dư 14–24 mm khoảng rỗng; khay sẽ xóc khi vận chuyển</h3>
+<p>Dựng lại chuỗi Z (Z = 0 tại mặt bàn):</p>
+<pre>chân 2 + đáy 8                     → sàn trong          Z10
+2 khay chồng × 19                  → đỉnh khay          Z48
+vành thân tại mộng    = 2 + 60     → mặt dưới nắp       Z62   ⇒ RỖNG 14 mm
+vành thân tại khe giữa= 2 + 70     → mặt dưới nắp       Z72   ⇒ RỖNG 24 mm</pre>
+<p>14–24 mm này <b>không được giao nhiệm vụ trong BOM</b>, không có chốt/khóa nắp (sheet 1 tự nhận đã hoãn), không có chi tiết nào ép khay xuống. Hộp bị nghiêng hoặc xóc trong vận chuyển là 152 quân + 4 xúc xắc va vào nhau và vào lớp hoàn thiện.</p>
+<p><b>Phương án A — hạ chiều cao (khuyến nghị):</b></p>
+<pre>vành thân tại mộng     = Z48 + khe 1,0 = Z49  → thân cao 47
+mặt ngoài nắp          = Z49 + 18      = Z67  → PHỦ BÌ 354 × 350 × 67
+mặt dưới nắp tại khe giữa = 67 − 8     = Z59  → thân cao tại khe giữa 57
+góc vát bù trên đỉnh thân = 3,239°  (khớp đúng góc nắp)</pre>
+<p>Giảm 13 mm chiều cao trên diện tích 354 × 350 — tiết kiệm gỗ đáng kể và tỷ lệ hộp thanh hơn.</p>
+<p><b>Phương án B — giữ 80 mm</b> nhưng giao nhiệm vụ rõ ràng cho 14 mm: khăn trải da lộn + 4 nút chỉ gió + sách luật, kèm chi tiết ép khay.</p>
+<p>Lưu ý: dù chọn phương án nào, nắp hình nêm + khay đáy phẳng <b>luôn</b> sinh khoảng rỗng hình nêm. Với Rev C, khe còn lại dưới mặt nắp trên khoang khay trái là:</p>
+<table><tr><th class="">X (mm từ mộng)</th><th class="">10</th><th class="">50</th><th class="">90</th><th class="">136</th><th class="">177</th></tr><tr><td class="">Mặt dưới nắp (Z)</td><td class="">49,57</td><td class="">51,83</td><td class="">54,09</td><td class="">56,70</td><td class="">59,02</td></tr><tr><td class="">Hở trên đỉnh khay (Z48)</td><td class="">1,57</td><td class="">3,83</td><td class="">6,09</td><td class="">8,70</td><td class="">11,02</td></tr></table>
+<p>Phần rỗng phía trong vẫn cần đệm mềm hoặc khăn phủ.</p>
+<h3>2.2 — Không có sheet nào vẽ thân hộp BX-01</h3>
+<p>Bộ 6 sheet gồm GA-01, GA-02, TR-01, AC-01, HD-01, QA-01. <b>Chi tiết quan trọng nhất — thân hộp — chỉ tồn tại dưới dạng một chuỗi kích thước trên mặt bằng GA-02.</b></p>
+<p>Thiếu: dung sai của chính các khoang (126 / 70 / 330), mặt cắt có dung sai vách và đáy, vị trí mắt mộng so với chuẩn, vị trí chân đệm, vị trí hốc nhấc tay.</p>
+<p>Hệ quả trực tiếp: QA-01 yêu cầu <i>&quot;khe khay trong khoang 1,0 ±0,3 mỗi bên&quot;</i>, nhưng riêng khay đã ±0,25 (= ±0,125 mỗi bên) — phần dung sai còn lại phải dồn hết vào khoang, mà khoang <b>chưa hề được dung sai hóa</b>. Yêu cầu này không truy nguyên được.</p>
+<p><b>Phải làm:</b> thêm 1 sheet BX-01, và ghi rõ khoang <b>126 +0,4/0</b>, <b>70 +0,4/0</b>, <b>330 +0,5/0</b>.</p>
+<p>Ngoài ra QA-01 bước 3 ghi <i>&quot;khóa chuẩn A/B/C&quot;</i> nhưng <b>A/B/C chưa được định nghĩa ở bất kỳ đâu</b> — chỉ có &quot;DATUM A&quot; của mặt ngoài nắp trên HD-01.</p>
+<h3>2.3 — Không lấy được khay ra khỏi hộp</h3>
+<p>Khay hở 1,0 mm mỗi bên và 2,5 mm mỗi đầu — không luồn được ngón tay. Hốc nhấc tay 70 × 7 nằm <b>trên khay</b>, nhưng vách khoang chắn ngay bên cạnh nên hốc đó vô dụng. AC-01 thì không có hốc nào cả, lại là chi tiết nặng nhất (cao 38).</p>
+<p><b>Phải làm:</b> phay <b>hốc lõm 70 × 10 sâu trên vành khoang của thân</b>, trùng vị trí hốc trên khay → mở được ~17 mm để kẹp. Bổ sung hốc tương tự cho AC-01.</p>
+<p>Rãnh Joker cũng bị y hệt: sâu 24,5 mm mà quân chỉ hở 2,3 mm bề ngang → không nhặt được, phải lật úp cả khay. <b>Thêm hõm ngón bán nguyệt Ø25 × sâu 12</b> vào dải gỗ 15 mm bên hông rãnh (còn lại 3 mm + 5 mm vách ngoài = 8 mm gỗ, đủ bền vì hõm chỉ dài 25/150 mm).</p>
+<h3>2.4 — Chốt gỗ Ø6 × 322: vừa không khoan được, vừa sẽ gãy</h3>
+<ul><li>Độ mảnh <b>54 : 1</b> cho một thanh gỗ Ø6.</li><li>Mũi khoan Ø6,35 dài 322 mm thực tế không có sẵn; khoan từ hai đầu thì phá yêu cầu đồng trục 0,15/322.</li><li>Khe lỗ Ø6,35 / chốt Ø6,00 = <b>0,35–0,40 mm đường kính</b> — quá lỏng cho bản lề, cánh sẽ rơ và xệ.</li></ul>
+<p><b>Phải làm — 2 chốt Ø6 × 160 cho mỗi cánh</b>, đóng từ hai đầu, gặp nhau bên trong mắt mộng số 4:</p>
+<table><tr><th class="">Mắt mộng</th><th class="">1</th><th class="">2</th><th class="">3</th><th class="">4</th><th class="">5</th><th class="">6</th><th class="">7</th></tr><tr><td class="">Thuộc về</td><td class="">THÂN</td><td class="">NẮP</td><td class="">THÂN</td><td class=""><b>NẮP</b></td><td class="">THÂN</td><td class="">NẮP</td><td class="">THÂN</td></tr><tr><td class="">Vị trí (mm)</td><td class="">0–44</td><td class="">45–89</td><td class="">90–134</td><td class=""><b>135–179</b></td><td class="">180–224</td><td class="">225–269</td><td class="">270–314</td></tr></table>
+<p>Chốt A: −4 → 156 (ăn 21 mm vào mắt 4). Chốt B: 318 → 158 (ăn 21 mm vào mắt 4). Khe hở giữa hai chốt 2 mm, nằm gọn trong mắt mộng → <b>khớp vẫn liên tục, hai chốt không va nhau</b>. Khoan chỉ còn 165 mm mỗi đầu (mũi tiêu chuẩn làm được), đồng trục chỉ phải giữ trong từng nửa. Số nút bịt CP-01 vẫn là 4.</p>
+<p>Đồng thời siết khe chốt về <b>Ø6,20 +0,05/0</b> (khe 0,20–0,25 mm).</p>
+<h3>2.5 — Chưa giải quyết động học mở 180°</h3>
+<p>HD-01 ghi <i>&quot;góc mở 180° ±2°&quot;</i> nhưng <b>không định nghĩa cao độ trục xoay so với mặt bàn</b>, cũng không nói cánh mở ra thì tựa vào đâu.</p>
+<p>Nếu trục nằm giữa bề dày nắp tại mộng (Z ≈ 71), mở 180° sẽ khiến cánh <b>treo lơ lửng ở Z62</b>: toàn bộ trọng lượng, đòn bẩy 176,7 mm, dồn lên một chốt gỗ Ø6 qua 3 mắt mộng — chỉ <b>132/350 mm (38 %)</b> chiều dài cánh có mắt mộng chịu lực.</p>
+<p>Ảnh mẫu cho thấy hai cánh mở ra <b>nằm phẳng trên mặt bàn</b>, tức trục phải rất thấp. Bố trí hiện tại không cho ra kết quả đó.</p>
+<p><b>Đây là điểm phải chốt bằng một bản vẽ động học riêng trước mọi thứ khác</b> — vị trí trục quyết định lại biên dạng mộng, bề dày nắp và cả chiều cao thân.</p>
+<div class="pb"></div>
+<h2>3. Hai chi tiết công năng bị bỏ sót so với ảnh mẫu</h2>
+<h3>3.1 — Cánh nắp trong ảnh là khay lõm có lót da</h3>
+<p>Ảnh 1 và ảnh 3 cho thấy rõ hai cánh mở ra là <b>khay lõm, lót da (dải vàng/cam)</b> — đó là khay bỏ bài / tính điểm của người chơi, và chính là thứ khiến cánh nắp có ích khi mở.</p>
+<p>Rev B mô hình hóa cánh nắp là <b>nêm gỗ đặc, không có lòng lõm</b>. Ở mép tự do dày 8 mm thì không phay lòng được.</p>
+<p><b>Giải:</b> phay lòng <b>~100 × 330 sâu 6</b> chỉ trong nửa dày của cánh (vùng còn dày ≥ 12 mm, tức từ phía mộng ra 106 mm), lót da dê. Đáy lòng còn 4–8 mm.</p>
+<h3>3.2 — Mép tự do dày 8 mm dài 350 mm không có gì đỡ ở giữa</h3>
+<p>Khi đóng, hai cánh chìa ra 176,7 mm và gặp nhau qua khe 0,6 mm <b>ngay trên khoang phụ kiện rộng 70 mm — chỗ hoàn toàn rỗng</b>. Hai đầu cánh chỉ tì vào vách trước và vách sau, nhịp hở 330 mm. Ấn tay vào giữa nắp là hai đầu cánh võng xuống và cào vào nhau.</p>
+<p><b>Giải (một chi tiết xử lý ba vấn đề):</b> cho AC-01 một <b>sống nổi giữa chạy suốt 325 mm, rộng 12–16 mm</b>, cao đúng tới mặt dưới nắp tại khe giữa — <b>11 mm</b> trên vành khay nếu theo phương án hạ chiều cao ở §2.1. Sống này:</p>
+<ol><li>đỡ hai đầu cánh nắp suốt chiều dài,</li><li>ép khay xuống, triệt tiêu xóc,</li><li>làm tay nắm để rút AC-01 ra (giải luôn §2.3 cho khay này).</li></ol>
+<p>Bọc nỉ 0,8 mm trên đỉnh sống để nắp đóng êm và hấp thụ sai lệch.</p>
+<div class="pb"></div>
+<h2>4. Ba con số nên đổi</h2>
+<h3>4.1 — Rãnh Joker 150 → 152; khoang phụ 80 → 78</h3>
+<p>Rãnh Joker đang dùng <b>triết lý khe khác hẳn</b> khay quân: biên 0,8 / khe 0,4, so với biên 1,0 / khe 0,75 của khay quân. Cùng một loại quân, cùng một hộp, mà hai tiêu chuẩn.</p>
+<p>Hệ quả — nếu lô quân về +0,5 mm so với danh nghĩa:</p>
+<table><tr><th class="">Trường hợp lô quân</th><th class="">Khe khay quân</th><th class="">Khe rãnh Joker (biên 1,0)</th></tr><tr><td class="">Danh nghĩa</td><td class="">0,745</td><td class="">0,650</td></tr><tr><td class="">Rev B max (+0,3)</td><td class="">0,418</td><td class="">0,267</td></tr><tr><td class="">Lô thực tế +0,5</td><td class="">0,200</td><td class=""><b>−0,016 — không nhét được</b></td></tr></table>
+<p>Đổi rãnh Joker sang <b>152</b>, khoang phụ sang <b>78</b>: chuỗi vẫn khép đúng <code>5+152+5+75+5+78+5 = 325</code>, và kể cả lô +0,5 vẫn còn khe 0,651.</p>
+<h3>4.2 — Giao nhiệm vụ cho khoang phụ 58 × 78</h3>
+<p>Khoang phụ 58 × 80 × sâu 18,5 hiện <b>không có nội dung nào trong BOM</b> — một khoảng trống chưa được giao việc.</p>
+<p><b>Đề xuất:</b> 4 quân trắng dự phòng xếp 2 × 2 nằm ngang. Cần 51,4 × 73,6 mm (quân max) hoặc 51,8 × 74,0 mm (lô +0,5) — vừa khít trong 58 × 78. Sâu 11,4 ≤ 18,5. Bộ thành <b>156 quân</b>, đúng cấu hình chuẩn thị trường Mỹ.</p>
+<h3>4.3 — Hốc xúc xắc: 4 ổ riêng thay vì một ngăn rỗng</h3>
+<p>Hốc 58 × 75 × 18,5 để 4 viên xúc xắc chạy tự do sẽ va sứt lớp hoàn thiện và va vào quân. Làm <b>4 ổ 18 × 18 sâu 12 dạng 2 × 2</b>, mỗi ổ có hõm ngón — đúng như bố trí thấy trong ảnh 3.</p>
+<div class="pb"></div>
+<h2>5. Rủi ro độ ẩm — chỗ nguy hiểm nhất của cả bộ bản vẽ</h2>
+<p>QA-01 ghi <i>&quot;độ ẩm 8–10 %&quot;</i> mà <b>không nói khí hậu đích</b>. 8–10 % EMC tương ứng ~40–50 % RH (phòng điều hòa / ôn đới). Môi trường Việt Nam không điều hòa là 12–14 % EMC.</p>
+<p>Giãn nở tiếp tuyến gỗ cứng ≈ 0,20 % trên mỗi 1 % thay đổi MC:</p>
+<table><tr><th class="">Kích thước</th><th class="">ΔMC 2 %</th><th class="">ΔMC 3 %</th><th class="">ΔMC 5 %</th></tr><tr><td class="">Một cánh nắp ngang thớ, 176,7</td><td class="">0,71</td><td class=""><b>1,06</b></td><td class="">1,77</td></tr><tr><td class="">Thân ngang 350</td><td class="">1,40</td><td class="">2,10</td><td class="">3,50</td></tr><tr><td class="">Khoang khay rộng 126</td><td class="">0,50</td><td class="">0,76</td><td class="">1,26</td></tr><tr><td class="">Lòng khay rộng 114</td><td class="">0,46</td><td class="">0,68</td><td class="">1,14</td></tr></table>
+<p><b>Với ΔMC = 3 %, hai cánh nắp nở về phía khe giữa tổng cộng 2 × 1,06 = 2,12 mm — trong khi khe chỉ có 0,6 mm. Nắp sẽ kẹt cứng, hoặc tự cạy bung mộng.</b></p>
+<p>Ghi chú <i>&quot;khuyến nghị panel floating hoặc veneer trên lõi ổn định&quot;</i> ở QA-01 phải chuyển từ <b>khuyến nghị</b> thành <b>yêu cầu bắt buộc</b> — hoặc đó, hoặc mở khe giữa lên ≥ 2,5 mm (xấu về thẩm mỹ).</p>
+<p>Cùng lý do: mép 8 mm dài 350 mm bằng gỗ đặc chắc chắn cong vênh. Yêu cầu phẳng <b>0,50/300</b> trên một nêm gỗ đặc vát tới 8 mm là <b>không đạt được</b>; trên lõi ổn định + veneer thì đạt.</p>
+<p><b>Ngoài ra:</b> chốt định vị độ ẩm phải ghi theo <b>thị trường đích</b>, không phải theo xưởng. Nếu bán nội địa Việt Nam không điều hòa, làm ở 8 % là sai chiều — mọi khe sẽ đóng lại.</p>
+<div class="pb"></div>
+<h2>6. Dung sai nắp: nên chuyển sang dung sai quan hệ</h2>
+<p>Stack ±0,8 tính đúng, nhưng <b>thân cũng là 354 ±0,8</b>. Trường hợp xấu: thân 354,8 và nắp 353,2 → lệch 1,6 mm, viền nắp thụt vào <b>0,8 mm mỗi bên</b> — nhìn thấy rõ trên một sản phẩm cao cấp.</p>
+<p><b>Phải làm:</b> dung sai hóa <b>quan hệ</b>, không phải hai trị tuyệt đối độc lập. Ghi <i>&quot;đồng mép nắp–thân ±0,3, lắp theo thân thực tế&quot;</i> và đưa cánh nắp vào công đoạn <b>match-fit</b> cuối chuyền (cắt theo thân đã hoàn thiện), thay vì gia công độc lập theo cote.</p>
+<div class="pb"></div>
+<h2>7. Thiếu trong BOM và QA</h2>
+<table><tr><th class="">Thiếu</th><th class="">Ghi chú</th></tr><tr><td class="">Nỉ</td><td class="">5 miếng (4 khay quân + AC-01), không có dòng nào trong BOM</td></tr><tr><td class="">Da lót cánh nắp</td><td class="">Xem §3.1</td></tr><tr><td class=""><b>Loại hoàn thiện</b></td><td class="">QA-01 chỉ ghi chà tới P320 rồi nói <i>&quot;không để sơn làm giảm khe&quot;</i> — sơn gì? Dầu? Shellac? PU?</td></tr><tr><td class="">Xúc xắc</td><td class="">Có hốc chứa nhưng không có dòng BOM</td></tr><tr><td class="">Nút chỉ gió / đánh dấu nhà cái</td><td class="">Không có</td></tr><tr><td class="">Định nghĩa chuẩn A/B/C</td><td class="">QA-01 bước 3 tham chiếu nhưng chưa định nghĩa</td></tr><tr><td class="">Khóa / chốt đóng nắp</td><td class="">Sheet 1 tự nhận đã hoãn — nhưng ràng buộc &quot;không kim loại&quot; khiến đây là bài toán khó, cần giải sớm</td></tr></table>
+<p><b>Lưu ý riêng cho cocobolo:</b> gỗ nhiều dầu, <b>bắt buộc lau acetone hoặc cồn ngay trước khi phủ</b>, nếu không lớp hoàn thiện sẽ không bám. Bụi cocobolo là chất gây mẫn cảm da và hô hấp mạnh — cần ghi cảnh báo bảo hộ cho xưởng lên bản vẽ.</p>
+<div class="pb"></div>
+<h2>8. Hai điểm ngoài kỹ thuật nhưng ảnh hưởng trực tiếp</h2>
+<h3>8.1 — CITES</h3>
+<p>Cocobolo (<i>Dalbergia retusa</i>) và gỗ trắc (<i>Dalbergia</i> spp.) đều thuộc <b>Phụ lục II CITES</b> — toàn bộ chi <i>Dalbergia</i> đã bị liệt kê từ CoP17 (2017). Annotation #15 sau CoP19 có miễn trừ cho <b>thành phẩm với khối lượng gỗ loài liệt kê ≤ 10 kg mỗi lô hàng</b>. Hộp này ước tính ~3–4 kg gỗ, nên <b>2 hộp một lô đã vượt ngưỡng miễn trừ</b>.</p>
+<p>Nếu có xuất khẩu, cần giấy phép CITES.</p>
+<div class="warn">⚠️ Phần này viết theo trí nhớ và <b>annotation #15 có thể đã thay đổi tại CoP20</b>. Bắt buộc kiểm tra bản hiện hành với Cơ quan quản lý CITES Việt Nam trước khi chốt vật liệu — đây là rủi ro pháp lý, không phải rủi ro kỹ thuật.</div>
+<h3>8.2 — Rack không vào được hộp</h3>
+<p>Sheet 1 đã tự ghi <i>&quot;chưa tính khoang rack 18,5–19 inch&quot;</i>. Nói rõ hơn: rack Mahjong Mỹ dài 14–19 inch <b>không bao giờ vào được hộp 354 mm (13,9 inch)</b> — đây không phải chuyện hoãn lại mà là bất khả thi ở kích thước hiện tại.</p>
+<p>Hoặc bán rack rời, hoặc định vị sản phẩm là bộ kiểu Trung/Nhật (không dùng rack). Cần quyết định vì nó ảnh hưởng tới cách mô tả sản phẩm.</p>
+<div class="pb"></div>
+<h2>9. Thứ tự xử lý đề nghị cho Rev C</h2>
+<table><tr><th class="">#</th><th class="">Việc</th><th class="">Chặn cái gì</th></tr><tr><td class="">1</td><td class="">Chốt động học bản lề (§2.5)</td><td class="">Quyết định lại biên dạng mộng, bề dày nắp, chiều cao thân</td></tr><tr><td class="">2</td><td class="">Chốt chiều cao: 67 hay giữ 80 (§2.1)</td><td class="">Toàn bộ chuỗi Z, chiều cao sống giữa AC-01</td></tr><tr><td class="">3</td><td class="">Chốt cấu tạo nắp: veneer/lõi ổn định (§5) + lòng lõm lót da (§3.1)</td><td class="">Cấu tạo cánh, khe giữa, yêu cầu phẳng</td></tr><tr><td class="">4</td><td class="">Vẽ sheet BX-01 + dung sai khoang (§2.2)</td><td class="">Lập trình CNC</td></tr><tr><td class="">5</td><td class="">Hốc nhấc tay trên thân + hõm ngón rãnh Joker (§2.3)</td><td class="">Lập trình CNC</td></tr><tr><td class="">6</td><td class="">2 chốt × 160, lỗ Ø6,20 (§2.4)</td><td class="">Gá khoan</td></tr><tr><td class="">7</td><td class="">Rãnh Joker 152 / khoang phụ 78 / ổ xúc xắc (§4)</td><td class="">Lập trình CNC</td></tr><tr><td class="">8</td><td class="">Chuyển sang dung sai quan hệ + match-fit nắp (§6)</td><td class="">Quy trình chuyền</td></tr><tr><td class="">9</td><td class="">Bổ sung BOM, định nghĩa chuẩn A/B/C, chốt hoàn thiện (§7)</td><td class="">Duyệt mẫu vàng</td></tr><tr><td class="">10</td><td class="">Xác minh CITES (§8.1)</td><td class="">Chốt vật liệu</td></tr></table>
+<p><b>Điểm khóa của Rev B vẫn giữ nguyên giá trị và phải làm trước tất cả:</b> đo tối thiểu 20 quân thuộc đúng lô mua, lấy trị lớn nhất theo 3 trục. Nếu lô vượt 25,7 × 36,8 × 11,4 mm thì phải hiệu chỉnh lòng khay — và như §4.1 chỉ ra, rãnh Joker là chỗ hỏng đầu tiên.</p>
+<div class="foot">Sinh tu <code>docs/REVIEW-RevB.md</code> bang <code>tools/md2html.py</code>. Moi tri so sinh tu <code>tools/box_spec.py</code>.</div>
+</body></html>

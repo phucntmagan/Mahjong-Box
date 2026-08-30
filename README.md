@@ -19,7 +19,9 @@ Khởi đầu là một bản review độc lập cho bản vẽ sản xuất **
 | 7 | `docs/QUAI-XACH.md` | Phương án quai A — **đã loại**, giữ làm hồ sơ |
 | 8 | `docs/PROMPT-RENDER.md` | Prompt dựng ảnh 3D vật liệu thật — sinh từ đặc tả, không gõ tay |
 
-PDF tương ứng trong `build/`. Hình trong `figs/`.
+PDF tương ứng trong `build/` (`bx01`, `chot-rev-c`, `khoa-nap`, `nap-go-dac`,
+`dong-hoc-ban-le`, `quai-xach`, `review-revb`). Hình trong `figs/`.
+Bộ bản vẽ: `build/BAN-VE-SAN-XUAT.pdf` (8 tờ A3) + PNG từng tờ trong `build/ban-ve/`.
 
 **Hình 3D:** `figs/fig12a..g` — tổng thể nắp đóng, nắp mở 180°, lòng hộp, cắt dọc giữa hộp,
 vách trái (hốc âm hai tay + bản lề), cắt ngang hốc âm, và nắp che ổ xúc xắc đậy vào.

@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8">
+<title>Phương án quai A — đã loại, giữ làm hồ sơ</title>
+<style>
+@page { size: A4; margin: 16mm 15mm 14mm 15mm; }
+* { box-sizing: border-box; }
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body { font-family: "DejaVu Sans", sans-serif; font-size: 9.3pt; line-height: 1.5;
+       color: #1a1a1a; margin: 0; }
+h1 { font-size: 17pt; margin: 0 0 2mm; letter-spacing: -0.2pt; }
+h2 { font-size: 12pt; margin: 7mm 0 2.5mm; padding-bottom: 1.2mm;
+     border-bottom: 1.2pt solid #1a1a1a; break-after: avoid; }
+h3 { font-size: 10pt; margin: 4.5mm 0 1.5mm; break-after: avoid; }
+p { margin: 0 0 2mm; }
+ul, ol { margin: 0 0 2mm; padding-left: 5mm; }
+li { margin-bottom: 0.8mm; }
+table { width: 100%; border-collapse: collapse; margin: 2mm 0 3mm; font-size: 8.4pt;
+        break-inside: avoid; }
+th { background: #ecebe7; text-align: left; font-weight: bold; padding: 1.3mm 1.8mm;
+     border: 0.4pt solid #b8b5ae; }
+td { padding: 1.2mm 1.8mm; border: 0.4pt solid #cfccc5; vertical-align: top; }
+td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; }
+td.c, th.c { text-align: center; }
+tr:nth-child(even) td { background: #f7f6f3; }
+code, pre { font-family: "DejaVu Sans Mono", monospace; }
+pre { background: #f4f3ef; border-left: 2.5pt solid #8a8madd; border-left-color: #8a877e;
+      padding: 2.5mm 3mm; font-size: 8pt; line-height: 1.45; margin: 2mm 0 3mm;
+      white-space: pre; break-inside: avoid; }
+code { font-size: 8.4pt; background: #f0efeb; padding: 0.2mm 0.8mm; border-radius: 1pt; }
+.head { border-bottom: 2.5pt solid #1a1a1a; padding-bottom: 3mm; margin-bottom: 4mm; }
+.head .meta { font-size: 8.2pt; color: #55524b; margin-top: 1.5mm; }
+.head .meta b { color: #1a1a1a; }
+.verdict { background: #f2f0ea; border: 0.8pt solid #b8b5ae; border-left: 3pt solid #1a1a1a;
+           padding: 3mm 3.5mm; margin: 3mm 0 4mm; break-inside: avoid; }
+.verdict .big { font-size: 10.5pt; font-weight: bold; display: block; margin-bottom: 1.5mm; }
+.warn { background: #fdf6e8; border: 0.6pt solid #d9c184; border-left: 3pt solid #c79a1e;
+        padding: 2.5mm 3mm; margin: 2.5mm 0; font-size: 8.6pt; break-inside: avoid; }
+.fix { background: #eef4ee; border-left: 3pt solid #4a7a52; padding: 2.5mm 3mm;
+       margin: 2.5mm 0; font-size: 8.8pt; break-inside: avoid; }
+.fix b:first-child { color: #2f5a36; }
+.ok  { color: #2f7a3c; font-weight: bold; }
+.bad { color: #a8332a; font-weight: bold; }
+.tag { display: inline-block; font-size: 7.4pt; font-weight: bold; padding: 0.4mm 1.6mm;
+       border-radius: 1.5pt; vertical-align: 1pt; margin-right: 1.5mm; letter-spacing: 0.3pt; }
+.t-crit { background: #a8332a; color: #fff; }
+.t-maj  { background: #c07a12; color: #fff; }
+.t-min  { background: #6b6862; color: #fff; }
+figure { margin: 3mm 0 4mm; break-inside: avoid; text-align: center; }
+figcaption { font-size: 7.8pt; color: #55524b; margin-top: 1.5mm; text-align: left; }
+.foot { margin-top: 6mm; padding-top: 2mm; border-top: 0.6pt solid #cfccc5;
+        font-size: 7.6pt; color: #6b6862; }
+.pb { break-before: page; }
+.nb { break-inside: avoid; }
+</style></head><body>
+<div class="head"><h1>Phương án quai A — đã loại, giữ làm hồ sơ</h1><div class="meta"><b>Bộ hồ sơ:</b> Hộp Mahjong 152 quân, BURLORA · <b>Đơn vị:</b> mm<br><b>Nguồn số:</b> tools/handle_calc.py · <b>Hình:</b> tools/draw_handle.py</div></div>
+<h1>Thiết kế quai xách — Hộp Mahjong 152 quân</h1>
+<div class="warn"><b>Trạng thái 29-08-2026. Phương án A trong tài liệu này ĐÃ BỊ LOẠI</b>, thay bằng phương án C (hốc âm hai tay). Giữ lại làm hồ sơ vì nó là cơ sở của các trị số vẫn còn hiệu lực: vát nắp 18 → 12 và khe ráp giữa (1,5 lúc đó; nay 0.7 — xem CHOT-REV-C.md mục Rev C3b). Bảng khối lượng và bảng &quot;số hộp mỗi lô&quot; trong đây đều đã lỗi thời — xem <b><code>docs/CHOT-REV-C.md</code></b>. So sánh A ↔ C: <code>tools/handle_option_c.py</code>.</div>
+<div class="warn">Bản đầy đủ có hình: <b><code>build/Thiet-ke-quai-xach-Mahjong.pdf</code></b> (7 trang). Hình rời: <code>figs/fig1..fig5</code>. Tính toán: <code>tools/handle_calc.py</code>. Dựng hình: <code>tools/draw_handle.py</code>.</div>
+<h2>Ý chính</h2>
+<p><b>Quai và khóa nắp là cùng một bài toán.</b> Hộp mở bằng hai cánh nắp xoay ra hai bên; nhấc hộp lên mà không có gì giữ thì hai cánh bung. Nên chi tiết nào làm quai cũng buộc phải làm khóa.</p>
+<p>Đề xuất giải cả hai bằng <b>một chi tiết</b>: sống khóa cocobolo 362 × 44 × 20 nằm dọc khe ráp giữa, đè lên cả hai cánh, mang quai da ở giữa, giữ xuống hai trụ vách bằng hai chốt xoay gỗ 1/4 vòng. Chi tiết này cũng đỡ mép tự do của nắp — vấn đề §3.2 còn treo trong review Rev B. <b>Một chi tiết, ba việc.</b></p>
+<h2>Khối lượng — con số quyết định</h2>
+<p>Cấu hình chốt: thân, khay, khung nắp, sống khóa = <b>cocobolo</b> (ρ 1,00); tấm nắp = <b>Nu gõ đỏ</b>; quai = <b>da bò</b>. Nguồn sự thật: <code>tools/box_spec.py</code>.</p>
+<table><tr><th class="">Cấu tạo khay</th><th class="n">Gỗ</th><th class="n">+ Quân</th><th class="n">TỔNG</th></tr><tr><td class="">Khay cocobolo</td><td class="n">5,05</td><td class="n">2,43</td><td class="n"><b>7,48 kg</b></td></tr><tr><td class="">Khay lõi ổn định</td><td class="n">4,43</td><td class="n">2,43</td><td class="n"><b>6,86 kg</b></td></tr></table>
+<p>7,5 kg một tay là nặng — hơn chiếc cặp laptop đầy. <b>Đòn bẩy duy nhất còn lại là khay</b> (chênh 0,62 kg); 2,43 kg quân cờ là cố định.</p>
+<p>Tải thiết kế: <b>P = 220 N</b> (7,48 kg × hệ số động 3), 110 N mỗi điểm neo. Kiểm chứng: treo <b>30 kg / 60 s</b> + <b>5.000 chu kỳ</b> nhấc–đặt.</p>
+<h2>Vì sao quai phải nằm giữa nóc</h2>
+<p>Trọng tâm ở X 177, Y 175. Vật treo tự xoay đến khi trọng tâm rơi thẳng dưới điểm treo. Quai trên vách trước lệch 175 mm → hộp treo dọc, nắp thành hai tấm đứng, xúc xắc rời ổ.</p>
+<p>Mặt trên chỉ có bốn chỗ neo được:</p>
+<table><tr><th class="">Vị trí</th><th class=""></th></tr><tr><td class="">Vách trái/phải</td><td class="">✗ 314/350 mm đã là mặt mộng bản lề</td></tr><tr><td class=""><b>Vách trước/sau</b></td><td class="">✓ liền khối với đáy</td></tr><tr><td class="">Hai vách ngăn</td><td class="">✓ nhưng chỉ cách nhau 76 mm — quá hẹp để nắm</td></tr><tr><td class="">Cánh nắp</td><td class="">✗ xoay tự do, sẽ bung</td></tr></table>
+<p>→ Hai điểm neo tại <b>đỉnh vách trước và sau, X 177</b>, cách nhau 342 mm. Đó là hình dạng sống khóa.</p>
+<h2>Ba phương án</h2>
+<table><tr><th class=""></th><th class="">A · Sống + quai da</th><th class="">B · Bail gỗ gập</th><th class="">C · Hốc âm hai tay</th></tr><tr><td class="">Giải luôn khóa nắp</td><td class="">✓</td><td class="">✓</td><td class="">✗</td></tr><tr><td class="">Đỡ mép tự do nắp</td><td class="">✓</td><td class="">✓</td><td class="">✗</td></tr><tr><td class="">Phủ bì</td><td class="">354 × 362 × 83</td><td class="">354 × 362 × 99</td><td class="">354 × 350 × 67</td></tr><tr><td class="">Chi tiết chuyển động</td><td class="">2</td><td class="">4</td><td class="">0</td></tr><tr><td class="">Kim loại</td><td class="">không</td><td class="">không</td><td class="">không</td></tr><tr><td class="">Da</td><td class="">có</td><td class="">không</td><td class="">không</td></tr><tr><td class="">Tay xách</td><td class="">một tay · 7,48 kg</td><td class="">một tay · 7,48 kg</td><td class="">hai tay · 3,74 kg/tay</td></tr><tr><td class="">Rủi ro chế tạo</td><td class="">trung bình</td><td class="">cao</td><td class="">thấp</td></tr></table>
+<p><b>Khuyến nghị A.</b> Chọn B nếu khách đòi không dùng da (giá: +16 mm chiều cao, thêm 2 khớp mòn). Ở 7,5 kg, <b>C không còn là phương án dự phòng mà là lựa chọn nghiêm túc</b>: 3,74 kg mỗi tay.</p>
+<h2>Kiểm bền phương án A</h2>
+<table><tr><th class="">Bộ phận</th><th class="">Tính</th><th class="n">Cho phép</th><th class="n">Hệ số</th></tr><tr><td class="">Sống — uốn tại hốc quai</td><td class="">11,2 MPa</td><td class="n">110 (MOR)</td><td class="n">10×</td></tr><tr><td class="">Sống — võng giữa nhịp</td><td class="">0,87 mm</td><td class="n">1,14 (L/300)</td><td class="n">đạt</td></tr><tr><td class="">Chốt — cắt qua lưỡi</td><td class="">0,86 MPa</td><td class="n">~14</td><td class="n">16×</td></tr><tr><td class="">Chốt — ép mặt gỗ</td><td class="">0,69 MPa</td><td class="n">~10</td><td class="n">14×</td></tr><tr><td class="">Da — kéo</td><td class="">0,92 MPa</td><td class="n">~20</td><td class="n">22×</td></tr><tr><td class="">Đường chỉ khóa, 8 mũi</td><td class="">220 N</td><td class="n">720 N</td><td class="n">3,3×</td></tr></table>
+<p>Hai cảnh báo không nằm trong bảng:</p>
+<ol><li><b>Điểm yếu thật là mòn, không phải bền tức thời.</b> Sau 5.000 chu kỳ lỗ chốt gỗ sẽ ô-van hóa. Lót ổ bằng gỗ cực cứng (grenadille/lignum) hoặc sừng, bôi sáp vi tinh thể.</li><li><b>Đừng để dây da dẹt trần làm phần nắm.</b> Dây 30 × 8 cạnh vuông mang 7 kg sẽ cắt vào tay sau ~30 giây. Phần nắm giữa 120 mm phải bọc quanh lõi tròn Ø20–22.</li></ol>
+<h2>Tác động dây chuyền</h2>
+<table><tr><th class="">#</th><th class="">Thay đổi</th><th class="">Hệ quả</th></tr><tr><td class="">1</td><td class="">Vách trước/sau 10 → 20 tại băng X 155–199</td><td class="">+6 ngoài, +4 trong. Phủ bì Y = <b>362</b></td></tr><tr><td class="">2</td><td class="">AC-01: 325 → <b>317</b></td><td class="">5+152+5+65+5+80+5 = 317</td></tr><tr><td class="">3</td><td class="">Vát nắp 18 → 8 đổi thành <b>18 → 12</b></td><td class="">góc 1,945°; phay được rãnh âm 4; hết cạnh dao 8 mm</td></tr><tr><td class="">4</td><td class="">Hốc R8,5 đầu mỗi cánh tại Y 4 / Y 346</td><td class="">ghép thành lỗ Ø17 cho chốt</td></tr><tr><td class="">5</td><td class="">Ổ xúc xắc phải có <b>nắp trượt</b></td><td class="">xách là xúc xắc rời ổ</td></tr><tr><td class="">6</td><td class="">Phủ bì 354 × 350 × 67 → <b>354 × 362 × 83</b></td><td class="">+16 cao, +12 sâu</td></tr><tr><td class="">7</td><td class="">QA: treo 29 kg/60 s, 5.000 chu kỳ</td><td class="">thay cho mục &quot;20 chu kỳ&quot; hiện chỉ áp cho bản lề</td></tr></table>
+<h2>Ngưỡng miễn trừ CITES — số hộp mỗi lô hàng</h2>
+<p>Khung nắp cocobolo đẩy lượng gỗ <i>Dalbergia</i> mỗi hộp lên cao:</p>
+<table><tr><th class="">Cấu tạo khay</th><th class="n">Dalbergia / hộp</th><th class="n">3 hộp</th><th class="n">Tối đa mỗi lô</th></tr><tr><td class="">Khay cocobolo</td><td class="n">4,40 kg</td><td class="n">13,19</td><td class="n"><b>2 hộp</b></td></tr><tr><td class="">Khay lõi ổn định</td><td class="n">2,92 kg</td><td class="n">8,75</td><td class="n"><b>3 hộp</b></td></tr></table>
+<p>Theo ngưỡng miễn trừ 10 kg của annotation #15 — phải xác minh bản hiện hành. Đây là <b>lý do thương mại</b> để chọn khay lõi ổn định, độc lập với lý do khối lượng.</p>
+<h2>Cần chốt trước khi vẽ chi tiết</h2>
+<ol><li>Khay cocobolo (7,48 kg) hay lõi ổn định (6,86 kg)? → quyết định A/B hay C, và số hộp mỗi lô CITES</li><li>Có dùng da không? → A hay B</li><li>Chấp nhận phủ bì 83 mm và hai trụ nhô 6 mm? → nếu không thì chỉ còn C</li><li><b>Động học bản lề (review Rev B §2.5) đã chốt chưa?</b></li></ol>
+<p>Mục 4 là điều kiện tiên quyết: chừng nào chưa chốt trục xoay bản lề thì chưa vẽ được chi tiết đầu cánh, mà sống khóa lại kẹp đúng vào đầu cánh.</p>
+<div class="foot">Sinh tu <code>docs/QUAI-XACH.md</code> bang <code>tools/md2html.py</code>. Moi tri so sinh tu <code>tools/box_spec.py</code>.</div>
+</body></html>

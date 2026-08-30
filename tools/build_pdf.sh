@@ -24,3 +24,9 @@ b docs/DONG-HOC-BAN-LE.md dong-hoc-ban-le "Động học bản lề — trục �
 b docs/NAP-GO-DAC.md nap-go-dac "Nắp gỗ đặc — khung ôm tấm Nu thả" \
   "<b>Bộ hồ sơ:</b> Hộp Mahjong 152 quân, BURLORA · <b>Đơn vị:</b> mm" \
   "<b>Nguồn số:</b> tools/lid_solid_calc.py · <b>Hình:</b> tools/draw_lid.py"
+b docs/QUAI-XACH.md quai-xach "Phương án quai A — đã loại, giữ làm hồ sơ" \
+  "<b>Bộ hồ sơ:</b> Hộp Mahjong 152 quân, BURLORA · <b>Đơn vị:</b> mm" \
+  "<b>Nguồn số:</b> tools/handle_calc.py · <b>Hình:</b> tools/draw_handle.py"
+b docs/REVIEW-RevB.md review-revb "Review kỹ thuật bản vẽ Rev B" \
+  "<b>Bộ hồ sơ:</b> Hộp Mahjong 152 quân, BURLORA · <b>Đơn vị:</b> mm" \
+  "<b>Nguồn số:</b> tools/check_dimensions.py"

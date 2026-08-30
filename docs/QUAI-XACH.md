@@ -5,7 +5,7 @@
 > Bảng khối lượng và bảng "số hộp mỗi lô" trong đây đều đã lỗi thời — xem **`docs/CHOT-REV-C.md`**.
 > So sánh A ↔ C: `tools/handle_option_c.py`.
 
-> Bản đầy đủ có hình: **`build/Thiet-ke-quai-xach-Mahjong.pdf`** (7 trang).
+> Bản PDF: **`build/quai-xach.pdf`**.
 > Hình rời: `figs/fig1..fig5`. Tính toán: `tools/handle_calc.py`. Dựng hình: `tools/draw_handle.py`.
 
 ## Ý chính
