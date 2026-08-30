@@ -5,20 +5,20 @@ các tài liệu trước đó sai hoặc đã hết hiệu lực**. Đọc nó 
 
 | | Rev B | Chốt hiện tại | Nguồn |
 |---|---|---|---|
-| Phủ bì | 354 × 350 × 80 | **378 × 350 × 62** | `box_spec.py` |
+| Phủ bì | 354 × 350 × 80 | **388.2 × 350 × 62** (thân 378) | `box_spec.py` |
 | Chuỗi X | 10+126+6+70+6+126+10 | **22+126+6+70+6+126+22** | `width_options.py` |
 | Phương án xách | (chưa có) | **C — hốc âm hai tay** | `handle_option_c.py` |
 | Đáy hộp | 8 | **6** | `detail_features.py` |
-| Tấm nắp Nu | 10 | **7** | `lid_solid_calc.py` |
+| Tấm nắp Nu | 10, thụt 3 dưới mặt khung | **tấm NÂNG 10** (mộng 7) — **ngang bằng mặt khung** | `lid_solid_calc.py` |
 | Nắp | 18 → 8 (vát) | **đều 15, không vát** | `box_spec.py` |
-| **Trục xoay bản lề** | không định nghĩa | **P = (6,1 , 47) — lùi vào đúng R** | `hinge_kinematics.py` |
-| **Bản lề** | mắt mộng gỗ + chốt Ø6 | **mắt mộng gỗ + chốt gỗ Ø6** (không đổi) | `hinge_kinematics.py` |
-| Ống gỗ | Ø18 | **Ø12,2**, CHÌM HẲN — nhô ra 0,0 | `hinge_kinematics.py` |
-| Hốc âm hai tay | (chưa có) | **sâu 16** (từ 12) → vách 22 | `handle_option_c.py` |
+| **Trục xoay bản lề** | không định nghĩa | **P = (0.0 , 47) — đúng trên arris** | `hinge_kinematics.py` |
+| **Bản lề** | mắt mộng gỗ + chốt Ø6 | **mắt mộng gỗ + chốt gỗ Ø5** | `hinge_kinematics.py` |
+| Ống gỗ | Ø18 | **Ø10.2**, nhô ra 5.1 mm mỗi bên, **KHÔNG hạ bậc** | `hinge_kinematics.py` |
+| Hốc âm hai tay | (chưa có) | **sâu 16** → vách 22; khe hở vào tay **22.6**, trần bo **R8** + dốc 10° | `grip_hook.py` |
 | Khe ráp giữa | 0,6 | **1,5 ±0,3** | `lid_solid_calc.py` |
 | Khóa nắp | không có | **8 cặp nam châm nắp↔thân** | `lid_latch.py` |
-| Khối lượng | không tính | **6,20 / 6,82 kg** | `box_spec.py` |
-| Tải thiết kế | — | **182 / 201 N** | `box_spec.py` |
+| Khối lượng | không tính | **6.50 / 7.12 kg** | `box_spec.py` |
+| Tải thiết kế | — | **64 / 70 N** | `box_spec.py` |
 
 ## 1. Bề rộng: 370
 
@@ -58,10 +58,10 @@ tiết tranh nhau một bộ phận dày 10 mm.)*
 
 | | A · sống khóa + quai da | C · hốc âm hai tay |
 |---|---|---|
-| Phủ bì | 370 × 362 × 78 | **378 × 350 × 62** |
+| Phủ bì | 370 × 362 × 78 | **388.2 × 350 × 62** |
 | Thể tích bao | 10,45 L | **8,03 L** |
-| Khối lượng (khay cocobolo) | 7,19 kg | **6,82 kg** |
-| Khối lượng (khay lõi ổn định) | 6,59 kg | **6,20 kg** |
+| Khối lượng (khay cocobolo) | 7,19 kg | **7.12 kg** |
+| Khối lượng (khay lõi ổn định) | 6,59 kg | **6.50 kg** |
 | Số tay | một | hai |
 | Tải mỗi tay | 71 N | **34 N** |
 | Chi tiết chuyển động | 2 chốt xoay | **0** |
@@ -161,7 +161,7 @@ và cách nhấc AC-01 bằng kẹp hai dải gỗ qua hõm ngón rãnh Joker �
 **(b) Ống bản lề Ø18 → Ø12** (bước trung gian, nay đã bỏ). Lập luận khi đó: ống phải tiếp tuyến cả vành thân
 lẫn mặt trên nắp, nên R = nửa bề dày nắp; muốn ống thanh hơn thì phải làm nắp mỏng hơn.
 
-![Tổng thể nắp đóng: mắt mộng gỗ Ø12,2 nằm chìm trong hạ bậc dọc cạnh trái, không một chi tiết kim loại.](figs/fig12a-tong-the-nap-dong.png)
+![Tổng thể nắp đóng: mắt mộng gỗ Ø10.2 trên arris dọc cạnh trái, tấm Nu ngang bằng mặt khung, không một chi tiết kim loại.](figs/fig12a-tong-the-nap-dong.png)
 
 **(c) Bỏ ống gỗ Ø15: đưa trục xoay ra khỏi giữa bề dày nắp.** Đây là thay đổi lớn nhất của phiên này, và nó bắt đầu từ
 một câu hỏi: *bản lề trong ảnh gần như vô hình, mà nắp vẫn dày — sao họ làm được?*
@@ -188,7 +188,11 @@ thì phải bỏ đi bấy nhiêu** — và ở giữa bề dày nắp, con số
 (mặt cạnh nắp áp vào mặt thân, 3 335 mm², hệ số 29× dưới người tỳ 5 kg) thay cho mặt phay 10× trong lòng
 mộng, và cánh mở nằm **phẳng bằng vành thân** thay vì cao hơn 15 mm.
 
-**Hàng cuối là phương án đã chốt (họ C).** Lùi trục vào đúng bán kính ống thì ống tiếp tuyến mặt ngoài
+> **HẾT HIỆU LỰC — xem *Rev C3* ở mục 7.** Đoạn dưới đây ghi lại quyết định của Rev C2 (chọn họ C).
+> Rev C3 đã bỏ họ C vì hạ bậc của nó khoá trần hốc âm; nay dùng **họ B**, ống nhô ra 5,1 mm mỗi bên.
+> Giữ đoạn này vì lập luận về *chỗ đặt trục quyết định đường kính ống* vẫn đúng nguyên.
+
+**Hàng cuối là phương án Rev C2 (họ C).** Lùi trục vào đúng bán kính ống thì ống tiếp tuyến mặt ngoài
 vách **từ bên trong** — **chìm hẳn, nhô ra 0,0 mm**, phủ bì X không phình. Hai hệ quả bắt buộc, cả hai
 đều là trị số suy ra:
 
@@ -204,8 +208,8 @@ gập lại **móc** được, toàn bộ tải dồn qua đầu ngón bấm và
 `handle_option_c.py` §4 đã cảnh báo. Ở 16 mm cả đốt lọt vào và còn 1 mm kê.
 
 Kéo theo: vách bản lề = 16 + 6 = **22** (nay `box_spec.py` tính `WALL_HINGE = GRIP_D + GRIP_BACK` nên hai
-trị số không thể lệch nhau), chuỗi X dài thêm 8 mm → **378**. Dải gỗ trên hốc còn **15,9 dày** sau hạ bậc
-bản lề, hệ số an toàn khi xách **23×**.
+trị số không thể lệch nhau), chuỗi X dài thêm 8 mm → thân **378**. *(Rev C3: dải gỗ trên hốc không còn bị
+hạ bậc ăn mất, nay dày hết **22 mm**.)*
 
 ### Một lần đi chệch phải ghi lại
 
@@ -252,6 +256,58 @@ Trị số **R ≥ 8** ghi ở bản trước là **chép từ bài toán quai d
 bo nằm dưới một trần bị khống chế 20 mm, nên R8 để lại lòng hốc 12 mm và ngón tay không
 lọt. Chặn trên thật là **4,30**, làm tròn xuống dao có sẵn: **R4**. Suy: `tools/grip_hook.py`.
 
+### Rev C3 — bỏ hạ bậc bản lề, và cái giá của nó
+
+Rev C2 sửa được trần hốc âm nhưng vẫn phải sống chung với **hạ bậc bản lề 5.1 × 15
+chạy suốt 350 mm** — hệ quả bắt buộc của họ C. Mà vách bản lề lại chính là chỗ đặt hốc âm hai tay.
+Hạ bậc làm ba việc, cả ba đều xấu:
+
+- khoá cao độ trần hốc → khe hở vào tay chỉ 20,0 mm;
+- giới hạn bán kính bo mép trần ở **R4,3** → áp lực đầu ngón lúc bắt lực 357 kPa;
+- lấy mất 5.1 mm bề dày của dải gỗ trên hốc — chính đường truyền lực khi xách.
+
+Rev C3 **bỏ hạ bậc**, tức quay về **họ B**: trục nằm đúng trên arris, ống gỗ nhô ra ngoài.
+
+| | Rev C2 (họ C) | Rev C3 (họ B) |
+|---|---:|---:|
+| Trục xoay | (5.1 , 47) | **(0.0 , 47)** |
+| Chốt / thành gỗ | Ø6 / 3,0 | **Ø5 / 2.5** |
+| Ống gỗ | Ø12.2 | **Ø10.2** |
+| Hạ bậc vành | 5.1 × 15 suốt 350 | **không** |
+| Nhô ra mỗi bên | 0,0 | **5.1** |
+| Phủ bì X | 378,0 | **388.2** |
+| Khe hở vào tay | 20,0 | **22.60** |
+| Bo mép trần hốc | R4 · 357 kPa | **R8 · 178 kPa** |
+| Bề mặt trần hốc | 18,5 | **20.68** |
+| Dải gỗ trên hốc | 19,0 × 15,9 | **16.4 × 22** (dày hết vách) |
+| Mặt chặn 180° | 3 335 mm² | **3649 mm²** |
+
+**Cách trả bớt giá:** hạ ống gỗ từ Ø12.2 xuống **Ø10.2** — đúng cái đòn bẩy
+mà `docs/DONG-HOC-BAN-LE.md` đã chỉ ra từ trước và để ngỏ. Dải nhìn thấy bớt
+2.0 mm, phần nhô ra bớt 1.0 mm mỗi bên.
+
+> **Đòn bẩy đó CÓ ĐIỀU KIỆN.** Thành gỗ quanh lỗ chốt còn **2.5 mm**, là cận dưới đã
+> ghi. Phải khoan thử lỗ Ø5.20 sâu 160 mm xuyên 7 mắt mộng cocobolo và **đo
+> được độ trôi mũi khoan ≤ 0,10 mm** trước khi chốt. Nếu lớn hơn: trả thành gỗ về 3,0, ống về
+> Ø11.2, phủ bì X về 389.2. Mục 7 dưới đây
+> **từ rủi ro thành việc chặn**.
+
+### Rev C3 — tấm Nu ngang bằng mặt khung
+
+Mặt nắp thành **một mặt phẳng liền**. Cách làm: **tấm NÂNG** — tấm dày 10, phay một bậc sâu
+3 × rộng 8 quanh mép trên, còn lại một mộng dày 7 thả trong rãnh như cũ.
+
+Tấm **vẫn phải thả**: Nu nở 0.22 %/1%MC mọi phương, dán cứng thì hoặc tấm nứt hoặc
+mộng khung bung. Nên quanh lòng tấm phải chừa khe **1.5 mm** — không phải trang trí mà là chỗ nở:
+
+| trường hợp | dịch mỗi phía | khe hẹp nhất | khe rộng nhất |
+|---|---:|---:|---:|
+| đã ổn định về 11 %, ±2 % | 0.66 | 0.84 | 2.16 |
+| lắp thẳng ở 9 %, +4 % một chiều | 1.33 | 0.17 | 2.83 |
+
+Giá phải trả: tấm Nu dày thêm 3 mm → cả hộp nặng thêm ~0,2 kg. Muốn khe nhỏ hơn thì phải bỏ Nu
+đặc, chuyển sang veneer trên lõi ổn định — xem `docs/NAP-GO-DAC.md`.
+
 ![Nắp mở 180°: hai cánh nằm ngang, mặt trên phẳng đúng cao độ vành thân Z47.](figs/fig12b-nap-mo-180.png)
 
 ## 8. Còn lại
@@ -264,7 +320,7 @@ lọt. Chặn trên thật là **4,30**, làm tròn xuống dao có sẵn: **R4*
 | 4 | Xác minh CITES bằng văn bản gốc | việc của bên mua |
 | 5 | Đo tối thiểu 20 quân thuộc đúng lô mua | chưa làm — chặn mọi thứ về khay |
 | 6 | Ép thử 1 mộng khung cocobolo, để 7 ngày rồi phá huỷ | chưa làm |
-| 7 | Khoan thử lỗ chốt Ø6,20 sâu 160 xuyên 7 mắt mộng cocobolo, đo độ trôi | chưa làm |
+| 7 | Khoan thử lỗ chốt Ø5.20 sâu 160 xuyên 7 mắt mộng cocobolo, đo độ trôi | **CHẶN** — thành gỗ nay chỉ 2.5 mm |
 
 Mục 5 và 6 là hai rủi ro thi công lớn nhất. Mộng khung cocobolo: 8 mộng, gỗ nhiều dầu, bắt buộc epoxy + lau
 acetone trong vòng 15 phút kể từ khi phay xong má mộng + chốt draw-bore Ø5. Đường phá của mẫu thử phải đi

@@ -70,7 +70,9 @@ b.append(panel(484, 92, 416, 274, 'B · Ba họ nghiệm — cái nào ép ống
 b.append('<g clip-path="url(#cb)">')
 SB, Z0 = 4.0, 27.0
 RA = TL/2                        # ho A: ong bi be day nap ep cung
-PXX, RB_D, RB_H = S['PIN_X'], S['REBATE_D'], S['REBATE_H']
+# Ho C duoc ve o hinh hoc CUA RIENG NO de so sanh, khong lay tri so dang chot.
+DC = B.derive_mode('C')
+PXX, RB_D, RB_H = DC['PIN_X'], DC['REBATE_D'], DC['REBATE_H']
 WH = B.WALL_HINGE
 
 def det(ox, px, rr, rebate, label, sub, col):
@@ -111,13 +113,16 @@ def det(ox, px, rr, rebate, label, sub, col):
 b.append(det(524, RA, RA, False, 'HỌ A',
              [f'ống Ø{TL:.0f} = bề dày nắp', 'nhô 0 · KHÔNG có chặn'], '#a8332a'))
 b.append(det(672, 0.0, RK, False, 'HỌ B',
-             [f'ống Ø{2*RK:.1f}', f'NHÔ RA {RK:.1f} mỗi bên'], '#c07a12'))
+             [f'ống Ø{2*RK:.1f}', f'NHÔ RA {RK:.1f} mỗi bên'],
+             '#2f7a3c' if B.HG_MODE == 'B' else '#c07a12'))
 b.append(det(820, PXX, RK, True, 'HỌ C',
-             [f'ống Ø{2*RK:.1f} · nhô 0', f'hạ bậc {RB_D:.1f}×{RB_H:.0f}'], '#2f7a3c'))
+             [f'ống Ø{2*RK:.1f} · nhô 0', f'hạ bậc {RB_D:.1f}×{RB_H:.0f}'],
+             '#2f7a3c' if B.HG_MODE == 'C' else '#8a857c'))
 b.append('</g>')
 
 ann = [(60, 396, v.X(PX), v.Z(PZ),
-        f'Trục chốt gỗ Ø{B.KN_PIN:.0f} tại ({PX:.1f} , {PZ:.0f}) — lùi vào {PX:.1f} nên ống chìm hẳn'),
+        f'Trục chốt gỗ Ø{B.KN_PIN:.0f} tại ({PX:.1f} , {PZ:.0f}) — trên arris; ống Ø{2*RK:.1f} '
+        f'nhô ra {S["PROUD"]:.1f} mỗi bên'),
        (60, 413, v.X(60), v.Z(Z_RIM+TL/2),
         f'{B.N_KN} mắt mộng gỗ × {B.KN_LEN:.0f}, bước {S["KN_PITCH"]:.0f}, chuỗi {S["KN_RUN"]:.0f} — không kim loại'),
        (60, 430, v.X(-92), v.Z(Z_RIM-TL/2),
@@ -125,13 +130,14 @@ ann = [(60, 396, v.X(PX), v.Z(PZ),
        (60, 447, v.X(-4), v.Z(Z_RIM-TL/2),
         f'Chặn 180° = mặt cạnh nắp áp vào mặt ngoài vách, {S["STOP_A"]:.0f} mm²'),
        (908, 396, 856, 210,
-        f'Họ C: ống Ø{2*RK:.1f} chìm hẳn, nhô ra 0,0 — phủ bì X {S["X_OA"]:.1f}'),
+        f'Họ C chìm hẳn nhưng phải hạ bậc {RB_D:.1f}×{RB_H:.0f} suốt vách — nó khoá trần hốc âm '
+        f'(HÌNH 14)'),
        (908, 413, 560, 210,
         f'Họ A: ống Ø{TL:.0f} = bề dày nắp, là HỆ QUẢ bắt buộc của chỗ đặt trục')]
 
 open('figs/fig8-dong-hoc-ban-le.svg', 'w').write(svg(940, 486, hdr(
     'HÌNH 8 — Bản lề mắt mộng gỗ: chỗ đặt trục quyết định đường kính ống',
     f'Trục cắm vào trong vật liệu thì mặt đầu cánh nắp quét thành cung, buộc phải bo tròn — R = ½ bề dày nắp. Ống Ø{TL:.0f} là hệ quả, không phải lựa chọn.',
-    f'Đưa trục ra mặt phẳng mép đầu cánh thì bán kính quét = 0 và ống còn Ø{2*RK:.1f}. Lùi trục vào đúng R (họ C) thì ống CHÌM HẲN — nhô ra 0,0 mm.')
+    f'Đưa trục ra mặt phẳng mép đầu cánh (họ B) thì bán kính quét = 0, ống còn Ø{2*RK:.1f} và KHÔNG cần hạ bậc — đổi lại ống nhô ra {RK:.1f} mm mỗi bên.')
     + ''.join(b) + annot(ann, 470)))
 print('fig8 xong')

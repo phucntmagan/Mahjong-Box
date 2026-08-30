@@ -136,10 +136,14 @@ print(f"  Rang buoc la KHOAN: lo O(chot+{B.KN_FIT:.1f}) sau {B.KN_PIN_L:.0f} mm 
       f"{B.N_KN} mat mong")
 print(f"  xen ke tren cocobolo nhieu dau. Mui khoan troi 0,1-0,2 mm tren {B.KN_PIN_L:.0f} la")
 print(f"  binh thuong; thanh go phai nuot duoc do troi do.")
-print(f"\n  Neu xuong khoan duoc bang khoan can va do duoc do troi <= 0,10 mm thi ha")
-print(f"  xuong chot O5 + thanh 2,5 duoc: ong O{2*((5.0+B.KN_FIT)/2+2.5):.1f} thay cho "
-      f"O{2*R:.1f} — dai nhin thay bot {2*R - 2*((5.0+B.KN_FIT)/2+2.5):.1f} mm.")
-print(f"  Do la DAC TINH KIEM phai lam TRUOC khi chot, khong phai gia thiet.")
+print(f"\n  === DON BAY NAY DA DUOC LAY (Rev C3) ===")
+print(f"  Ban truoc dung chot O6 + thanh 3,0 -> ong O{2*((6.0+B.KN_FIT)/2+3.0):.1f}.")
+print(f"  Nay ha xuong chot O{B.KN_PIN:.0f} + thanh {B.KN_WALL:.1f} -> ong O{2*R:.1f}:")
+print(f"  duong kinh bot {2*((6.0+B.KN_FIT)/2+3.0) - 2*R:.1f} mm, dai nhin thay bot"
+      f" {((6.0+B.KN_FIT)/2+3.0) - R:.1f} mm.")
+print(f"  Doi lai: thanh go quanh lo chot chi con {B.KN_WALL:.1f} mm. DAC TINH KIEM bat buoc")
+print(f"  TRUOC khi chot — do do troi mui khoan tren 160 mm phai <= 0,10 mm. Neu do")
+print(f"  duoc lon hon thi phai tra thanh go ve 3,0 va ong ve O{2*((B.KN_PIN+B.KN_FIT)/2+3.0):.1f}.")
 
 # ==========================================================================
 hr("6. KET LUAN")
@@ -154,6 +158,10 @@ print(f"   - Muon KHONG NHO RA  -> phai chap nhan khe ho rong bang ban kinh ong.
 print(f"   - Muon KHONG KHE HO  -> phai chap nhan ong nho ra bang ban kinh ong.")
 print(f"   - Muon CA HAI        -> phai bo mo phang 180 do (xem docs/DONG-HOC-BAN-LE.md);")
 print(f"     va bo 180 do la bo luon khay bo bai tren mat duoi nap.")
-print(f"\n  Cau hinh dang chot (truc lui vao {R:.1f} = dung ban kinh ong) la toi uu cua")
-print(f"  ve 'khong nho ra'. Don bay duy nhat con lai la ha duong kinh ong — va no")
-print(f"  bi chan boi do chinh xac khoan lo chot, khong phai boi do ben.")
+print(f"\n  Rev C3 da CHON dau kia cua dinh luat: ho B — chap nhan ong nho ra {R:.1f} mm")
+print(f"  moi ben de KHONG phai ha bac. Ly do khong nam o ban le ma nam o HOC AM:")
+print(f"  ha bac {R:.1f} x {B.T_LID:.0f} chay suot vach ban le, ma hoc am hai tay nam dung")
+print(f"  tren vach do — ha bac khoa tran hoc xuong va lam dai go tren hoc mong di")
+print(f"  {R:.1f} mm. Bo ha bac thi khe ho vao tay va ban kinh bo mep deu rong ra")
+print(f"  (xem tools/grip_hook.py). Gia phai tra la {2*R:.1f} mm phu bi X.")
+print(f"  Don bay con lai van la ha duong kinh ong — muc 5 da lay mot phan.")

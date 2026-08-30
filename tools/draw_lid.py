@@ -58,6 +58,7 @@ ST_H = ST_S = B.STILE
 RAIL = B.RAIL
 op_w, op_l = S['OP_W'], S['OP_L']
 GRV, TON, PAN_T = B.GRV, B.TON, B.PAN_T
+REV, PAN_TH = B.PAN_REV, S['PAN_TH']
 T_H, T_S, S_TOP = B.T_HINGE, B.T_SEAM, B.S_TOP
 os.makedirs('figs', exist_ok=True)
 
@@ -82,7 +83,9 @@ b.append(panel(336,92,576,190,'B · Mặt cắt ngang cánh nắp  TL 2,5:1'))
 b += [s2.poly([(0,0),(ST_H,0),(ST_H,T_H),(0,T_H)],FR,sw=1.1),
       s2.poly([(LW-ST_S,0),(LW,0),(LW,T_S),(LW-ST_S,T_S)],FR,sw=1.1),
       s2.poly([(ST_H,T_H),(LW-ST_S,T_S),(LW-ST_S,T_S-8),(ST_H,T_H-10)],'#faf9f6','#faf9f6',0),
-      s2.rect(ST_H-GRV,LW-ST_S+GRV,T_H-S_TOP-PAN_T,T_H-S_TOP,NU,sw=1.1)]
+      # tam NANG: mong day PAN_T chay trong ranh, long tam day len ngang mat khung
+      s2.rect(ST_H-GRV,LW-ST_S+GRV,T_H-S_TOP-PAN_T,T_H-S_TOP,NU,sw=1.1),
+      s2.rect(ST_H+REV,LW-ST_S-REV,T_H-S_TOP,T_H,NU,sw=1.1)]
 cx,cy = s2.X(10), s2.Z(9)
 b.append(f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="{3.1*2.50:.1f}" fill="#faf9f6" stroke="#2a241c" stroke-width="1"/>')
 b += [s2.rect(LW-22,LW+22,18,38,SP,sw=1.2),
@@ -97,14 +100,17 @@ b += [s2.rect(LW-22,LW+22,18,38,SP,sw=1.2),
 s3 = V(400-(ST_H-14)*7.4, 462, 7.4)       # chi tiet ranh 7,4x
 b.append(panel(336,300,300,190,'C · Chi tiết mộng–rãnh  TL 7,4:1'))
 b += [s3.poly([(ST_H-14,0),(ST_H,0),(ST_H,18),(ST_H-14,18)],FR,sw=1.1),
-      s3.rect(ST_H-GRV,ST_H,18-PAN_T,18,'#faf9f6',sw=1.0),
-      s3.rect(ST_H-GRV+3,ST_H+8,18-PAN_T,18,NU,sw=1.1),
+      s3.rect(ST_H-GRV,ST_H,18-PAN_T-S_TOP,18-S_TOP,'#faf9f6',sw=1.0),
+      s3.rect(ST_H-GRV+3,ST_H+8,18-PAN_T-S_TOP,18-S_TOP,NU,sw=1.1),
+      s3.rect(ST_H+REV,ST_H+8,18-S_TOP,18,NU,sw=1.1),
       s3.dim(ST_H-GRV,ST_H,19,'rãnh 9',dy=-3),
+      arrow(s3.X(ST_H),s3.Z(18-S_TOP/2),s3.X(ST_H+REV),s3.Z(18-S_TOP/2),'#a8332a',1.4,4),
+      T(s3.X(ST_H+REV+1.6),s3.Z(18-S_TOP/2)+3.5,f'khe {REV:.1f}',font_size=9,fill='#a8332a'),
       s3.dim(ST_H-GRV+3,ST_H,-1,'mộng 6'),
       arrow(s3.X(ST_H-GRV+3),s3.Z(13),s3.X(ST_H-GRV),s3.Z(13),'#a8332a',1.8,5),
       T(s3.X(ST_H-GRV+1.4),s3.Z(15.6),'thả 3',text_anchor='middle',font_size=9.5,fill='#a8332a')]
 
-ann=[(908,330, s3.X(ST_H-2), s3.Z(13), f'Tấm Nu {PAN_T:.0f}, thụt {S_TOP:.0f} dưới mặt trên khung'),
+ann=[(908,330, s3.X(ST_H+3), s3.Z(17), f'Tấm NÂNG dày {PAN_TH:.0f}: lòng tấm NGANG BẰNG mặt khung'),
      (908,347, s3.X(ST_H-7.5), s3.Z(4),  'Đáy rãnh — 3 mm trống để tấm nở'),
      (908,412, s3.X(ST_H-6.2), s3.Z(11), 'KHÔNG keo quanh rãnh —'),
      (908,429, s3.X(ST_H-3), s3.Z(6),  'chỉ chốt 1 điểm ở đúng tâm tấm'),
@@ -117,7 +123,7 @@ ann=[(908,330, s3.X(ST_H-2), s3.Z(13), f'Tấm Nu {PAN_T:.0f}, thụt {S_TOP:.0f
 open('figs/fig6-khung-tam-tha.svg','w').write(svg(940,528,
   hdr('HÌNH 6 — Nắp gỗ đặc: khung cocobolo ôm tấm Nu thả trong rãnh',
       'Chỉ hai thanh đố 34 mm nằm trong chuỗi kích thước bề rộng cánh. Tấm Nu thả tự do trong rãnh nên nở bao nhiêu cũng không đẩy khe ráp giữa.',
-      f'Khung dày {T_H:.0f} tại mộng → {T_S:.0f} tại khe giữa; tấm Nu dày đều {PAN_T:.0f} thụt {S_TOP:.0f} dưới mặt khung: mặt dưới tự thành khay bỏ bài.')
+      f'Tấm Nu là tấm NÂNG dày {PAN_TH:.0f}: mộng {PAN_T:.0f} thả trong rãnh, lòng tấm ngang bằng mặt khung, khe {REV:.1f} mm quanh lòng tấm để nở.')
   + ''.join(b) + annot(ann, 620)))
 print('fig6 xong')
 

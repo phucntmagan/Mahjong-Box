@@ -188,7 +188,7 @@ luồn ngón ↔ hốc âm hai tay.
 
 ## 8. Kéo theo
 
-- Khối lượng: **6,20 kg** (khay lõi ổn định) / **6,82 kg** (khay cocobolo) — đã tính cả 8 cặp nam châm
+- Khối lượng: **6.50 kg** (khay lõi ổn định) / **7.12 kg** (khay cocobolo) — đã tính cả 8 cặp nam châm
   và trừ 16 hốc âm. Bản lề mắt mộng gỗ không thêm chi tiết nào ngoài gỗ.
 - BOM thêm: 16 nam châm khối 20 × 5 × 5 N45 mạ Ni, epoxy dán.
 - QA thêm: đo lực tách mỗi cặp trên mẫu đã hoàn thiện, ngưỡng 12,6 N.

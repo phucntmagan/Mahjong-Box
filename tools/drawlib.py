@@ -38,9 +38,14 @@ def arrow(x1,y1,x2,y2,col,w=2.0,head=6):
 def svg(w,h,body): return (f'<svg xmlns="http://www.w3.org/2000/svg" width="{w}" height="{h}" '
     f'viewBox="0 0 {w} {h}" font-family="DejaVu Sans" font-size="11.5">'
     f'<rect width="100%" height="100%" fill="#faf9f6"/>{body}</svg>')
+_ENT = __import__('re').compile(r'&(?![A-Za-z#][A-Za-z0-9]*;)')
+def esc(t):
+    """Thoat ky tu XML trong noi dung chu. Da mot lan lam hong ca hinh vi mot
+    dau '<' trong cau van (fig14, Rev C2) — nay chan tai cho."""
+    return _ENT.sub('&amp;', str(t)).replace('<', '&lt;').replace('>', '&gt;')
 def T(x,y,t,**k):
     a=' '.join(f'{kk.replace("_","-")}="{v}"' for kk,v in k.items())
-    return f'<text x="{x}" y="{y}" {a}>{t}</text>'
+    return f'<text x="{x}" y="{y}" {a}>{esc(t)}</text>' 
 def lead(x,y,px,py,anchor):
     dx = -8 if anchor=='end' else 8
     return (f'<polyline points="{x+dx},{y-4} {(x+dx+px)/2},{y-4} {px},{py}" fill="none" '

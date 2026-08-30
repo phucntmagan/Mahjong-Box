@@ -36,9 +36,10 @@ print(f"   - No cung la cho duy nhat khoet duoc khe luon ngon nhac khay. Hoc am 
 print(f"     {B.GRIP_D:.0f} tu ngoai + khe luon ngon {B.WELL_D:.0f} tu trong = an het be day vach.")
 print(f"  Ba chi tiet tranh nhau mot bo phan day {B.WALL_FB:.0f} mm.\n")
 print(f"  Vach TRAI/PHAI day {C['WALL_HINGE']:.0f} mm, va tren no KHONG co gi khac tranh cho:")
-print(f"  ong go ban le O{2*C['R_KN']:.1f} nam o ARRIS (0 , Z{C['Z_RIM']:.0f}), chiem {C['R_KN']:.1f} mm")
-print(f"  be day vach tinh tu mat ngoai,")
-print(f"  con hoc am o Z{C['GRIP_Z0']:.0f}..{C['GRIP_Z_TOP']:.0f} — hai vung roi nhau theo Z.")
+print(f"  ong go ban le O{2*C['R_KN']:.1f} nam o ARRIS (0 , Z{C['Z_RIM']:.0f}) va NHO RA"
+      f" {C['PROUD']:.1f} mm,")
+print(f"  chi an vao goc tren-ngoai cua vach,")
+print(f"  con hoc am o Z{C['GRIP_Z0']:.0f}..{C['GRIP_Z_TOP']:.1f} — hai vung roi nhau theo Z.")
 print(f"  (Chinh hoc am dinh ra be day {C['WALL_HINGE']:.0f}: sau {B.GRIP_D:.0f} + thanh sau"
       f" {B.GRIP_BACK:.0f} = {C['WALL_HINGE']:.0f}.")
 print(f"   Ong go chi an {C['R_KN']:.1f} mm vao vach {C['WALL_HINGE']:.0f}, con {C['WALL_HINGE']-C['R_KN']:.1f} mm;")
@@ -62,10 +63,10 @@ for a, bb in [("Kich thuoc", f"{B.GRIP_W:.0f} rong (theo Y) x sau {B.GRIP_D:.0f}
                                   f" {C['GRIP_LEDGE_T']:.1f} (vach {C['WALL_GRIP']:.0f} tru ha bac"
                                   f" ban le {C['REBATE_D']:.1f})"),
               ("Dai go DUOI hoc", f"{C['GRIP_SKIRT']:.0f} mm, lai duoc day hop {B.BOT:.0f} do lung"),
-              ("Va cham voi ban le", f"ha bac ban le nam o Z{C['Z_RIM']-C['REBATE_H']:.0f}.."
-                                     f"{C['Z_RIM']:.0f}. Dinh hoc am dung o Z{C['GRIP_Z_TOP']:.0f},"
-                                     f" tuc duoi day ha bac {B.GRIP_LIP:.0f} mm go dac — HAI VUNG"
-                                     f" KHONG CON CHONG NHAU. Day la thay doi Rev C2")]:
+              ("Va cham voi ban le", f"Rev C3 BO ha bac. Thu duy nhat con tren dau vach"
+                                     f" la hom mat mong nap, day o Z{C['Z_RIM']-C['R_KN']:.1f}."
+                                     f" Dinh hoc am o Z{C['GRIP_Z_TOP']:.2f} — con"
+                                     f" {C['GRIP_LIP_MIN']:.2f} mm go dac ben tren")]:
     print(f"   {a:22s}: {bb}")
 print(f"\n  Hai tay dat o hai vach trai/phai, cach nhau {C['W']:.0f} mm — hop gan vuong")
 print(f"  ({C['W']:.0f} x {C['Y_OA']:.0f}) nen dat o vach nao cung cho khoang cach hai tay nhu nhau.")
@@ -151,9 +152,8 @@ print(f"\n  => Hai yeu cau bat buoc cho tran hoc. TRUOC Rev C2 hai dong nay chi 
 print(f"     chu trong file nay, khong co trong box_spec — nay da thanh kich thuoc:")
 print(f"     a) Tran hoc doc {B.GRIP_SLOPE:.0f}° vao trong (GRIP_SLOPE) de dau ngon ap deu ca")
 print(f"        {min(B.GRIP_D,L_DISTAL):.0f} mm sau, khong phai chi bam mep.")
-print(f"     b) Mep ngoai tran bo tron (GRIP_R). Tri so R>=8 ghi o ban truoc la CHEP")
-print(f"        tu bai toan quai da va SAI o day: no lam long hoc chi con 12 mm, ngon")
-print(f"        tay khong lot. Chot R{B.GRIP_R:.0f} — chan tren tu ec-go-no-mi la 4,30.")
+print(f"     b) Mep ngoai tran bo tron (GRIP_R). Rev C2 phai lay R4 vi ha bac ban le")
+print(f"        khoa tran hoc xuong; Rev C3 bo ha bac nen R{B.GRIP_R:.0f} vao duoc.")
 print(f"     Xem tools/grip_hook.py va HINH 14. Ca hai deu co tu kiem trong box_spec.")
 
 # ============================================================================

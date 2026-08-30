@@ -76,8 +76,9 @@ for k, (a_, tag) in enumerate(rows):
                        font_size=9.5, fill='#fff'))
         x += gap*SCB
     if tag:
-        b.append(T(x + 8, y + 17, tag, font_size=10, font_weight='bold',
-                   fill='#2f7a3c' if tag == 'HỌ C' else '#55524b'))
+        b.append(T(x + 8, y + 17, tag + (' — ĐANG CHỐT' if tag[-1] == B.HG_MODE else ''),
+                   font_size=10, font_weight='bold',
+                   fill='#2f7a3c' if tag[-1] == B.HG_MODE else '#55524b'))
 b.append(f'<line x1="{gx + R*SCB:.1f}" y1="{gy + 8}" x2="{gx + R*SCB:.1f}" '
          f'y2="{gy + 20 + len(rows)*(bh+12):.1f}" stroke="#2f7a3c" stroke-width="1.4" '
          f'stroke-dasharray="5,4"/>')

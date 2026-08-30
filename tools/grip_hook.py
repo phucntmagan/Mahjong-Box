@@ -2,10 +2,13 @@
 """
 TRAN HOC AM — "phan bau ngon tay". Chay: python3 tools/grip_hook.py
 
-Bai toan: ha bac ban le (ho C) lay het go o x < REBATE_D tu Z(Z_RIM - T_LID) len
-vanh. Hoc am nam DUNG tren vach do. Neu tran hoc de o cao do cu (Z_FLOOR + 28)
-thi doan tran o phia mat ngoai bi ha bac lay mat -> ngon tay khong con gi de bau.
-Muc 2 do lai loi do bang so. Cac muc sau suy ra hinh dang tran moi.
+Rev C2: ha bac ban le (ho C) lay het go o x < REBATE_D tu Z(Z_RIM - T_LID) len
+vanh. Hoc am nam DUNG tren vach do, nen tran hoc bi khoa xuong Z28 va ban kinh
+bo mep chi con R4.
+
+Rev C3: BO ha bac (ve ho B). Vach ban le lien khoi tu san toi vanh. Cao do tran
+hoc thoi lay tu chan tren cua vach — no duoc suy tu CHINH BAN TAY, con vach du
+go hay khong la mot cau hoi RIENG, kiem doc lap.
 
 Moi tri so lay tu box_spec.derive(). Khong go cung so nao trong file nay.
 """
@@ -16,100 +19,119 @@ def hr(t): print("\n" + "=" * 78 + "\n" + t + "\n" + "=" * 78)
 
 S = B.derive()
 Z_RIM, Z_FL = S['Z_RIM'], S['Z_FLOOR']
-RB_D, RB_H = S['REBATE_D'], S['REBATE_H']
+RB_D, RB_H, RK = S['REBATE_D'], S['REBATE_H'], S['R_KN']
 GD, GW, WG = B.GRIP_D, B.GRIP_W, S['WALL_GRIP']
+m = B.mass_of(S, 'loi on dinh')[2]
+P_hand = m*9.81*B.DYN/2
 
 # ==========================================================================
-hr("1. RANG BUOC — khe ho vao tay KHONG phai so tu chon")
-print(f"  Vach ban le day {WG:.0f}. Tren dinh no co hai thu cung doi cho:")
-print(f"   - ha bac ban le : x 0..{RB_D:.1f} , z {Z_RIM-RB_H:.0f}..{Z_RIM:.0f}"
-      f"  (cao dung be day nap {B.T_LID:.0f})")
-print(f"   - hoc am        : x 0..{GD:.0f} , z {Z_FL:.0f}..len tren")
-print(f"  Hai vung nay CHONG NHAU theo X (0..{RB_D:.1f}). Nen dinh hoc am phai dung")
-print(f"  duoi day ha bac, chua them {B.GRIP_LIP:.0f} mm go dac. Suy ra:\n")
-print(f"      khe ho vao tay = Z_RIM - be day nap - san go - san trong")
-print(f"                     = {Z_RIM:.0f} - {B.T_LID:.0f} - {B.GRIP_LIP:.0f}"
-      f" - {Z_FL:.0f} = {S['GRIP_APER']:.0f} mm\n")
-print(f"  Do la mot DINH LUAT, khong phai lua chon: chi co hai don bay.")
-print(f"  {'be day nap':>12s}{'khe ho vao tay':>17s}   ghi chu")
-for t in (12.0, 13.0, 15.0, 17.0, 19.0):
-    ap = Z_RIM - t - B.GRIP_LIP - Z_FL
-    note = ("DANG CHOT" if abs(t - B.T_LID) < 1e-9 else
-            "nap mong hon — xem docs/NAP-GO-DAC.md truoc khi doi" if t < B.T_LID else
-            "nap day hon thi tay bop hon")
-    print(f"  {t:12.0f}{ap:17.0f}   {note}")
-print(f"\n  (Don bay thu hai la nang vanh Z_RIM, tuc lam hop cao them — bo.)")
+hr("1. CAI GI NAM TREN DAU HOC AM")
+print(f"  Vach ban le day {WG:.0f}, cao tu san Z{Z_FL:.0f} toi vanh Z{Z_RIM:.0f}.")
+print(f"  Hoc am an sau {GD:.0f} tu mat ngoai. Cai gi chiem cho o phia tren?\n")
+print(f"  {'ho ban le':>10s}{'ha bac':>16s}{'hom mat mong nap':>19s}"
+      f"{'tran hoc cao nhat':>20s}")
+for mode in ('C', 'B'):
+    d = B.derive_mode(mode)
+    lim = min(d['grip_top'](GD*i/64) for i in range(65))
+    print(f"  {mode:>10s}{d['REBATE_D']:8.1f} x{d['REBATE_H']:5.0f}"
+          f"{'Z' + format(Z_RIM - d['R_KN'], '.1f'):>19s}{'Z' + format(lim, '.1f'):>20s}"
+          + ("   <- DANG CHOT" if mode == B.HG_MODE else ""))
+print()
+_C = B.derive_mode('C')
+_R0 = B.GRIP_R
+def _rmax(mode):
+    """Ban kinh bo mep lon nhat con dung duoc o mot ho ban le."""
+    best = None
+    for i in range(20, 141):
+        B.GRIP_R = i/10
+        d = B.derive_mode(mode)
+        if d['GRIP_FLAT'] >= 3.0 and d['GRIP_LIP_MIN'] >= B.GRIP_LIP_REQ: best = B.GRIP_R
+    B.GRIP_R = _R0
+    return best
+print(f"  Ho C: ha bac {_C['REBATE_D']:.1f} x {_C['REBATE_H']:.0f} chay SUOT chieu dai vach,")
+print(f"        lay het go o dai ngoai cung tu Z{Z_RIM-_C['REBATE_H']:.0f} len vanh. O R"
+      f"{B.GRIP_R:.0f} thi go dac con lai tren tran chi")
+print(f"        {_C['GRIP_LIP_MIN']:.2f} mm — tu kiem no. Ban kinh bo mep lon nhat ho C"
+      f" chiu duoc: R{_rmax('C'):.1f}.")
+print(f"  Ho B: khong ha bac. Thu duy nhat con nam tren dau vach la HOM cua mat")
+print(f"        mong NAP: mot phan tu dia ban kinh {RK:.1f} khoet vao goc tren-ngoai,")
+print(f"        tuc go chi mat tu Z{Z_RIM-RK:.1f} tro len, va chi o {RK:.1f} mm ngoai cung.")
+print(f"        Ban kinh bo mep lon nhat ho B chiu duoc: R{_rmax('B'):.1f}.")
+print(f"\n  => Bo ha bac tra lai {_C['REBATE_H']-RK:.1f} mm chieu cao vach cho hoc am,")
+print(f"     va noi rong cua so ban kinh bo mep tu R{_rmax('C'):.1f} len R{_rmax('B'):.1f}.")
 
 # ==========================================================================
-hr("2. LOI DA CO — do lai bang so")
-OLD_H = 28.0
-old_ceil = Z_FL + OLD_H
-print(f"  Ban cu de tran hoc PHANG o Z{old_ceil:.0f} (= san trong {Z_FL:.0f} + cao hoc"
-      f" {OLD_H:.0f}).")
-print(f"  Ha bac ban le chiem z {Z_RIM-RB_H:.0f}..{Z_RIM:.0f}. Z{old_ceil:.0f} nam TRONG dai do.")
-print(f"  Vay o cao do tran hoc, go con o dau theo X?\n")
-print(f"  {'x':>12s}{'co go ngay tren tran?':>26s}")
-for xa, xb, zhi in ((0.0, RB_D, Z_RIM - RB_H), (RB_D, GD, Z_RIM)):
-    ok = 'KHONG — ha bac da lay mat' if old_ceil > zhi else 'CO'
-    print(f"  {xa:5.1f} .. {xb:4.1f}{ok:>26s}")
-print(f"\n  => Doan tran con MOC duoc chi la {GD - RB_D:.1f} mm (dang le {GD:.0f}).")
-print(f"     Dot ngon tay dai {B.L_DISTAL:.0f} -> lot {(GD-RB_D)/B.L_DISTAL*100:.0f} %."
-      f" Con te hon hoc sau 12 cu ({12/B.L_DISTAL*100:.0f} %).")
-print(f"\n  Vi sao tu kiem cu khong bat: dieu kien viet la")
-print(f"      GRIP_Z1 > Z_RIM - REBATE_H  VA  REBATE_D > GRIP_D")
-print(f"  Ve sau la {RB_D:.1f} > {GD:.0f} — SAI, nen ca menh de khong bao gio dung.")
-print(f"  Kiem moi (box_spec.selfcheck) do GRIP_LIP_MIN: quet TUNG DIEM tren tran,")
-print(f"  o moi x doi hoi con >= {B.GRIP_LIP_REQ:.1f} mm go dac ben tren. Khong the lot nua.")
+hr("2. LOI DA CO — giu lai lam ho so")
+# hai so LICH SU cua ban Rev C1/C2, giu de doi chieu:
+OLD_H  = 28.0                                # chieu cao hoc tu chon luc do
+OLD_RB = (6.0 + B.KN_FIT)/2 + 3.0            # R ong go luc do: chot O6 + thanh 3,0
+print(f"  Rev C1 de tran hoc PHANG o Z{Z_FL+OLD_H:.0f} (= san {Z_FL:.0f} + cao hoc {OLD_H:.0f}")
+print(f"  — mot so TU CHON). Z{Z_FL+OLD_H:.0f} nam trong dai ha bac"
+      f" Z{Z_RIM-B.T_LID:.0f}..{Z_RIM:.0f}, nen o")
+print(f"  {OLD_RB:.1f} mm ngoai cung khong con go ngay tren tran: doan moc duoc chi con")
+print(f"  {GD-OLD_RB:.1f} mm thay vi {GD:.0f} — {(GD-OLD_RB)/B.L_DISTAL*100:.0f} % dot ngon,"
+      f" te hon ca hoc sau 12 da bi loai.\n")
+print(f"  Tu kiem luc do viet:  GRIP_Z1 > Z_RIM - REBATE_H  VA  REBATE_D > GRIP_D")
+print(f"  Ve sau la {OLD_RB:.1f} > {GD:.0f} — luon SAI, nen ca menh de khong bao gio no.")
+print(f"  Mot dieu kien VA co mot ve luon sai la mot cai luoi trang tri.\n")
+print(f"  Kiem moi khong so hai so nua: no quet TUNG DIEM tren tran, o moi x doi")
+print(f"  hoi con >= {B.GRIP_LIP_REQ:.1f} mm go dac ben tren (GRIP_LIP_MIN). Rev C3 bo ha")
+print(f"  bac roi nhung kiem do VAN GIU — chinh no la thu chung minh tran moi thoat:")
+print(f"  go dac mong nhat tren tran nay = {S['GRIP_LIP_MIN']:.1f} mm.")
 
 # ==========================================================================
-hr("3. BAN KINH BO MEP NGOAI TRAN — hai yeu cau nguoc chieu")
-print(f"  Bo cang lon thi mep cang em tay, nhung dinh bo cang an len cao, ma tran")
-print(f"  hoc lai bi tran {S['GRIP_APER']:.0f} mm chan tren -> long hoc thap xuong,")
-print(f"  ngon tay khong lot het chieu sau. Quet R:\n")
-print(f"  {'R':>6s}{'cao long hoc tai x=R':>23s}{'tran phang con':>16s}"
-      f"{'be mat tran':>13s}{'khe lung ngon':>15s}")
+hr("3. CAO DO TRAN — suy tu ngon tay, khong tu vach")
+print(f"  Rev C2 lay tran = day ha bac tru san go. Do la mot su TINH CO: ha bac")
+print(f"  bien mat thi tri so do vo nghia. Nay tran duoc dinh nghia lai:")
+print(f"      nang tran vua du de khe hep nhat giua LUNG ngon tay va SAN hoc")
+print(f"      bang dung FING_MAR = {B.FING_MAR:.1f} mm.")
+print(f"  Roi hoi rieng: vach con du go tren tran khong? (muc 2 — con"
+      f" {S['GRIP_LIP_MIN']:.1f} mm.)\n")
+print(f"  Ket qua: dinh ao tran Z{S['GRIP_Z1']:.2f}, dinh bo tron Z{S['GRIP_Z_TOP']:.2f},")
+print(f"  khe ho vao tay {S['GRIP_APER']:.2f} mm (Rev C2 la 20,0).")
+
+hr("3b. BAN KINH BO MEP — nay bi chan hai dau, va cua so rong ra")
+print(f"  {'R':>6s}{'khe ho vao tay':>17s}{'tran phang con':>16s}{'be mat tran':>13s}"
+      f"{'go dac tren tran':>18s}")
 R0 = B.GRIP_R
-best = None
-for i in range(20, 91):
+best_hi = None
+for i in range(20, 141):
     B.GRIP_R = i/10
     d = B.derive()
-    if d['GRIP_FIT'] >= B.FING_MAR: best = B.GRIP_R
-    if i % 10 == 0 or abs(i/10 - R0) < 1e-9:
-        print(f"  {B.GRIP_R:6.1f}{d['GRIP_Z_TOP']-B.GRIP_R-Z_FL:23.2f}{d['GRIP_FLAT']:16.2f}"
-              f"{d['GRIP_SURF']:13.2f}{d['GRIP_FIT']:15.2f}"
+    if d['GRIP_FLAT'] >= 3.0 and d['GRIP_LIP_MIN'] >= B.GRIP_LIP_REQ: best_hi = B.GRIP_R
+    if i % 20 == 0 or abs(i/10 - R0) < 1e-9:
+        print(f"  {B.GRIP_R:6.1f}{d['GRIP_APER']:17.2f}{d['GRIP_FLAT']:16.2f}"
+              f"{d['GRIP_SURF']:13.2f}{d['GRIP_LIP_MIN']:18.2f}"
               + ("   <- CHOT" if abs(i/10 - R0) < 1e-9 else ""))
 B.GRIP_R = R0
-print(f"\n  Doi hoi khe lung ngon >= {B.FING_MAR:.1f} mm -> R lon nhat = {best:.2f}.")
-m0 = B.mass_of(S, 'loi on dinh')[2]
-P0 = m0*9.81*B.DYN/2
-rmin = P0/(B.N_FING*B.FING_W*math.radians(B.WRAP_SKIN)*B.P_COMFORT)
-print(f"\n  Chan DUOI thi nguoc lai. Luc bao gio cung bat dau don ve mep bo; da dau")
-print(f"  ngon boc quanh mep chung {B.WRAP_SKIN:.0f}°, tuc dai cham chi rong"
-      f" R x {math.radians(B.WRAP_SKIN):.3f}.")
-print(f"  Doi hoi ap luc luc do <= {B.P_COMFORT*1000:.0f} kPa ({P0:.0f} N moi tay,"
-      f" {B.N_FING} ngon x {B.FING_W:.0f} rong):")
-print(f"      R >= {P0:.0f} / ({B.N_FING}x{B.FING_W:.0f}x{math.radians(B.WRAP_SKIN):.3f}"
-      f"x{B.P_COMFORT:.2f}) = {rmin:.2f} mm\n")
+print(f"\n  Chan TREN: doan tran phang phai con >= 3,0 mm -> R <= {best_hi:.1f}.")
+print(f"  (Rev C2 chan tren la 4,30 vi khe ho bi ha bac khoa o 20 mm. Nay khong con.)\n")
+rmin_hard = P_hand/(B.N_FING*B.FING_W*math.radians(B.WRAP_SKIN)*B.P_COMFORT)
+rmin_soft = P_hand/(B.N_FING*B.FING_W*math.radians(B.WRAP_SKIN)*B.P_TARGET)
+print(f"  Chan DUOI la ap luc. Luc bao gio cung bat dau don ve mep bo; da dau ngon")
+print(f"  boc quanh mep chung {B.WRAP_SKIN:.0f}°, dai cham rong R x"
+      f" {math.radians(B.WRAP_SKIN):.3f}. Voi {P_hand:.0f} N moi tay,")
+print(f"  {B.N_FING} ngon x {B.FING_W:.0f} rong:")
+print(f"      khong DAU   (<= {B.P_COMFORT*1000:.0f} kPa) -> R >= {rmin_hard:.2f}")
+print(f"      xach LAU du (<= {B.P_TARGET*1000:.0f} kPa) -> R >= {rmin_soft:.2f}\n")
 print(f"  {'R':>6s}{'ap luc luc bat luc':>21s}   ket qua")
-for r in (3.0, 3.5, 4.0, 4.5, 5.0):
-    pr = P0/(B.N_FING*B.FING_W*r*math.radians(B.WRAP_SKIN))*1000
-    ok = ('DAU TAY' if r < rmin else
-          'ngon khong lot het' if r > best else 'DUOC')
+for r in (3.0, 4.0, 6.0, 7.0, 8.0, 10.0, 12.0):
+    pr = P_hand/(B.N_FING*B.FING_W*r*math.radians(B.WRAP_SKIN))*1000
+    ok = ('DAU' if r < rmin_hard else 'chiu duoc, chua em' if r < rmin_soft else
+          'tran phang con < 3' if r > best_hi else 'DUOC')
     print(f"  {r:6.1f}{pr:18.0f} kPa   {ok}")
 CUTTERS = (3.0, 4.0, 5.0, 6.0, 8.0, 10.0)
-win = [c for c in CUTTERS if rmin <= c <= best]
-print(f"\n  Cua so cho phep: {rmin:.2f} .. {best:.2f} mm — rong {best-rmin:.2f} mm.")
-print(f"  Dao bo canh co san (mm): {', '.join(f'{c:.0f}' for c in CUTTERS)}")
-print(f"  Loi vao cua so: {', '.join(f'R{c:.0f}' for c in win) if win else 'KHONG CO'}"
-      f"{'  — DUY NHAT mot dao, khong con gi de chon' if len(win) == 1 else ''}.")
+win = [c for c in CUTTERS if rmin_soft <= c <= best_hi]
+print(f"\n  Cua so theo muc tieu {B.P_TARGET*1000:.0f} kPa: {rmin_soft:.2f} .. {best_hi:.1f} mm.")
+print(f"  Dao bo canh co san (mm): {', '.join(f'{c:.0f}' for c in CUTTERS)}"
+      f" -> loi vao: {', '.join(f'R{c:.0f}' for c in win)}")
+print(f"  Lay dao NHO NHAT loi vao cua so (bo cang to thi cang an vao tran phang):"
+      f" R{min(win):.0f}.")
 print(f"  Da chot GRIP_R = {B.GRIP_R:.1f}  "
-      f"({'khop' if win and abs(win[0]-B.GRIP_R) < 1e-9 else 'LECH'}).")
-print(f"\n  Ghi chu: docs cu tung viet 'bo tron mep >= R8, cung tri so da chot cho")
-print(f"  quai da'. Cho quai da thi dung — da vat qua mot canh tu do. O day mep bo")
-print(f"  nam duoi mot tran bi khong che chieu cao, R8 lam long hoc chi con")
-B.GRIP_R = 8.0; d8 = B.derive(); B.GRIP_R = R0
-print(f"  {d8['GRIP_Z_TOP']-8.0-Z_FL:.1f} mm (khe lung ngon {d8['GRIP_FIT']:+.2f}) — ngon tay khong vao het.")
-print(f"  Tri so R8 do da duoc CHEP LAI tu bai toan khac. Bo.")
+      f"({'khop' if abs(min(win)-B.GRIP_R) < 1e-9 else 'LECH'}).")
+print(f"\n  Ghi lai: Rev C2 phai lay R4 (343 kPa) vi ha bac khoa khe ho o 20 mm. Bo")
+print(f"  ha bac di thi R8 vao duoc, ap luc luc bat luc con"
+      f" {P_hand/(B.N_FING*B.FING_W*8.0*math.radians(B.WRAP_SKIN))*1000:.0f} kPa.")
 
 # ==========================================================================
 hr("4. DO DOC TRAN — chan tren la goc ma sat")
@@ -121,8 +143,7 @@ print(f"  mu tra bang = {B.MU_SKIN:.2f} (lay can duoi) -> doc toi da"
 print(f"  Chot {B.GRIP_SLOPE:.0f}°: tan = {math.tan(th):.3f} / {B.MU_SKIN:.2f}"
       f" -> he so {B.MU_SKIN/math.tan(th):.2f}x.\n")
 print(f"  Cai doc dung de lam gi: no nang tran len {GD*math.tan(th):.2f} mm o day hoc,")
-print(f"  vua dung cho dau ngon tay gap lai (dot ngoai cheo len khi bau) ma van cham")
-print(f"  tran suot ca {B.L_DISTAL:.0f} mm, thay vi chi cham o mot diem gan mieng hoc.")
+print(f"  vua dung cho dau ngon tay gap lai ma van cham tran suot ca {B.L_DISTAL:.0f} mm.")
 
 # ==========================================================================
 hr("5. NGON TAY CO LOT HET CHIEU SAU KHONG")
@@ -134,9 +155,10 @@ for i in range(9):
     c = S['grip_ceil'](x) - Z_FL
     t = S['fing_t'](x)
     print(f"  {x:18.1f}{c:15.2f}{t:18.2f}{c-t:11.2f}")
-print(f"\n  Khe hep nhat {S['GRIP_FIT']:.2f} mm (yeu cau >= {B.FING_MAR:.1f}). DAT.")
+print(f"\n  Khe hep nhat {S['GRIP_FIT']:.2f} mm — bang dung FING_MAR vi tran duoc suy")
+print(f"  tu chinh dieu kien nay (muc 3).")
 print(f"\n  Nhay theo co ngon tay. Dat dau mut o do sau 'dep' roi hoi CA ngon co lot")
-print(f"  khong; lay dep lon nhat con lot. (Ngon to hon thi phai dung nong hon.)")
+print(f"  khong; lay dep lon nhat con lot.")
 print(f"  {'day ngon o DIP':>16s}{'dat dau mut sau':>17s}{'be mat cham':>13s}{'ghi chu':>26s}")
 def max_depth(td, n=200):
     ok_dep = 0.0
@@ -154,110 +176,89 @@ for td in (14.0, 16.0, 17.5, 19.0):
     dep = max_depth(td)
     surf = min(dep + (S['GRIP_SURF'] - GD), S['GRIP_SURF']) if dep > 0 else 0.0
     note = ("ngon mau (nam, 50%)" if abs(td - B.FING_T_DIP) < 1e-9 else
-            "nam 95%" if td == 17.5 else
-            "ngon rat to" if td > 17.5 else "nu / ngon ut")
+            "nam 95%" if td == 17.5 else "ngon rat to" if td > 17.5 else "nu / ngon ut")
     print(f"  {td:16.1f}{dep:17.1f}{surf:13.1f}{note:>26s}")
-print(f"\n  Doc: ngon to hon ngon mau van dat toi {max_depth(17.5):.1f} mm — qua"
-      f" dot ngon {B.L_DISTAL:.0f}.")
-print(f"  Cai gioi han khong phai chieu sau hoc ma la CHIEU CAO long hoc, va chieu")
-print(f"  cao do bi ha bac ban le khoa lai o {S['GRIP_APER']:.0f} mm (muc 1).")
 
 # ==========================================================================
 hr("6. AP LUC LEN DAU NGON TAY")
-m = B.mass_of(S, 'loi on dinh')[2]
-P_hand = m*9.81*B.DYN/2
 A_new = B.N_FING*B.FING_W*min(S['GRIP_SURF'], B.L_DISTAL)
-EDGE_SHARP, WRAP = 0.5, 60.0     # canh vuong bao gio cung cham ~0,5 mm; da boc ~60 do
+EDGE_SHARP = 0.5
 print(f"  Hop {m:.2f} kg, he so dong {B.DYN:.0f} -> {P_hand:.0f} N moi tay.")
 print(f"  Ap luc phu thuoc BE RONG DAI CHAM, ma dai cham lai phu thuoc hinh tran.\n")
-print(f"  {'tinh huong':>40s}{'dai cham':>11s}{'dien tich':>12s}{'ap luc':>11s}")
+print(f"  {'tinh huong':>42s}{'dai cham':>11s}{'dien tich':>12s}{'ap luc':>11s}")
 rows = [("canh vuong, ngon vua bat luc", EDGE_SHARP),
-        (f"bo R{B.GRIP_R:.0f}, da boc {WRAP:.0f}°",
-         B.GRIP_R*math.radians(WRAP)),
+        (f"bo R4 (Rev C2), da boc {B.WRAP_SKIN:.0f}°", 4.0*math.radians(B.WRAP_SKIN)),
+        (f"bo R{B.GRIP_R:.0f} (Rev C3), da boc {B.WRAP_SKIN:.0f}°",
+         B.GRIP_R*math.radians(B.WRAP_SKIN)),
         ("tran phang sau 12, ngon cham 12 (Rev B)", min(12.0, B.L_DISTAL)),
-        (f"tran bo + doc, cham het dot ngon", min(S['GRIP_SURF'], B.L_DISTAL))]
+        ("tran bo + doc, cham het dot ngon", min(S['GRIP_SURF'], B.L_DISTAL))]
 for lbl, surf in rows:
     A = B.N_FING*B.FING_W*surf
-    print(f"  {lbl:>40s}{surf:11.2f}{A:12.0f}{P_hand/A*1000:10.0f} kPa")
-print(f"\n  Nguong: ~100 kPa cam thay em, ~200 kPa chiu duoc, >400 kPa dau trong")
-print(f"  chua day mot phut.")
-print(f"  Doc bang: canh VUONG cho {P_hand/(B.N_FING*B.FING_W*EDGE_SHARP)*1000:.0f} kPa"
-      f" — dau ngay lap tuc. Bo R{B.GRIP_R:.0f} ha xuong")
-print(f"  {P_hand/(B.N_FING*B.FING_W*B.GRIP_R*math.radians(WRAP))*1000:.0f} kPa"
-      f" — nho di {B.GRIP_R*math.radians(WRAP)/EDGE_SHARP:.1f} lan — ngay o thoi diem xau nhat;")
-print(f"  roi do doc dan tai ra het dot ngon -> {P_hand/A_new*1000:.0f} kPa.")
+    print(f"  {lbl:>42s}{surf:11.2f}{A:12.0f}{P_hand/A*1000:10.0f} kPa")
+print(f"\n  Nguong: ~100 kPa em, ~200 kPa chiu duoc lau, >400 kPa dau trong mot phut.")
 print(f"  Bo mep lo cho THOI DIEM XAU NHAT, do doc lo cho TRANG THAI ON DINH.")
-print(f"  Cai bo tron KHONG lam mat chieu sau moc: no bien mot canh sac thanh"
-      f" {S['GRIP_ARC']:.1f} mm")
-print(f"  cung, cong {S['GRIP_FLAT']/math.cos(th):.1f} mm tran doc = {S['GRIP_SURF']:.1f} mm BE MAT,")
-print(f"  dai hon ca chieu sau hoc {GD:.0f} mm.")
 
 # ==========================================================================
 hr("7. DAI GO TREN HOC — kiem ben tren TIET DIEN THAT")
 def sect(n=2000):
-    """A, z trong tam, I quanh truc ngang qua trong tam, cua tiet dien vach
-    tai cho co hoc am (da tru hoc am va ha bac ban le)."""
     dx = WG/n
     A = Az = 0.0; cells = []
     for i in range(n):
         x = (i + 0.5)*dx
-        zhi = (Z_RIM - RB_H) if x < RB_D else Z_RIM
+        zhi = S['grip_top'](x)
         zlo = S['grip_ceil'](x) if x < GD else Z_FL
         if zhi <= zlo: continue
         a = (zhi - zlo)*dx; zc = (zhi + zlo)/2
         A += a; Az += a*zc; cells.append((a, zc, zhi - zlo))
     zc0 = Az/A
     I = sum(a*(zc - zc0)**2 + a*h*h/12 for a, zc, h in cells)
-    zmin = min(S['grip_ceil'](WG*(i+0.5)/n) if WG*(i+0.5)/n < GD else Z_FL for i in range(n))
-    return A, zc0, I, zmin
-A_s, zc_s, I_s, zmin_s = sect()
-c_max = max(Z_RIM - zc_s, zc_s - zmin_s)
-P_des = m*9.81*B.DYN
-P_h = P_des/2
-M = P_h*GW/8
+    return A, zc0, I
+A_s, zc_s, I_s = sect()
+c_max = max(Z_RIM - zc_s, zc_s - Z_FL)
+M = P_hand*GW/8
 sig = M*c_max/I_s
-tau = 1.5*(P_h/2)/A_s
-dfl = P_h*GW**3/(192*B.E_W*I_s)
+tau = 1.5*(P_hand/2)/A_s
+dfl = P_hand*GW**3/(192*B.E_W*I_s)
 print(f"  Dam nhip {GW:.0f} mm (be rong hoc), ngam hai dau vao vach hai ben hoc.")
-print(f"  Tiet dien KHONG phai chu nhat: no la chu L — dai go tren tran (bi ha bac")
-print(f"  an mat {RB_D:.1f} o phia ngoai) cong thanh sau hoc {B.GRIP_BACK:.0f} mm chay suot chieu cao.")
+print(f"  Tiet dien la chu L: dai go tren tran cong thanh sau hoc {B.GRIP_BACK:.0f} mm.")
+print(f"  Ho B khong ha bac nen dai go tren tran day HET {S['GRIP_LEDGE_T']:.1f} mm"
+      f" (ho C chi con 15,9).")
 print(f"    Dien tich          A  = {A_s:8.1f} mm2")
-print(f"    Trong tam          z  = Z{zc_s:6.2f}")
+print(f"    Trong tam          z  = Z{zc_s:7.2f}")
 print(f"    Momen quan tinh    I  = {I_s:8.0f} mm4")
-print(f"    Thot xa nhat       c  = {c_max:8.2f} mm")
 print(f"    Uon            sigma  = {sig:8.2f} MPa / MOR {B.MOR:.0f}   -> he so {B.MOR/sig:.0f}x")
 print(f"    Cat              tau  = {tau:8.2f} MPa / {B.SHEAR:.0f}      -> he so {B.SHEAR/tau:.0f}x")
 print(f"    Vong giua nhip        = {dfl:8.4f} mm")
-b_rect, h_rect = S['GRIP_LEDGE_T'], S['GRIP_LEDGE']
-I_r = b_rect*h_rect**3/12
-sig_r = M*(h_rect/2)/I_r
-print(f"\n  Can duoi — chi lay dai go tren tran nhu mot chu nhat {h_rect:.0f} x {b_rect:.1f}")
-print(f"  (bo qua thanh sau hoc, coi nhu no khong dinh vao dau):")
+b_r, h_r = S['GRIP_LEDGE_T'], S['GRIP_LEDGE']
+I_r = b_r*h_r**3/12
+sig_r = M*(h_r/2)/I_r
+print(f"\n  Can duoi — chi lay dai go tren tran nhu chu nhat {h_r:.1f} x {b_r:.1f}:")
 print(f"    I = {I_r:.0f} mm4 ({I_r/I_s*100:.0f} % tiet dien that),"
       f" sigma = {sig_r:.2f} MPa -> he so {B.MOR/sig_r:.0f}x")
-print(f"  Ca hai cach deu cho he so hang tram lan.")
-print(f"  Ket cau khong phai rang buoc — nhu truoc. Cai rang buoc van la BAN TAY.")
+print(f"  Ket cau khong phai rang buoc. Rang buoc van la BAN TAY.")
 
 # ==========================================================================
 hr("8. CHOT LAI")
-for a, b_ in [("Khe ho vao tay (mat ngoai)", f"{S['GRIP_APER']:.0f} mm — HE QUA cua"
-                                             f" ha bac ban le, khong tu chon"),
+for a, b_ in [("Khe ho vao tay (mat ngoai)", f"{S['GRIP_APER']:.2f} mm — suy tu ngon tay,"
+                                             f" khong tu vach"),
               ("Sau hoc", f"{GD:.0f} mm (dot ngon {B.L_DISTAL:.0f} + ke {GD-B.L_DISTAL:.0f})"),
               ("Rong hoc", f"{GW:.0f} mm theo Y, Y {S['GRIP_Y0']:.0f}..{S['GRIP_Y1']:.0f}"),
-              ("Bo mep ngoai tran", f"R{B.GRIP_R:.0f} (chan tren ec-go-no-mi {best:.2f},"
-                                    f" dao co san)"),
+              ("Bo mep ngoai tran", f"R{B.GRIP_R:.0f} — cua so {rmin_soft:.2f}..{best_hi:.1f},"
+                                    f" dao co san loi vao: R{min(win):.0f}"),
               ("Doc tran", f"{B.GRIP_SLOPE:.0f}° len phia trong"
                            f" (chan tren goc ma sat {math.degrees(math.atan(B.MU_SKIN)):.1f}°)"),
               ("Cao do tran", f"Z{S['GRIP_Z_TOP']-B.GRIP_R:.2f} thap nhat (x={B.GRIP_R:.0f})"
                               f" -> Z{S['GRIP_Z_IN']:.2f} tai day hoc"),
-              ("Dinh bo tron", f"Z{S['GRIP_Z_TOP']:.0f}, cach day ha bac"
-                               f" {S['GRIP_LIP_MIN']:.1f} mm go dac"),
-              ("Be mat tran", f"{S['GRIP_SURF']:.1f} mm ({S['GRIP_ARC']:.1f} cung +"
-                              f" {S['GRIP_FLAT']/math.cos(th):.1f} doc)"),
-              ("Ap luc dau ngon", f"{P_hand/A_new*1000:.0f} kPa"),
-              ("Dai go tren hoc", f"cao {S['GRIP_LEDGE']:.0f} x day {S['GRIP_LEDGE_T']:.1f}"
-                                  f" (cho mong nhat), he so uon {B.MOR/sig:.0f}x"),
+              ("Go dac tren tran", f"mong nhat {S['GRIP_LIP_MIN']:.2f} mm"
+                                   f" (yeu cau >= {B.GRIP_LIP_REQ:.1f})"),
+              ("Be mat tran", f"{S['GRIP_SURF']:.2f} mm ({S['GRIP_ARC']:.2f} cung +"
+                              f" {S['GRIP_FLAT']/math.cos(th):.2f} doc)"),
+              ("Ap luc dau ngon", f"{P_hand/A_new*1000:.0f} kPa on dinh /"
+                                  f" {P_hand/(B.N_FING*B.FING_W*B.GRIP_R*math.radians(B.WRAP_SKIN))*1000:.0f}"
+                                  f" kPa luc bat luc"),
+              ("Dai go tren hoc", f"cao {S['GRIP_LEDGE']:.2f} x day {S['GRIP_LEDGE_T']:.1f}"
+                                  f" (day HET be day vach), he so uon {B.MOR/sig:.0f}x"),
               ("Vach ban le", f"{S['WALL_HINGE']:.0f} = sau hoc {GD:.0f} + thanh sau"
-                              f" {B.GRIP_BACK:.0f} — phu bi X van {S['X_OA']:.0f}")]:
+                              f" {B.GRIP_BACK:.0f}")]:
     print(f"  {a:28s}{b_}")
 print(f"\n  Tu kiem box_spec: {B.selfcheck(S) or 'DAT'}")

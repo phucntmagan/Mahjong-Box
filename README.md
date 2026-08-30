@@ -3,8 +3,8 @@
 Hộp gỗ đựng bộ Mahjong 152 quân (BURLORA), tham chiếu bộ Mahjong của Hermès.
 Khởi đầu là một bản review độc lập cho bản vẽ sản xuất **Rev B**; nay là hồ sơ thiết kế đang tiến hoá.
 
-**Phủ bì đã chốt: 378 × 350 × 62 mm · 6,20 kg** (khay lõi ổn định) hoặc **6,82 kg** (khay cocobolo).
-Ống gỗ bản lề Ø12,2 **chìm hẳn trong hạ bậc** — không nhô ra tí nào.
+**Phủ bì đã chốt: 388.2 × 350 × 62 mm · 6.50 kg** (khay lõi ổn định) hoặc **7.12 kg** (khay cocobolo).
+Ống gỗ bản lề Ø10.2 nằm **đúng trên arris**, nhô ra 5.1 mm mỗi bên — **không hạ bậc**.
 
 ## Đọc theo thứ tự này
 
@@ -29,11 +29,11 @@ Dựng bằng `tools/render3d.py` (bộ dựng hình riêng, không thư viện 
 | | |
 |---|---|
 | Vật liệu | thân, khay, khung nắp: **cocobolo** ρ 1,00 · tấm nắp: **Nu gõ đỏ** thả trong rãnh |
-| Nắp | khung gỗ đặc **đều 15** ôm tấm Nu thả 7 — tấm liền đóng khe ráp giữa ở ΔMC 1,85 % |
-| Xách | **phương án C** — hai hốc âm 120 rộng × sâu **16** trong **vách trái/phải**, khe hở vào tay 20, xách hai tay |
-| Bản lề | **mắt mộng gỗ, KHÔNG kim loại.** Trục **P = (6,1 , 47) — lùi vào đúng bán kính ống** nên ống **chìm hẳn, nhô ra 0,0**; ống gỗ **Ø12,2** (chốt gỗ Ø6 + thành 3,0), 7 mắt × 44, chuỗi 314, 2 chốt gỗ Ø6 × 160 mỗi cánh. Hạ bậc vành 6,1 × 15. Mở 180° nằm ngang phẳng bằng vành thân, vươn 182,15 |
-| Xách | hốc âm **sâu 16** (đốt ngón tay lọt hẳn vào mới móc được) → vách bản lề **22** = 16 + 6. Trần hốc bo R4 rồi dốc 10° — bề mặt 18.5 mm |
-| Bề rộng | **378** = 22+126+6+70+6+126+22. Vách bản lề 22 suy ra từ hốc âm, không phải do bản lề |
+| Nắp | khung gỗ đặc **đều 15** ôm **tấm Nu NÂNG** dày 10 (mộng 7 thả trong rãnh): mặt tấm **ngang bằng mặt khung**, khe 1.5 mm quanh lòng tấm để nở |
+| Xách | **phương án C** — hai hốc âm 120 rộng × sâu **16** trong **vách trái/phải**, khe hở vào tay 22.6, xách hai tay |
+| Bản lề | **mắt mộng gỗ, KHÔNG kim loại.** Trục **P = (0.0 , 47) — đúng trên arris**, ống gỗ **Ø10.2** (chốt gỗ Ø5 + thành 2.5) **nhô ra 5.1 mm mỗi bên**, **KHÔNG hạ bậc**. 7 mắt × 44, chuỗi 314, 2 chốt gỗ Ø5 × 160 mỗi cánh. Mở 180° nằm ngang phẳng bằng vành thân, vươn 188.25 |
+| Xách | hốc âm **sâu 16** (đốt ngón tay lọt hẳn vào mới móc được) → vách bản lề **22** = 16 + 6. Trần hốc bo **R8** rồi dốc 10° — bề mặt 20.7 mm |
+| Bề rộng | thân **378** = 22+126+6+70+6+126+22; phủ bì **388.2** kể cả ống bản lề nhô ra. Vách bản lề 22 suy ra từ hốc âm, không phải do bản lề |
 | Khe ráp giữa | **1,5 ±0,3** |
 | Khóa nắp | **8 cặp nam châm 20 × 5 × 5** nối nắp với thân, chặn phương Z, tự do theo X |
 

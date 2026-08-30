@@ -55,3 +55,52 @@ print(f"     chinh la mat canh cua do doc ban le. Nguoi choi ty 5 kg o mep ngoai
 print(f"     {M_ty:.2f} N.m. Ep mat ngang tho co tri so cho phep ({B.C_PERP:.0f} MPa cho")
 print(f"     cocobolo); Nu KHONG co tri so nao on dinh.")
 print(f"  ==> Do doc ban le BAT BUOC la go dac thang tho. Tuc la KHUNG + TAM THA.")
+
+# ==========================================================================
+hr("2. TAM NU NGANG BANG MAT KHUNG — tam NANG (raised panel)")
+print(f"  Yeu cau: mat nap la MOT MAT PHANG lien, tam Nu khong thut xuong duoi")
+print(f"  mat khung {B.S_TOP:.0f} mm nhu ban truoc.\n")
+print(f"  Khong the chi nang tam len roi dan: tam Nu {S['PAN_W']:.0f} x {S['PAN_L']:.0f} no")
+print(f"  {B.K['Nu moi phuong']*100:.2f} %/1%MC MOI PHUONG. Dan cung thi hoac tam nut hoac")
+print(f"  mong khung bung. Nen tam VAN PHAI THA — chi doi hinh cat cua no:\n")
+for a, b_ in [("Be day toan bo tam", f"{S['PAN_TH']:.0f} = mong {B.PAN_T:.0f} + phan dang len"
+                                     f" {B.S_TOP:.0f}"),
+              ("Bac phay quanh mep TREN", f"sau {B.S_TOP:.0f} x rong {S['PAN_REB']:.0f}"
+                                          f" (= an vao ranh {B.TON:.0f} + khe {B.PAN_REV:.1f})"),
+              ("Mong con lai", f"day {B.PAN_T:.0f}, an vao ranh {B.TON:.0f} tren tong sau"
+                               f" {B.GRV:.0f} -> tha {S['PAN_FLOAT']:.0f} mm moi phia"),
+              ("Long tam (phan dang len)", f"{S['FIELD_W']:.2f} x {S['FIELD_L']:.2f}, mat tren"
+                                           f" o Z{S['Z_LID']:.0f} — ngang bang mat khung"),
+              ("Khe quanh long tam", f"{B.PAN_REV:.1f} mm moi phia")]:
+    print(f"   {a:26s}: {b_}")
+print(f"\n  Cai khe {B.PAN_REV:.1f} mm KHONG phai trang tri: no la cho cho tam no ra.")
+print(f"  Tam tha giua nen moi phia dich mot NUA tong bien thien.\n")
+print(f"  {'phuong':>10s}{'kich thuoc tam':>17s}{'dich moi phia':>16s}{'khe con lai':>14s}")
+for lbl, dim, mv in (("theo X", S['PAN_W'], S['PAN_MOVE_W']),
+                     ("theo Y", S['PAN_L'], S['PAN_MOVE_L'])):
+    print(f"  {lbl:>10s}{dim:17.1f}{mv:16.2f}{B.PAN_REV - mv:14.2f}")
+print(f"\n  Muc 1 da dat: xuong lam ~9 % MC, mua nong am len ~13 % -> bien do 4 %.")
+print(f"  Tam PHAI duoc on dinh ve giua dai ({(9+13)/2:.0f} %) TRUOC khi lap, luc do bien")
+print(f"  thien chi con +/- {B.DMC_DES:.1f} %. Neu lap thang o 9 % thi ca {B.DMC_DRY:.0f} %")
+print(f"  doi ve MOT phia — do la truong hop kiem thu hai.\n")
+print(f"  {'truong hop':>34s}{'dich moi phia':>15s}{'khe hep nhat':>14s}{'khe rong nhat':>15s}")
+for lbl, mv in ((f"da on dinh 11 %, +/-{B.DMC_DES:.0f} %", S['PAN_MOVE']),
+                (f"lap thang o 9 %, +{B.DMC_DRY:.0f} % mot chieu", S['PAN_MOVE_DRY'])):
+    print(f"  {lbl:>34s}{mv:15.2f}{B.PAN_REV-mv:14.2f}{B.PAN_REV+mv:15.2f}")
+print(f"\n  Ca hai truong hop khe VAN CON HO — {B.PAN_REV:.1f} mm chon dung de nuot duoc ca")
+print(f"  truong hop xau. Do la ly do khe la {B.PAN_REV:.1f} chu khong phai 1,0.\n")
+print(f"  {'bien thien am':>15s}{'khe hep nhat':>15s}{'khe rong nhat':>16s}   ghi chu")
+for dm in (2.0, B.DMC_DRY, 6.0, 8.0):
+    mv = max(S['PAN_W'], S['PAN_L'])*B.K['Nu moi phuong']*dm/2
+    note = ("lap kho, truong hop kiem" if abs(dm - B.DMC_DRY) < 1e-9 else
+            "long tam dap vao khung" if mv > B.PAN_REV else "")
+    print(f"  {dm:14.1f} %{B.PAN_REV-mv:15.2f}{B.PAN_REV+mv:16.2f}   {note}")
+print(f"\n  Neu muon khe NHO hon {B.PAN_REV:.1f} mm thi chi con mot duong: bo Nu dac, dung")
+print(f"  veneer Nu tren loi on dinh ({B.K['loi on dinh']*100:.2f} %/1%MC thay vi"
+      f" {B.K['Nu moi phuong']*100:.2f} %).")
+mv_core = max(S['PAN_W'], S['PAN_L'])*B.K['loi on dinh']*B.DMC_DRY/2
+print(f"  Luc do dich moi phia chi {mv_core:.2f} mm, khe {mv_core*1.5:.1f} mm la du — hoac dan")
+print(f"  cung luon, khong con khe. Doi lai: mat cat canh tam khong con la go that.")
+print(f"\n  ==> Chot: tam Nu DAC, tha, khe {B.PAN_REV:.1f} mm quanh long tam. Khe do la mot")
+print(f"      duong bong deu, doc theo ca bon canh — doc duoc nhu chi tiet, khong phai")
+print(f"      nhu khe ho. Mat tren tam va mat khung DONG PHANG o Z{S['Z_LID']:.0f}.")
