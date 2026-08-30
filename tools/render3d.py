@@ -50,8 +50,16 @@ def norm(a):
 LIGHT = norm((-0.45, -0.75, 0.85))
 
 class Scene:
+    """Mot mat = (dinh, mau, mat_na_canh).
+
+    MAT NA CANH la thu quyet dinh hinh nhin ra khoi go hay khoi giay ke o. Mot
+    mat lon phai chia nho de thuat toan tho son sap dung, nhung neu ve vien cho
+    TUNG O thi ca khoi go hien nguyen luoi chia. Nen moi o mang mot mat na noi
+    ro canh nao cua no nam tren BIEN cua mat goc; chi nhung canh do moi duoc ve
+    vien. Vien di cung o nen thu tu chieu sau van dung — khong can luot ve rieng.
+    """
     def __init__(self, clip_y=None):
-        self.faces = []          # (verts, colour)
+        self.faces = []          # (verts, colour, edge_mask)
         self.clip_y = clip_y     # (y0, y1) — cat bo phan ngoai khoang
     # ---- nguyen thuy
     MAXCELL = 13.0     # canh o luoi toi da khi chia nho mat
@@ -63,14 +71,14 @@ class Scene:
         lon la cach re nhat de het hien tuong do.
         """
         if not split:
-            self.faces.append((v, col)); return
+            self.faces.append((v, col, 0b1111)); return
         a, b, c, d = v
         e1 = math.sqrt(sum((b[i]-a[i])**2 for i in range(3)))
         e2 = math.sqrt(sum((d[i]-a[i])**2 for i in range(3)))
         nu = max(1, min(16, int(e1/self.MAXCELL) + 1))
         nv = max(1, min(16, int(e2/self.MAXCELL) + 1))
         if nu == 1 and nv == 1:
-            self.faces.append((v, col)); return
+            self.faces.append((v, col, 0b1111)); return
         def P(u, w):   # noi suy song tuyen tinh
             return tuple(a[i]*(1-u)*(1-w) + b[i]*u*(1-w) + c[i]*u*w + d[i]*(1-u)*w
                          for i in range(3))
@@ -78,17 +86,23 @@ class Scene:
             for j in range(nv):
                 u0, u1 = i/nu, (i+1)/nu
                 w0, w1 = j/nv, (j+1)/nv
-                self.faces.append(([P(u0, w0), P(u1, w0), P(u1, w1), P(u0, w1)], col))
+                # canh 0 = P(u0,w0)->P(u1,w0) ... theo thu tu dinh ben duoi
+                m = ((1 if j == 0 else 0)
+                     | (2 if i == nu-1 else 0)
+                     | (4 if j == nv-1 else 0)
+                     | (8 if i == 0 else 0))
+                self.faces.append(([P(u0, w0), P(u1, w0), P(u1, w1), P(u0, w1)], col, m))
     def poly(self, v, col):
         """Da giac n dinh. n>4 duoc chia quat quanh trong tam: thuat toan tho son
         sap xep theo TAM mat, ma trong tam cua mot da giac co cung bo luon bi keo
         lech ve phia chum dinh -> sap sai. Chia quat lam moi manh co tam rieng."""
         if len(v) == 4: self.quad(v, col); return
-        if len(v) < 4: self.faces.append((v, col)); return
+        if len(v) < 4: self.faces.append((v, col, 0b111)); return
         n = len(v)
         c = tuple(sum(p[i] for p in v)/n for i in range(3))
         for i in range(n):
-            self.faces.append(([c, v[i], v[(i+1) % n]], col))
+            # tam giac quat [c, v_i, v_i+1]: chi canh v_i->v_i+1 la bien that
+            self.faces.append(([c, v[i], v[(i+1) % n]], col, 0b010))
     def _cy(self, y0, y1):
         """Cat theo mat phang Y. Tra ve (y0, y1, bi_cat_dau, bi_cat_cuoi)."""
         if self.clip_y is None: return y0, y1, False, False
@@ -139,7 +153,16 @@ def gp(x0, prof):
 def add_body(sc, show_mag=True):
     C, D = COL['coco'], COL['cut']
     sc.box(0, W, 0, YB, 0, B.FOOT, COL['foot'])                       # chan dem
-    sc.box(0, W, 0, YB, B.FOOT, Z_FL, C, D)                           # day
+    # ĐÁY: chia theo ĐÚNG các đường mà vách đứng lên trên nó. Một mặt đáy chạy
+    # suốt 378 mm sẽ vắt qua chân vách, và thuật toán thợ sơn sắp theo tâm mặt
+    # nên vài ô của nó vẽ đè lên vách — hiện ra thành răng cưa trong lòng hốc âm.
+    # Cắt trước thì không ô nào còn vắt qua ranh giới, hết răng cưa.
+    _gy0, _gy1 = S['GRIP_Y0'], S['GRIP_Y1']
+    _xc = sorted({0.0, WH, W - WH, W})
+    _yc = sorted({0.0, FB, _gy0, _gy1, YB - FB, YB})
+    for _xa, _xb in zip(_xc, _xc[1:]):
+        for _ya, _yb in zip(_yc, _yc[1:]):
+            sc.box(_xa, _xb, _ya, _yb, B.FOOT, Z_FL, C, D)            # day
 
     # vach trai/phai (dinh phang Z_RIM), khoet hoc am hai tay o giua chieu sau.
     # Chia theo Z lam hai dai:
@@ -343,48 +366,112 @@ def add_lid(sc, th=0.0, leaves=(True, True), show_mag=True):
                            zr+0.1, zr+B.MAG_REC, COL['mag'])
 
 # --------------------------------------------------------------- ve
-def render(sc, eye, target, w, h, focal, title, sub_):
+def _wrap(txt, budget):
+    """Cat chu thanh nhieu dong theo so ky tu — de phu de khong tran ra ngoai."""
+    out, line = [], ''
+    for word in txt.split():
+        if line and len(line) + 1 + len(word) > budget:
+            out.append(line); line = word
+        else:
+            line = (line + ' ' + word) if line else word
+    if line: out.append(line)
+    return out
+
+def render(sc, eye, target, w, h, title, sub_, zoom=1.0, fit=None, pan=(0.0, 0.0)):
+    """Chieu phoi canh + KHUNG HINH TU DONG.
+
+    Truoc day moi hinh phai chinh tay mot tri so `focal`, va vi the hinh nao
+    cung thua mot mang trong o duoi. Nay chieu hai luot: luot dau lay toa do
+    chuan hoa de biet vat the chiem cho nao, luot sau chon he so phong sao cho
+    no vua khit khung con lai duoi dai tieu de. `fit` cho phep dong khung theo
+    MOT KHOI quan tam thay vi ca canh — dung cho hinh can nhin.
+    """
     ex, ey, ez = eye
     f = norm(sub(target, eye))
     r = norm(cross(f, (0, 0, 1)))
     u = cross(r, f)
-    out = []
-    for verts, col in sc.faces:
-        pts, zs, ok = [], [], True
-        for p in verts:
-            d = sub(p, eye)
-            zc = dot(d, f)
-            if zc < 1.0: ok = False; break
-            pts.append((w/2 + focal*dot(d, r)/zc, h/2 + 34 - focal*dot(d, u)/zc))
-            zs.append(zc)
-        if not ok or len(pts) < 3: continue
+
+    def proj(p):
+        d = sub(p, eye)
+        zc = dot(d, f)
+        if zc < 1.0: return None
+        return (dot(d, r)/zc, -dot(d, u)/zc, zc)
+
+    # ---- luot 1: toa do chuan hoa
+    prepped = []
+    for verts, col, mask in sc.faces:
+        q = [proj(p) for p in verts]
+        if any(t is None for t in q) or len(q) < 3: continue
         n = norm(cross(sub(verts[1], verts[0]), sub(verts[2], verts[0])))
         if dot(n, sub(eye, verts[0])) < 0: n = (-n[0], -n[1], -n[2])
         sh = 0.34 + 0.66*max(0.0, dot(n, LIGHT))
+        prepped.append((sum(t[2] for t in q)/len(q), q, col, sh, mask))
+    if not prepped:
+        raise SystemExit('khong con mat nao trong khung nhin')
+
+    # ---- khung hinh
+    if fit is None:
+        pts = [(t[0], t[1]) for _, q, _, _, _ in prepped for t in q]
+    else:
+        x0, x1, y0, y1, z0, z1 = fit
+        pts = []
+        for X in (x0, x1):
+            for Y in (y0, y1):
+                for Z in (z0, z1):
+                    t = proj((X, Y, Z))
+                    if t: pts.append((t[0], t[1]))
+    bx0 = min(p[0] for p in pts); bx1 = max(p[0] for p in pts)
+    by0 = min(p[1] for p in pts); by1 = max(p[1] for p in pts)
+    hdr = 44 + 16*len(_wrap(sub_, int((w - 48)/5.35)))
+    M = 16.0
+    focal = min((w - 2*M)/max(bx1 - bx0, 1e-6),
+                (h - hdr - 2*M)/max(by1 - by0, 1e-6))*zoom
+    ox = w/2 - focal*(bx0 + bx1)/2 + pan[0]*w
+    oy = hdr + (h - hdr)/2 - focal*(by0 + by1)/2 + pan[1]*h
+
+    out = []
+    for zc, q, col, sh, mask in prepped:
+        pts_s = [(ox + focal*t[0], oy + focal*t[1]) for t in q]
         c = '#%02x%02x%02x' % tuple(min(255, int(v*sh)) for v in col)
-        k = '#%02x%02x%02x' % tuple(min(255, int(v*sh*0.82)) for v in col)
-        out.append((sum(zs)/len(zs), pts, c, k))
+        k = '#%02x%02x%02x' % tuple(min(255, int(v*sh*0.58)) for v in col)
+        out.append((zc, pts_s, c, k, mask))
     out.sort(key=lambda t: -t[0])
+
     body = [f'<rect width="100%" height="100%" fill="#f7f5f1"/>']
-    for _, pts, c, k in out:
-        d = ' '.join(f'{x:.1f},{y:.1f}' for x, y in pts)
-        body.append(f'<polygon points="{d}" fill="{c}" stroke="{k}" stroke-width="0.3"/>')
-    body.append(f'<rect x="0" y="0" width="{w}" height="58" fill="#f7f5f1" '
+    for _, pts_s, c, k, mask in out:
+        d = ' '.join(f'{x:.1f},{y:.1f}' for x, y in pts_s)
+        # vien trung mau nen de khong lo duong chia o
+        body.append(f'<polygon points="{d}" fill="{c}" stroke="{c}" stroke-width="0.7"/>')
+        if mask:
+            n = len(pts_s)
+            seg = []
+            for i in range(n):
+                if mask & (1 << i):
+                    a, b = pts_s[i], pts_s[(i+1) % n]
+                    if abs(a[0]-b[0]) + abs(a[1]-b[1]) < 1.6: continue
+                    seg.append(f'M {a[0]:.1f},{a[1]:.1f} L {b[0]:.1f},{b[1]:.1f}')
+            if seg:
+                body.append(f'<path d="{" ".join(seg)}" fill="none" stroke="{k}" '
+                            f'stroke-width="0.55" stroke-linecap="round"/>')
+    body.append(f'<rect x="0" y="0" width="{w}" height="{hdr - 8}" fill="#f7f5f1" '
                 f'fill-opacity="0.94"/>')
     body.append(f'<text x="24" y="30" font-size="15" font-weight="bold" '
                 f'font-family="DejaVu Sans" fill="#1a1a1a">{title}</text>')
-    body.append(f'<text x="24" y="48" font-size="10.5" font-family="DejaVu Sans" '
-                f'fill="#55524b">{sub_}</text>')
+    for i, ln in enumerate(_wrap(sub_, int((w - 48)/5.35))):
+        body.append(f'<text x="24" y="{48 + i*15}" font-size="10.5" '
+                    f'font-family="DejaVu Sans" fill="#55524b">{ln}</text>')
     return (f'<svg xmlns="http://www.w3.org/2000/svg" width="{w}" height="{h}" '
             f'viewBox="0 0 {w} {h}">' + ''.join(body) + '</svg>')
 
 os.makedirs('figs', exist_ok=True)
 CX, CY, CZ = W/2, YB/2, 30
-def shot(name, title, sub_, build, eye, target=None, w=1000, h=620, focal=1500):
+def shot(name, title, sub_, build, eye, target=None, w=1000, h=620,
+         zoom=1.0, fit=None, pan=(0.0, 0.0)):
     sc = Scene()
     build(sc)
     open(f'figs/{name}.svg', 'w').write(
-        render(sc, eye, target or (CX, CY, CZ), w, h, focal, title, sub_))
+        render(sc, eye, target or (CX, CY, CZ), w, h, title, sub_,
+               zoom=zoom, fit=fit, pan=pan))
     print(f'  {name}  ({len(sc.faces)} mat)')
 
 # 1 — tong the, nap dong
@@ -394,7 +481,7 @@ shot('fig12a-tong-the-nap-dong', 'HÌNH 12a — Tổng thể, nắp đóng',
      f'Bản lề mắt mộng gỗ Ø{2*RK:.1f}, trục trên arris, nhô ra {S["PROUD"]:.1f} mm mỗi bên — '
      f'không hạ bậc, không một chi tiết kim loại. Hốc âm hai tay khe hở {S["GRIP_APER"]:.1f} × '
      f'sâu {B.GRIP_D:.0f}. Tấm Nu ngang bằng mặt khung.',
-     v1, eye=(-250, -430, 260), target=(CX, CY, 22), focal=1250)
+     v1, eye=(-250, -430, 260), target=(CX, CY, 22))
 
 # 2 — nap mo 180 do
 def v2(sc):
@@ -407,7 +494,7 @@ def v2(sc):
 shot('fig12b-nap-mo-180', 'HÌNH 12b — Nắp mở 180°',
      f'Hai cánh nằm ngang, mặt trên phẳng đúng cao độ vành thân Z{Z_RIM:.0f}, vươn ra {LW:.0f} mm mỗi bên. '
      f'Lòng lõm của khung nắp chính là khay bỏ bài.',
-     v2, eye=(-90, -600, 430), target=(CX, CY, 18), w=1180, h=680, focal=1180)
+     v2, eye=(-90, -600, 430), target=(CX, CY, 18), w=1180, h=620)
 
 # 3 — noi that nhin tu tren
 def v3(sc):
@@ -420,7 +507,7 @@ shot('fig12c-noi-that', 'HÌNH 12c — Lòng hộp, tháo nắp',
      f'4 khay quân 3 × 12 (2 chồng mỗi khoang) + AC-01: rãnh Joker 8 quân, '
      f'4 ổ xúc xắc {B.DICE_SOCK:.0f} × {B.DICE_SOCK:.0f} (nắp che tháo ra), '
      f'hốc 4 quân dự phòng.',
-     v3, eye=(-70, -360, 520), target=(CX, CY, 20), focal=1250)
+     v3, eye=(-70, -360, 520), target=(CX, CY, 20))
 
 # 4 — mat cat doc
 def v4(sc):
@@ -435,7 +522,7 @@ shot('fig12d-mat-cat', 'HÌNH 12d — Cắt dọc giữa hộp',
      f'Cắt tại Y = 140. Chuỗi Z: chân {B.FOOT:.0f} + đáy {B.BOT:.0f} + 2 × khay {B.TRAY_H:.0f} '
      f'+ khe {B.CLR_Z:.0f} = vành Z{Z_RIM:.0f}; nắp dày {B.T_LID:.0f} đều → Z{Z_LID:.0f}. '
      f'Mặt cắt tô sáng.',
-     v4, eye=(-150, -520, 215), target=(CX, 215, 28), focal=1350)
+     v4, eye=(-150, -520, 215), target=(CX, 215, 28))
 
 # 5 — chi tiet goc: ban le + hoc am
 def v5(sc):
@@ -449,7 +536,8 @@ shot('fig12e-chi-tiet-goc', 'HÌNH 12e — Vách trái: hốc âm hai tay và b�
      f'Hốc âm {B.GRIP_W:.0f} rộng, khe hở vào tay {S["GRIP_APER"]:.1f}, sâu {B.GRIP_D:.0f} trong vách '
      f'{S["WALL_GRIP"]:.0f}; dải gỗ trên hốc {S["GRIP_LEDGE"]:.1f} cao × {S["GRIP_LEDGE_T"]:.0f} dày '
      f'(dày hết bề dày vách). {B.N_KN} mắt mộng gỗ Ø{2*RK:.1f} trên arris.',
-     v5, eye=(-560, -315, 250), target=(105, 172, 24), focal=1450)
+     v5, eye=(-470, -330, 205), target=(60, 150, 26),
+     fit=(-S['PROUD'] - 8, 96.0, 12.0, 250.0, 0.0, Z_RIM + 20))
 
 # 6 — CAT NGANG QUA HOC AM: cho thay dung cai "phan bau ngon tay"
 def v6(sc):
@@ -460,4 +548,5 @@ shot('fig12f-hoc-am-cat', 'HÌNH 12f — Cắt ngang hốc âm: phần bấu ng�
      f'Cắt tại Y{YB/2:.0f}, giữa hốc. Trần hốc KHÔNG phẳng: bo R{B.GRIP_R:.0f} ở mép ngoài rồi '
      f'dốc lên {B.GRIP_SLOPE:.0f}° vào trong, kết thúc ở Z{S["GRIP_Z_IN"]:.1f}. '
      f'Khe hở vào tay {S["GRIP_APER"]:.1f} mm; bề mặt trần {S["GRIP_SURF"]:.1f} mm > đốt ngón {B.L_DISTAL:.0f}.',
-     v6, eye=(-95, -330, 118), target=(46, YB/2, 24), w=1000, h=560, focal=2500)
+     v6, eye=(-95, -330, 118), target=(46, YB/2, 24), w=1000, h=560,
+     fit=(-S['PROUD'] - 10, 150.0, YB/2, YB, 0.0, Z_LID))
