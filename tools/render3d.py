@@ -37,6 +37,8 @@ COL = dict(
     brass  = (0xc4, 0xa2, 0x4a),
     foot   = (0x2e, 0x22, 0x1a),
     cut    = (0xdd, 0xba, 0x8a),   # mat cat — sang han de doc duoc tung lop
+    cov    = (0x94, 0x5f, 0x33),   # nap che o xuc xac — chi tiet roi, to khac de nhan ra
+    cov_c  = (0xc2, 0x93, 0x59),   # mat cat cua nap che
 )
 
 # --------------------------------------------------------------- vector
@@ -243,7 +245,7 @@ def add_tray(sc, x0, y0, z0, tiles=True):
             sc.box(X+0.4, X+tw-0.4, Y, Y+tl, z0+fl+B.FELT, z0+fl+B.FELT+th,
                    COL['tile'], COL['tile_e'])
 
-def add_ac(sc, tiles=True):
+def add_ac(sc, tiles=True, cover=False):
     C = COL['ac'] if 'ac' in COL else COL['tray']
     x0 = X_AC[0] + 1; w = S['AC_W_OUT']; y0 = FB + B.AC_CLR; l = S['AC_L']
     z0, h = Z_FL, B.AC_H
@@ -312,8 +314,29 @@ def add_ac(sc, tiles=True):
                        ay0+3+j*(tl_+1), ay0+3+j*(tl_+1)+tl_,
                        zt-B.AC_AUX_D+B.FELT, zt-B.AC_AUX_D+B.FELT+th_,
                        COL['tile'], COL['tile_e'])
-    # nap che o xuc xac KHONG ve o hinh noi that: no che het bon o. Kich thuoc
-    # va hom ngon xem to AC-02.
+    # --- nap che o xuc xac. MAC DINH KHONG ve: no che het bon o, hinh noi that
+    # se khong con gi de xem. Bat cover=True cho hinh 12g.
+    if cover:
+        cu0, cu1 = B.COVER_CLR/2, S['AC_DICE_L'] - B.COVER_CLR/2
+        cw0, cw1 = B.COVER_CLR/2, S['AC_W_IN'] - B.COVER_CLR/2
+        r = B.COVER_NOTCH/2
+        wc = S['COVER_NOTCH_W']                    # tam hai hom, he toa do cua hoc
+        CV, CVC = COL['cov'], COL['cov_c']
+        sc.box(Wx(cw0), Wx(cw1), U(cu0 + r), U(cu1), z_rec, zt, CV, CVC)
+        # dai mang hom ngon: cat lat theo u, moi lat mot be rong khac nhau ->
+        # nua tron thanh bac thang 0,75 mm, du min o ti le hinh nay.
+        n = 12
+        for i in range(n):
+            ua, ub = cu0 + r*i/n, cu0 + r*(i+1)/n
+            dmid = (ua + ub)/2 - cu0
+            hw = math.sqrt(max(0.0, r*r - dmid*dmid))
+            edges = [cw0]
+            for c_ in wc:
+                edges += [c_ - hw, c_ + hw]
+            edges.append(cw1)
+            for wa, wb in zip(edges[0::2], edges[1::2]):
+                if wb - wa < 1e-6: continue
+                sc.box(Wx(wa), Wx(wb), U(ua), U(ub), z_rec, zt, CV, CVC)
     return (xi0, xi1, dy0, dy1)
 
 def leaf_polys(th, right):
@@ -346,7 +369,7 @@ def leaf_polys(th, right):
                 B.RAIL + rv, B.LID_L - B.RAIL - rv, 'burl'))
     return out
 
-def add_lid(sc, th=0.0, leaves=(True, True), show_mag=True):
+def add_lid(sc, th=0.0, leaves=(True, True), show_mag=True, felt=False):
     for right in (False, True):
         if not leaves[1 if right else 0]: continue
         for poly, y0, y1, ck in leaf_polys(th, right):
@@ -357,6 +380,12 @@ def add_lid(sc, th=0.0, leaves=(True, True), show_mag=True):
             if is_body: continue
             sc.prism_y(circle_xz(c[0], c[1], RK), y0, y0 + B.KN_LEN,
                        COL['coco'], COL['cut'])
+        # dem ni duoi nap, tren moi khoang — chi ve khi nap dong
+        if abs(th) < 1e-9 and felt:
+            for xa, xb in [X_BAY[0], X_BAY[1], X_AC]:
+                a, b = max(xa, 0 if not right else XS), min(xb, XS if not right else W)
+                if b - a < 1e-6: continue
+                sc.box(a, b, FB, YB-FB, Z_RIM - B.FELT_PAD, Z_RIM, COL['felt'])
         # nam cham duoi nap
         if abs(th) < 1e-9 and show_mag:
             for xc in (B.MAG_X if not right else [W-x for x in B.MAG_X]):
@@ -550,3 +579,23 @@ shot('fig12f-hoc-am-cat', 'HÌNH 12f — Cắt ngang hốc âm: phần bấu ng�
      f'Khe hở vào tay {S["GRIP_APER"]:.1f} mm; bề mặt trần {S["GRIP_SURF"]:.1f} mm > đốt ngón {B.L_DISTAL:.0f}.',
      v6, eye=(-95, -330, 118), target=(46, YB/2, 24), w=1000, h=560,
      fit=(-S['PROUD'] - 10, 150.0, YB/2, YB, 0.0, Z_LID))
+
+# 7 — AC-01 CO NAP CHE DAY VAO: rang buoc chieu cao chat nhat cua khay
+AC_DY0 = B.WALL_FB + B.AC_CLR + B.AC_WALL + B.AC_JOKER[1] + B.AC_WALL
+Y_CUT  = AC_DY0 + S['DICE_U'][0] + B.DICE_SOCK/2      # cat qua TAM mot hang o
+def v7(sc):
+    sc.clip_y = (Y_CUT, Y_CUT + 62)      # lat cat day 62 mm, khong keo ca hop ra sau
+    add_body(sc, show_mag=False)
+    for x0 in (X_BAY[0][0]+1, X_BAY[1][0]+1):
+        for k in (0, 1):
+            add_tray(sc, x0, B.WALL_FB + B.AC_CLR, Z_FL + k*B.TRAY_H + 0.02, tiles=True)
+    add_ac(sc, cover=True)
+    add_lid(sc, 0.0, show_mag=False, felt=True)
+shot('fig12g-nap-che-xuc-xac', 'HÌNH 12g — Nắp che ổ xúc xắc đậy vào, cắt qua tâm ổ',
+     f'Cắt tại Y{Y_CUT:.0f}. Nắp che dày {B.COVER_T:.0f} nằm trong sàn phay sâu {B.COVER_T:.0f}, '
+     f'mặt trên NGANG BẰNG vành AC-01 (Z{Z_FL+B.AC_H:.0f}). Dưới nắp: xúc xắc {B.DIE:.0f} hở '
+     f'{S["DIE_HEAD"]:.0f} mm; ổ sâu {B.DICE_SOCK_D:.0f} kể từ sàn nắp = {Z_FL+B.AC_H-B.dice_layout(S)["sock_d"]:.0f} '
+     f'tính từ đáy. Trên nắp che: khe {S["AC_GAP"]:.0f} mm tới vành thân Z{Z_RIM:.0f}, '
+     f'trong đó nỉ đệm dưới nắp hộp chiếm {B.FELT_PAD:.1f} — còn hở {S["COVER_PROUD"]:.1f} mm.',
+     v7, eye=(XS - 210, Y_CUT - 330, 122), target=(XS, Y_CUT + 20, 30), w=1000, h=620,
+     fit=(X_AC[0] - 34, X_AC[1] + 34, Y_CUT, Y_CUT + 62, 0.0, Z_LID), zoom=0.93)

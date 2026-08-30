@@ -20,7 +20,8 @@ Khởi đầu là một bản review độc lập cho bản vẽ sản xuất **
 
 PDF tương ứng trong `build/`. Hình trong `figs/`.
 
-**Hình 3D:** `figs/fig12a..e` — tổng thể nắp đóng, nắp mở 180°, lòng hộp, cắt dọc, mặt trước.
+**Hình 3D:** `figs/fig12a..g` — tổng thể nắp đóng, nắp mở 180°, lòng hộp, cắt dọc giữa hộp,
+vách trái (hốc âm hai tay + bản lề), cắt ngang hốc âm, và nắp che ổ xúc xắc đậy vào.
 Dựng bằng `tools/render3d.py` (bộ dựng hình riêng, không thư viện ngoài); mọi toạ độ lấy từ
 `box_spec` nên hình đúng từng milimét chứ không phải phác hoạ.
 
@@ -65,7 +66,7 @@ Toàn bộ hình học sinh từ chuỗi kích thước qua `derive()`, và `sel
 ```
 python3 tools/draw_bx01.py     # sinh figs/fig9, fig10
 python3 tools/draw_latch.py    # sinh figs/fig11
-python3 tools/render3d.py      # sinh figs/fig12a..f (hình 3D)
+python3 tools/render3d.py      # sinh figs/fig12a..g (hình 3D)
 python3 tools/draw_hinge.py    # sinh figs/fig8
 python3 tools/draw_concealed.py # sinh figs/fig13 (bản lề chìm)
 python3 tools/draw_grip.py     # sinh figs/fig14 (trần hốc âm)
